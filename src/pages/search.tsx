@@ -99,7 +99,7 @@ const SearchPage: NextPage<PageProps> = ({ outcomesTree, allTables }: PageProps)
         </div>
         <div>
           {searchTables(searchText, allTables).map(({ table, tableInfo }) => {
-            const title = `表${tableInfo.index}. ${tableInfo.text}`;
+            const title = `表${tableInfo.index}. ${tableInfo.item}`;
 
             return (
               <div key={tableInfo.id}>

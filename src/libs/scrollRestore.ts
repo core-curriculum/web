@@ -3,8 +3,8 @@
  * - see https://github.com/vercel/next.js/issues/3303#issuecomment-628400930
  * - see https://github.com/vercel/next.js/issues/12530#issuecomment-628864374
  */
-import { useEffect } from "react";
 import Router, { NextRouter } from "next/router";
+import { useEffect } from "react";
 
 function saveScrollPos(asPath: string, ref?: HTMLElement | null) {
   console.log(`ref:${ref}`);

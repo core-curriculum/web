@@ -2,12 +2,12 @@ import type { NextPage, GetStaticProps } from "next";
 import Head from "next/head";
 import { getNameColumnValues, mapRow } from "@libs/tableUtils";
 import type { HeaderedTable } from "@libs/tableUtils";
-import { loadCsv } from "@services/loadCsv";
+import { loadTable } from "@services/loadCsv";
 
 type PageProps = { table: HeaderedTable<string> };
 
 export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
-  const table = loadCsv("tables", "symptoms.csv");
+  const table = loadTable("TBL0500");
 
   return {
     props: { table },
@@ -20,8 +20,8 @@ const Home: NextPage<PageProps> = ({ table }: PageProps) => {
     { name: string; id: string; index: string; diseases: string[] }
   >(table, (row) => ({
     main: {
-      name: row["主要症候"],
-      diseases: row["検討すべき鑑別疾患"].split(",").filter((v) => v.trim() !== ""),
+      name: row["item"],
+      diseases: row["ddx"].split(",").filter((v) => v.trim() !== ""),
       id: row["id"],
       index: row["index"],
     },

@@ -2,12 +2,12 @@ import type { NextPage, GetStaticProps } from "next";
 import Head from "next/head";
 import { getNameColumnValues, mapRow } from "@libs/tableUtils";
 import type { HeaderedTable } from "@libs/tableUtils";
-import { loadCsv } from "@services/loadCsv";
+import { loadTable } from "@services/loadCsv";
 
 type PageProps = { table: HeaderedTable<string> };
 
 export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
-  const table = loadCsv("tables", "skills.csv");
+  const table = loadTable("TBL0300");
 
   return {
     props: { table },
@@ -28,7 +28,7 @@ const RatingCheck = ({ name }: RatingCheckProp) => (
 const Home: NextPage<PageProps> = ({ table }: PageProps) => {
   const skillTable = mapRow<string, { name: string; id: string; index: string }>(table, (row) => ({
     skill: {
-      name: row["基本的臨床手技"],
+      name: row["item"],
       id: row["id"],
       index: row["index"],
     },

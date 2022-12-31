@@ -9,10 +9,12 @@ type Expand<T extends object> = { [K in keyof T]: T[K] };
 
 const loadTableInfoDict = () => {
   const tableIndex = loadTableIndex();
+  const trimExt = (filename: string) => filename.replace(/\.[^\.]+$/, "");
   const dictList = toObjectList(tableIndex);
   return dictList.reduce((dict, line) => {
-    const link = fileToTableLink(line.file);
-    return { ...dict, [line["file"]]: { ...line, link } };
+    const file = trimExt(line.file);
+    const link = fileToTableLink(file);
+    return { ...dict, [file]: { ...line, file, link } };
 
   }, {} as { [file: string]: Expand<typeof dictList[number] & { link: string }> })
 };

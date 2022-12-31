@@ -1,12 +1,10 @@
-import * as fs from "fs";
-import * as path from "path";
 import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
 import Head from "next/head";
 import { Table } from "@components/Table";
 import { BackButton } from "@components/buttons/BackButton";
 import type { HeaderedTable } from "@libs/tableUtils";
 import { dropColumnsByNames } from "@libs/tableUtils";
-import { getTable, TableInfo } from "@services/tables";
+import { getTable, TableInfo, getTableFiles } from "@services/tables";
 
 type PageProps = { table: HeaderedTable<string>; tableInfo: TableInfo };
 
@@ -15,9 +13,7 @@ type PathParams = {
 };
 
 export const getStaticPaths: GetStaticPaths<PathParams> = (context) => {
-  const paths = fs
-    .readdirSync(path.resolve(process.cwd(), "data_in_repo", "tables"))
-    .map((filename) => ({ params: { id: path.basename(filename, path.extname(filename)) } }));
+  const paths = getTableFiles().map((file) => ({ params: { id: file } }));
   return {
     paths,
     fallback: false,
@@ -34,7 +30,7 @@ export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
 };
 
 const TableOfId: NextPage<PageProps> = ({ table, tableInfo: info }: PageProps) => {
-  const title = `表${info.index}. ${info.text}`;
+  const title = `表${info.number}. ${info.item}`;
   const [header, ...body] = dropColumnsByNames(table, ["id", "index", "H28ID"]);
   return (
     <>

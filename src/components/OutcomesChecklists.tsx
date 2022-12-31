@@ -1,13 +1,13 @@
 import type { ReactNode } from "react";
-import type { Tree } from "@/libs/treeUtils";
-import { reduceTree } from "@/libs/treeUtils";
+import type { Tree } from "@libs/treeUtils";
+import { reduceTree } from "@libs/treeUtils";
 import type {
   OutcomeInfo,
   Outcomel1 as L1,
   Outcomel2 as L2,
   Outcomel3 as L3,
   Outcomel4 as L4,
-} from "@/services/outcomes";
+} from "@services/outcomes";
 
 type PropType<T extends OutcomeInfo> = { item: T; childnodes: ReactNode };
 type OutcomesTreeProps = { outcomesTree: Tree<OutcomeInfo> };
