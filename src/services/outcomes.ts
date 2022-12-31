@@ -112,7 +112,7 @@ const getReplaceMap: (infoDict: TableInfoDict) => ReplaceMap<AttrInfo> = (
       mapper: ([, id]: RegExpExecArray) => {
         const target = infoDict[id];
         return {
-          replacedText: `表${target.index}`,
+          replacedText: `表${target.number}`,
           info: {
             type: "tableLink",
             url: target.link,
