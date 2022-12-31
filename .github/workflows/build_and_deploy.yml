@@ -22,7 +22,7 @@ jobs:
       - name: Checkout output in data repo
         uses: actions/checkout@v3
         with:
-          repository: ncukondo/core-curriculum-data
+          repository: core-curriculum/data
           token: ${{ secrets.GH_PAT }}
           path: data_in_repo
           fetch-depth: 1
