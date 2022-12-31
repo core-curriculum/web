@@ -19,6 +19,7 @@ type PropType<L extends OutcomeInfo> = {
 type OutcomesTreeProps = { outcomesTree: Tree<OutcomeInfo> };
 
 type ElementWithData = Element & { dataset?: { idList?: string } };
+const getLast = <T extends readonly unknown[]>(arr: T) => arr[arr.length - 1];
 const OutcomesTOC = ({ outcomesTree }: OutcomesTreeProps) => {
   const [idList, setIdList] = useState("");
   const onIntersect = useCallback((e: Element) => {
@@ -37,7 +38,7 @@ const OutcomesTOC = ({ outcomesTree }: OutcomesTreeProps) => {
     <ul className="relative overflow-hidden transition-all ">
       {reduceTree<OutcomeInfo, ReactNode>(outcomesTree, (item, childnodes, parents) => {
         const active = idList.includes(item.id);
-        const targeted = idList.split(",").at(-1) === item.id;
+        const targeted = getLast(idList.split(",")) === item.id;
         const props = { childnodes, idList, active, targeted };
         switch (item.layer) {
           case "l1":
