@@ -1,0 +1,5 @@
+APP_NAME=`basename /workspaces/*`
+mkdir /tmp/app
+cd /tmp/app
+npx create-next-app $@ ${APP_NAME}
+cp -f -r /tmp/app/* /workspaces
