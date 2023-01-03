@@ -28,7 +28,6 @@ describe("loadFullOutcomes", () => {
       '社会から信頼を得る上で必要なことを常に考え行動する。',
       '**Pr**ofessionalism'
     ];
-    console.log(data[1]);
     expect(data.length).toBe(596);
     expect(data[0].length).toBe(15);
     expect(data[1]).toEqual(sampeData);
