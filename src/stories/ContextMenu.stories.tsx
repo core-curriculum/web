@@ -1,8 +1,18 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import React from "react";
-import { ContextMenu } from "../components/ContextMenu";
+import toast, { Toaster } from "react-hot-toast";
+import { ContextMenu, ContextMenuProps } from "../components/ContextMenu";
 
-const TargetComponent = ContextMenu;
+const TargetComponent = <T extends readonly { name: string; label?: string }[]>(
+  props: ContextMenuProps<T>,
+) => {
+  return (
+    <div>
+      <ContextMenu {...props} />
+      <Toaster />
+    </div>
+  );
+};
 
 export default {
   title: "Layout/ContextMenu",
@@ -29,7 +39,10 @@ ClickItems.args = {
   ],
 };
 
-const copyToClip = async (text: string) => await navigator.clipboard.writeText(text);
+const copyToClip = async (text: string) => {
+  await navigator.clipboard.writeText(text);
+  toast(`Paste "${text}" to clipboard.`);
+};
 
 export const CopyItems = Template.bind({});
 CopyItems.args = {

@@ -1,8 +1,10 @@
-import { dropColumnsByNames, HeaderedTable } from "@libs/tableUtils";
+import { dropColumnsByNames, HeaderedTable, toObjectList } from "@libs/tableUtils";
 import { TableInfo } from "@services/tables";
+import { ItemContextMenu } from "./ItemContextMenu";
 
 const Table = ({ table, tableInfo }: { table: HeaderedTable<string>; tableInfo: TableInfo }) => {
-  const [header, ...body] = dropColumnsByNames(table, ["id", "index", "H28ID"]);
+  const [header] = dropColumnsByNames(table, ["id", "index"]);
+  const rowList = toObjectList(table) as Record<string, string>[];
   return (
     <table className="table">
       <thead>
@@ -10,16 +12,20 @@ const Table = ({ table, tableInfo }: { table: HeaderedTable<string>; tableInfo: 
           {header.map((cell, i) => (
             <th key={i}>{cell}</th>
           ))}
+          <th></th>
         </tr>
       </thead>
       <tbody>
-        {body.map((row, i) => (
+        {rowList.map((row, i) => (
           <tr key={i}>
-            {row.map((cell, j) => (
-              <td className="max-w-sm overflow-visible whitespace-normal" key={j}>
-                {cell}
+            {header.map((key) => (
+              <td className="max-w-sm overflow-visible whitespace-normal" key={row.id}>
+                {row[key]}
               </td>
             ))}
+            <td>
+              <ItemContextMenu id={row.id} index={row.index} />
+            </td>
           </tr>
         ))}
       </tbody>

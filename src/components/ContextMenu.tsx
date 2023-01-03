@@ -13,7 +13,7 @@ const ContextMenu = <T extends readonly { name: string; label?: string }[]>({
   onClick,
 }: Props<T>) => {
   return (
-    <div className="dropdown">
+    <div className="dropdown dropdown-end">
       <ContextButton />
       <ul tabIndex={0} className="dropdown-content menu rounded-box bg-base-100 p-2 text-sm shadow">
         {items.map(({ name, label }) => {
