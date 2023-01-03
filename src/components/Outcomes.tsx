@@ -13,6 +13,7 @@ import type {
   Outcomel4 as L4,
   AttrInfo,
 } from "@services/outcomes";
+import { OutcomesContextMenu } from "./OutcomesContextMenu";
 
 type PropType<T extends OutcomeInfo> = {
   item: T;
@@ -48,8 +49,8 @@ const Outcomel1 = ({ item, childnodes, idList }: PropType<L1>) => (
       data-id-list={idList}
     >
       <span className="pr-2 font-thin">{item.index}</span>
-      <span className="font-bold">{item.text}</span>
-      <span className="pl-2 text-sm font-normal text-gray-500">{item.id}</span>
+      <span className="mr-4 font-bold">{item.text}</span>
+      <OutcomesContextMenu item={item} />
     </h1>
     <p className="mt-4 px-8 text-gray-500">{item.desc}</p>
     {childnodes}
@@ -64,8 +65,8 @@ const Outcomel2 = ({ item, childnodes, idList }: PropType<L2>) => (
       data-id-list={idList}
     >
       <span className="pr-2 font-thin">{item.index}</span>
-      <span className="font-bold">{item.text}</span>
-      <span className="pl-2 text-sm font-normal text-gray-500">{item.id}</span>
+      <span className="mr-2 font-bold">{item.text}</span>
+      <OutcomesContextMenu item={item} />
     </h2>
     <p className="mt-4 px-4 text-gray-500">{item.desc}</p>
     {childnodes}
@@ -82,10 +83,10 @@ const Outcomel3 = ({ item, childnodes, parents, idList }: PropType<L3>) => {
         id={item.id}
       >
         <span className="pr-2 font-thin">{item.index}</span>
-        <span>
+        <span className="mr-2">
           {item.attrInfo ? <MappedText text={item.text} map={item.attrInfo} /> : item.text}
         </span>
-        <span className="pl-2 text-sm font-normal text-gray-500">{item.id}</span>
+        <OutcomesContextMenu item={item} />
       </h2>
       <ul className="mt-2">{childnodes}</ul>
     </section>
@@ -119,10 +120,10 @@ const MappedText = ({ text, map }: { text: string; map: MappedInfo<AttrInfo>[] }
 const Outcomel4 = ({ item, parents }: PropType<L4>) => {
   return (
     <li className="mr-4 ml-10 list-disc py-1 marker:text-sky-200 " id={item.id}>
-      <span className="text-gray-500">
+      <span className="mr-2 text-gray-500">
         {item.attrInfo ? <MappedText text={item.text} map={item.attrInfo} /> : item.text}
       </span>
-      <span className="text-sm text-gray-400">{item.id}</span>
+      <OutcomesContextMenu item={item} />
     </li>
   );
 };
