@@ -18,7 +18,7 @@ type LayerHeaders = {
   "4": LayerHeader4;
 };
 type LayerTag = keyof LayerHeaders;
-type TableIndexHeader = readonly ["file", "item", "id", "legend", "number", "index"]
+type TableIndexHeader = readonly ["file", "item", "id", "legend", "number", "index", "columns"]
 
 
 const loadCsv = <HEADER extends readonly string[] = string[]>(path: string) => {

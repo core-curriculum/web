@@ -1,4 +1,4 @@
-import { toObjectList } from "@libs/tableUtils";
+import { renameColumns, toObjectList } from "@libs/tableUtils";
 import { loadTable, loadTableIndex } from "@services/loadCsv";
 
 const fileToTableLink = (file: string) => {
@@ -8,15 +8,24 @@ const fileToTableLink = (file: string) => {
 type Expand<T extends object> = { [K in keyof T]: T[K] };
 
 const loadTableInfoDict = () => {
-  const tableIndex = loadTableIndex();
   const trimExt = (filename: string) => filename.replace(/\.[^\.]+$/, "");
-  const dictList = toObjectList(tableIndex);
-  return dictList.reduce((dict, line) => {
-    const file = trimExt(line.file);
+  const makeIndexed = <T extends object, K extends keyof T>(
+    source: T[], key: K
+  ): { [key in T[K] extends string ? T[K] : never]: T } => {
+    return source.reduce((indexed, item) => {
+      return { ...indexed, [item[key] as string]: item }
+    }, {} as { [key in T[K] extends string ? T[K] : never]: T })
+  }
+  const tableIndex = loadTableIndex();
+  const infoList = toObjectList(tableIndex).map((info) => {
+    const file = trimExt(info.file);
     const link = fileToTableLink(file);
-    return { ...dict, [file]: { ...line, file, link } };
-
-  }, {} as { [file: string]: Expand<typeof dictList[number] & { link: string }> })
+    const columns: Record<string, string> = Object.fromEntries(
+      info.columns.split(",").map((entry) => entry.split(":"))
+    );
+    return { ...info, file, link, columns }
+  })
+  return makeIndexed(infoList, "file")
 };
 
 const getTableFiles = () => {
@@ -24,8 +33,8 @@ const getTableFiles = () => {
 };
 
 const getTable = (file: string) => {
-  const table = loadTable(file);
   const tableInfo = loadTableInfoDict()[file];
+  const table = renameColumns(loadTable(file), tableInfo.columns);
 
   return { table, tableInfo };
 };
