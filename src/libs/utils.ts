@@ -12,4 +12,9 @@ const fmt = (text: String, dict: { [key: string]: string }, option: Option = def
   })
 }
 
-export { fmt }
+const copyToClip = async (text: string) => {
+  await navigator.clipboard.writeText(text);
+};
+
+
+export { fmt, copyToClip }

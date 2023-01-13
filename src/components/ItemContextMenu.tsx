@@ -1,26 +1,41 @@
-import toast from "react-hot-toast";
+import { Suspense } from "react";
 import { ContextMenu } from "@components/ContextMenu";
-import { fmt } from "@libs/utils";
-
-const copyToClip = async (text: string) => {
-  await navigator.clipboard.writeText(text);
-  toast(fmt('"{text}"をクリップボードにコピーしました', { text }));
-};
+import { toast } from "@components/toast";
+import { fmt, copyToClip } from "@libs/utils";
+import { useSavedItemList } from "@services/savedItemList";
 
 const ItemContextMenu = ({ id, index }: { id: string; index: string }) => {
-  const menus = [
-    { name: "id", label: fmt("id ({id}) をコピー", { id }) },
-    { name: "index", label: fmt("インデックス ({index}) をコピー", { index }) },
-  ] as const;
-  const menuClick = (name: typeof menus[number]["name"]) => {
+  const { addId, removeId, ids } = useSavedItemList();
+  const menus = (
+    [
+      ids.includes(id)
+        ? [{ name: "removeFromList", label: "リストから削除" }]
+        : [{ name: "addToList", label: "リストに追加" }],
+      [{ name: "id", label: fmt("idをコピー", { id }) }],
+    ] as const
+  ).flat();
+  const menuClick = async (name: typeof menus[number]["name"]) => {
     switch (name) {
+      case "addToList":
+        addId(id);
+        toast(fmt("項目をリストに追加しました", { id }));
+        return;
+      case "removeFromList":
+        removeId(id);
+        toast(fmt("項目をリストから削除しました", { id }));
+        return;
       case "id":
-        return copyToClip(id);
-      case "index":
-        return copyToClip(index);
+        await copyToClip(id);
+        toast(fmt('"id({id})"をクリップボードにコピーしました', { id }));
+
+        return;
     }
   };
-  return <ContextMenu items={menus} onClick={menuClick} />;
+  return (
+    <Suspense fallback={""}>
+      <ContextMenu items={menus} onClick={menuClick} />
+    </Suspense>
+  );
 };
 
 export { ItemContextMenu };
