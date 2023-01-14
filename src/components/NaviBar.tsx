@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
 import { MdSearch } from "react-icons/md";
@@ -23,13 +24,14 @@ const ToggleIcon = () => (
 const NaviBar = () => {
   const { ids } = useSavedItemList();
   return (
-    <div className="flex h-full items-center">
+    <div className="flex h-full items-center gap-2">
       <div className="flex-none lg:hidden">
         <label htmlFor="my-drawer-3" className="btn btn-ghost">
           <ToggleIcon />
         </label>
       </div>
-      <div className="mx-2 flex-1 px-2 text-lg font-extrabold">モデルコアカリキュラム</div>
+      <Image className="ml-2 max-lg:hidden" src="/logo.svg" width="50" height="50" alt="" />
+      <div className="flex-1 px-2 text-lg font-extrabold">モデルコアカリキュラム</div>
       <Suspense fallback="">
         <LinkToItemList href="./list" count={ids.length} />
       </Suspense>
