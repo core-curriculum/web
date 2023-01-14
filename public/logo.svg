@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 65 65">
+    <defs>
+        <style>
+            :root {
+                --main-color: #b9cde9;
+                --main-bg-color: #ffffff;
+            }
+
+            .stroke {
+                fill: none;
+                stroke: #b9cde9;
+                stroke-miterlimit: 10;
+                stroke-width: .25px;
+            }
+
+            .circle {
+                fill: #b9cde9;
+            }
+        </style>
+        <pattern id="asa" viewBox="0 0 29.6 17.2" width="14.8%" height="8.6%">
+            <g>
+                <path stroke="#b9cde9" class="stroke" d="M0,0 H9.95 L14.8,8.6 L29.6,17.2 V0 L0,17.2 V0 
+    L5.04,8.6 L0,17.21 H9.95 L14.86,8.6
+    M19.77,0 H29.6 L24.69,8.6 L29.6,17.21 H19.77 L14.68,8.6 L19.77,0
+    M14.8,0 V17.2
+    M0,0 L14.8,8.6
+    M5.04,8.6 H24.69" />
+            </g>
+        </pattern>
+        <mask id="mask">
+            <circle fill="#ffffff" cx="40" cy="40" r="20" />
+            <circle fill="#000000" cx="25" cy="25" r="20" />
+        </mask>
+    </defs>
+    <circle class="circle" cx="40" cy="40" r="20" fill="#b9cde9" mask="url(#mask)" />
+    <circle cx="25" cy="25" r="20" fill="url(#asa)" />
+</svg>
