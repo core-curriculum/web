@@ -4,7 +4,8 @@ import { Table } from "@components/Table";
 import { BackButton } from "@components/buttons/BackButton";
 import { HeaderedTable } from "@libs/tableUtils";
 import { Tree } from "@libs/treeUtils";
-import { useServerItemList } from "@services/localItemList";
+import { ServerItemList } from "@services/itemList";
+import { getItemListFromServer } from "@services/localItemList";
 import { loadFullOutcomesTable, makeOutcomesTree } from "@services/outcomes";
 import type { OutcomeInfo } from "@services/outcomes";
 import { searchOutcomes, searchTables } from "@services/search";
@@ -14,6 +15,7 @@ type PageProps = {
   outcomesTree: Tree<OutcomeInfo>;
   allTables: { table: HeaderedTable<string>; tableInfo: TableInfo }[];
   id: string;
+  itemList: ServerItemList;
 };
 
 export async function getStaticPaths() {
@@ -29,9 +31,10 @@ export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
   const outcomesTree = makeOutcomesTree(table, tableInfoDict);
   const allTables = getAllTables();
   const id = (context.params?.id as string) ?? "";
+  const itemList = await getItemListFromServer(id);
 
   return {
-    props: { outcomesTree, allTables, id },
+    props: { outcomesTree, allTables, id, itemList },
   };
 };
 
@@ -63,10 +66,10 @@ const HeaderBar = () => {
   );
 };
 
-const ListPage: NextPage<PageProps> = ({ id, outcomesTree, allTables }: PageProps) => {
-  const { data, isLoading } = useServerItemList(id);
-  const text = data?.items.join(",") ?? "";
-  if (isLoading || !allTables || !outcomesTree) return <div>Loading...{id}</div>;
+const ListPage: NextPage<PageProps> = ({ id, outcomesTree, allTables, itemList }: PageProps) => {
+  const isLoading = !allTables || !outcomesTree || !itemList || !id;
+  if (isLoading) return <div>Loading...</div>;
+  const text = itemList?.items.join(",") ?? "";
   return (
     <>
       <div className="ml-4">
