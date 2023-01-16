@@ -2,13 +2,13 @@ import { Suspense } from "react";
 import { ContextMenu } from "@components/ContextMenu";
 import { toast } from "@components/toast";
 import { fmt, copyToClip } from "@libs/utils";
-import { useSavedItemList } from "@services/savedItemList";
+import { useLocalItemList } from "@services/localItemList";
 
 const ItemContextMenu = ({ id, index }: { id: string; index: string }) => {
-  const { addId, removeId, ids } = useSavedItemList();
+  const { addItem, removeItem, items } = useLocalItemList();
   const menus = (
     [
-      ids.includes(id)
+      items.includes(id)
         ? [{ name: "removeFromList", label: "リストから削除" }]
         : [{ name: "addToList", label: "リストに追加" }],
       [{ name: "id", label: fmt("idをコピー", { id }) }],
@@ -17,11 +17,11 @@ const ItemContextMenu = ({ id, index }: { id: string; index: string }) => {
   const menuClick = async (name: typeof menus[number]["name"]) => {
     switch (name) {
       case "addToList":
-        addId(id);
+        addItem(id);
         toast(fmt("項目をリストに追加しました", { id }));
         return;
       case "removeFromList":
-        removeId(id);
+        removeItem(id);
         toast(fmt("項目をリストから削除しました", { id }));
         return;
       case "id":
