@@ -1,9 +1,13 @@
 import type { NextPage, GetStaticProps } from "next";
+import Image from "next/image";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
+import { CopyButton } from "@components/CopyButton";
 import { ItemContextMenu } from "@components/ItemContextMenu";
 import { Table } from "@components/Table";
 import { BackButton } from "@components/buttons/BackButton";
+import { useConfirmDialog } from "@hooks/useConfirmDialog";
 import { HeaderedTable } from "@libs/tableUtils";
 import { Tree } from "@libs/treeUtils";
 import { useLocalItemList } from "@services/localItemList";
@@ -56,23 +60,54 @@ const HeaderBar = () => {
   );
 };
 
-const ShareButton = () => {
-  const { items, shareItemList } = useLocalItemList();
-  const [sharing, setSharing] = useState(false);
+const idToListUrl = (id: string) => {
+  const url = new URL(window.location.href);
+  return `${url.origin}x/${id}`;
+};
+
+const useShare = () => {
+  const { shareItemList } = useLocalItemList();
+  const { showDialog } = useConfirmDialog();
+  const router = useRouter();
   const share = async () => {
-    setSharing(true);
     try {
       const inserted = await shareItemList();
-      confirm(JSON.stringify(inserted));
+      const url = idToListUrl(inserted.id);
+
+      await showDialog({
+        content: (
+          <>
+            <div className="mb-4">このリストを共有するには以下のurlを共有してください。 </div>
+            <div className="flex align-middle">
+              {url}
+              <CopyButton className="pl-2" content={url} />
+            </div>
+          </>
+        ),
+      });
     } catch (e) {
       toast((e as Error).message);
     }
+  };
+  return { share };
+};
+
+const ShareButton = () => {
+  const { items } = useLocalItemList();
+  const { share } = useShare();
+  const [sharing, setSharing] = useState(false);
+  const _share = async () => {
+    setSharing(true);
+    await share();
     setSharing(false);
   };
   return (
     <>
-      <button className="btn" disabled={items.length === 0 || sharing} onClick={share}>
+      <button className="btn" disabled={items.length === 0 || sharing} onClick={_share}>
         共有する
+        {sharing && (
+          <Image className="m-2" width="20" height="20" src="spinner.svg" alt="...shareing" />
+        )}
       </button>
     </>
   );
