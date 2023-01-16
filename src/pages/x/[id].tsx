@@ -1,12 +1,10 @@
 import type { NextPage, GetStaticProps } from "next";
-import { useState } from "react";
-import { toast } from "react-hot-toast";
 import { ItemContextMenu } from "@components/ItemContextMenu";
 import { Table } from "@components/Table";
 import { BackButton } from "@components/buttons/BackButton";
 import { HeaderedTable } from "@libs/tableUtils";
 import { Tree } from "@libs/treeUtils";
-import { useLocalItemList } from "@services/localItemList";
+import { useServerItemList } from "@services/localItemList";
 import { loadFullOutcomesTable, makeOutcomesTree } from "@services/outcomes";
 import type { OutcomeInfo } from "@services/outcomes";
 import { searchOutcomes, searchTables } from "@services/search";
@@ -15,16 +13,25 @@ import { getAllTables, loadTableInfoDict, TableInfo } from "@services/tables";
 type PageProps = {
   outcomesTree: Tree<OutcomeInfo>;
   allTables: { table: HeaderedTable<string>; tableInfo: TableInfo }[];
+  id: string;
 };
+
+export async function getStaticPaths() {
+  return {
+    paths: [],
+    fallback: true,
+  };
+}
 
 export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
   const table = loadFullOutcomesTable();
   const tableInfoDict = loadTableInfoDict();
   const outcomesTree = makeOutcomesTree(table, tableInfoDict);
   const allTables = getAllTables();
+  const id = (context.params?.id as string) ?? "";
 
   return {
-    props: { outcomesTree, allTables },
+    props: { outcomesTree, allTables, id },
   };
 };
 
@@ -56,31 +63,10 @@ const HeaderBar = () => {
   );
 };
 
-const ShareButton = () => {
-  const { items, shareItemList } = useLocalItemList();
-  const [sharing, setSharing] = useState(false);
-  const share = async () => {
-    setSharing(true);
-    try {
-      const inserted = await shareItemList();
-      confirm(JSON.stringify(inserted));
-    } catch (e) {
-      toast((e as Error).message);
-    }
-    setSharing(false);
-  };
-  return (
-    <>
-      <button className="btn" disabled={items.length === 0 || sharing} onClick={share}>
-        共有する
-      </button>
-    </>
-  );
-};
-
-const ListPage: NextPage<PageProps> = ({ outcomesTree, allTables }: PageProps) => {
-  const { items } = useLocalItemList();
-  const text = items.join(",");
+const ListPage: NextPage<PageProps> = ({ id, outcomesTree, allTables }: PageProps) => {
+  const { data, isLoading } = useServerItemList(id);
+  const text = data?.items.join(",") ?? "";
+  if (isLoading || !allTables || !outcomesTree) return <div>Loading...{id}</div>;
   return (
     <>
       <div className="ml-4">
@@ -111,9 +97,6 @@ const ListPage: NextPage<PageProps> = ({ outcomesTree, allTables }: PageProps) =
             );
           })}
         </div>
-      </div>
-      <div className="m-8">
-        <ShareButton />
       </div>
     </>
   );

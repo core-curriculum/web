@@ -16,5 +16,25 @@ const copyToClip = async (text: string) => {
   await navigator.clipboard.writeText(text);
 };
 
+const objectEquals = (a: Record<string, unknown>, b: Record<string, unknown>) => {
 
-export { fmt, copyToClip }
+  if (a === b) return true;
+
+  const aKeys = Object.keys(a).sort();
+  const bKeys = Object.keys(b).sort();
+
+  if (aKeys.toString() !== bKeys.toString()) return false;
+  return aKeys.findIndex((value) => a[value] !== b[value]) === -1;
+}
+
+const arrayEquals = (a: ReadonlyArray<unknown>, b: ReadonlyArray<unknown>) => {
+
+  if (a === b) return true;
+  if (a.length !== b.length) return false;
+  return a.findIndex((_, i) => a[i] !== b[i]) === -1;
+}
+
+
+
+
+export { fmt, copyToClip, objectEquals, arrayEquals }

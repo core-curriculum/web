@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
 import { MdSearch } from "react-icons/md";
-import { useSavedItemList } from "@services/savedItemList";
+import { useLocalItemList } from "@services/localItemList";
 import { LinkToItemList } from "./LinkToItemList";
 
 const ToggleIcon = () => (
@@ -22,7 +22,7 @@ const ToggleIcon = () => (
 );
 
 const NaviBar = () => {
-  const { ids } = useSavedItemList();
+  const { items } = useLocalItemList();
   return (
     <div className="flex h-full items-center gap-2">
       <div className="flex-none lg:hidden">
@@ -33,7 +33,7 @@ const NaviBar = () => {
       <Image className="ml-2 max-lg:hidden" src="/logo.svg" width="50" height="50" alt="" />
       <div className="flex-1 px-2 text-lg font-extrabold">モデルコアカリキュラム</div>
       <Suspense fallback="">
-        <LinkToItemList href="./list" count={ids.length} />
+        <LinkToItemList href="./list" count={items.length} />
       </Suspense>
       <div className="mx-2 flex-none px-2">
         <Link href="/search" passHref>
