@@ -7,7 +7,7 @@ const Body = ({ content }: { content: ReactNode }) => {
   return (
     <>
       <ScrollRestorer name={"body"} />
-      <div className="">{content}</div>
+      <div className="overflow-x-hidden">{content}</div>
     </>
   );
 };

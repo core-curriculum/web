@@ -14,7 +14,7 @@ const TargetComponent = (props: LinkToItemListProp) => {
 };
 
 export default {
-  title: "Layout/LinktoItemList",
+  title: "Components/LinktoItemList",
   component: TargetComponent,
   parameters: {
     // More on Story layout: https://storybook.js.org/docs/react/configure/story-layout
