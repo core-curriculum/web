@@ -1,21 +1,20 @@
 import type { NextPage, GetStaticProps } from "next";
-import { ItemContextMenu } from "@components/ItemContextMenu";
 import { Table } from "@components/Table";
 import { BackButton } from "@components/buttons/BackButton";
 import { HeaderedTable } from "@libs/tableUtils";
 import { Tree } from "@libs/treeUtils";
 import { ServerItemList } from "@services/itemList";
-import { getItemListFromServer } from "@services/localItemList";
 import { loadFullOutcomesTable, makeOutcomesTree } from "@services/outcomes";
 import type { OutcomeInfo } from "@services/outcomes";
 import { searchOutcomes, searchTables } from "@services/search";
+import { getItemListFromId } from "@services/serverItemList";
 import { getAllTables, loadTableInfoDict, TableInfo } from "@services/tables";
 
 type PageProps = {
   outcomesTree: Tree<OutcomeInfo>;
   allTables: { table: HeaderedTable<string>; tableInfo: TableInfo }[];
   id: string;
-  itemList: ServerItemList;
+  itemList: ServerItemList | string;
 };
 
 export async function getStaticPaths() {
@@ -25,14 +24,23 @@ export async function getStaticPaths() {
   };
 }
 
+const getServerItem = async (id: string) => {
+  try {
+    return await getItemListFromId(id);
+  } catch (e) {
+    console.error(e);
+    return id;
+  }
+};
+
 export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
   const table = loadFullOutcomesTable();
   const tableInfoDict = loadTableInfoDict();
   const outcomesTree = makeOutcomesTree(table, tableInfoDict);
   const allTables = getAllTables();
   const id = (context.params?.id as string) ?? "";
-  const itemList = await getItemListFromServer(id);
-
+  console.log(id);
+  const itemList = await getServerItem(id);
   return {
     props: { outcomesTree, allTables, id, itemList },
   };
@@ -69,6 +77,7 @@ const HeaderBar = () => {
 const ListPage: NextPage<PageProps> = ({ id, outcomesTree, allTables, itemList }: PageProps) => {
   const isLoading = !allTables || !outcomesTree || !itemList || !id;
   if (isLoading) return <div>Loading...</div>;
+  if (typeof itemList === "string") return <div>該当するリストが見つかりません。(id:{id})</div>;
   const text = itemList?.items.join(",") ?? "";
   return (
     <>
@@ -80,7 +89,6 @@ const ListPage: NextPage<PageProps> = ({ id, outcomesTree, allTables, itemList }
               <div>
                 <span className="mr-2 font-light text-sky-600">{item.index}</span>
                 {item.text}
-                <ItemContextMenu id={item.id} index={item.index} />
               </div>
               <Breadcrumb parents={item.parents} />
             </div>
