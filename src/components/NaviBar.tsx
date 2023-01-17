@@ -26,7 +26,7 @@ const NaviBar = () => {
   return (
     <div className="flex h-full items-center gap-2">
       <div className="flex-none lg:hidden">
-        <label htmlFor="my-drawer-3" className="btn btn-ghost">
+        <label htmlFor="mobileDrawHiddenCheckBox" className="btn btn-ghost">
           <ToggleIcon />
         </label>
       </div>

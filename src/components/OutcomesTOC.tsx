@@ -59,7 +59,7 @@ const ChildList = ({ active, childnodes }: { active: boolean; childnodes: ReactN
     <div className="overflow-y-hidden">
       <ul
         className={`transform overflow-y-hidden transition-all duration-500 ease-in-out
-          ${active ? "translate-y-0 scale-y-100" : "invisible h-0 -translate-y-1/2"}`}
+          ${active ? "scale-y-100" : "invisible h-0"}`}
       >
         {childnodes}
       </ul>
@@ -93,7 +93,7 @@ const ItemList = <L extends OutcomeInfo>({ item, childnodes, active, targeted }:
     >
       <div className="z-10 bg-white hover:text-sky-600">
         <a
-          className={`block w-full truncate rounded-md border-l-4 py-3 ${padding} ${size}
+          className={`block w-full truncate border-l-4 py-3 ${padding} ${size}
           hover:bg-sky-100 hover:underline ${targeted ? " border-sky-400 " : "border-transparent"}`}
           href={id}
         >
