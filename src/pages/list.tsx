@@ -62,7 +62,7 @@ const HeaderBar = () => {
 
 const idToListUrl = (id: string) => {
   const url = new URL(window.location.href);
-  return `${url.origin}x/${id}`;
+  return `${url.origin}/x/${id}`;
 };
 
 const useShare = () => {
