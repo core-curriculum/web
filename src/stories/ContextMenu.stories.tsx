@@ -15,7 +15,7 @@ const TargetComponent = <T extends readonly { name: string; label?: string }[]>(
 };
 
 export default {
-  title: "Layout/ContextMenu",
+  title: "Components/ContextMenu",
   component: TargetComponent,
   parameters: {
     // More on Story layout: https://storybook.js.org/docs/react/configure/story-layout
@@ -32,7 +32,7 @@ SimpleItems.args = {
 
 export const ClickItems = Template.bind({});
 ClickItems.args = {
-  onClick: (name) => alert(name),
+  onClick: (name: string) => alert(name),
   items: [
     { name: "item1", label: "label1" },
     { name: "item2", label: "label2" },
@@ -46,7 +46,7 @@ const copyToClip = async (text: string) => {
 
 export const CopyItems = Template.bind({});
 CopyItems.args = {
-  onClick: (name) => copyToClip(name),
+  onClick: (name: string) => copyToClip(name),
   items: [
     { name: "item1", label: "label1" },
     { name: "item2", label: "label2" },
