@@ -29,7 +29,7 @@ const Tint = ({ htmlFor }: { htmlFor: string }) => {
 
 const Content = ({ content }: { content: ReactNode }) => {
   return (
-    <div className="col-start-1 row-start-1 h-full w-full overflow-auto lg:col-start-2 ">
+    <div className="col-start-1 row-start-1 h-full w-full overflow-auto lg:col-start-2">
       {content}
     </div>
   );
@@ -40,7 +40,7 @@ const MobileDrawer = ({ content, menu, labelId }: Props) => {
   const _labelId = labelId ?? "mobileDrawHiddenCheckBox";
   return (
     <div className="grid h-full lg:grid-cols-[20rem,1fr]">
-      <input type="checkbox" id={_labelId} className="peer invisible" />
+      <input type="checkbox" id={_labelId} className="peer hidden" />
       <Content content={content} />
       <Tint htmlFor={_labelId} />
       <Menu content={menu} />
