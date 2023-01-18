@@ -1,4 +1,6 @@
-import { HeaderedTable, mapTable, reduceTable, renameColumns, toObjectList } from "@libs/tableUtils";
+import {
+  HeaderedTable, mapTable, reduceTable, renameColumns, toObjectList
+} from "@libs/tableUtils";
 import { MappedText, mapText, MappedInfo } from "@libs/textMapper";
 import { loadTable, loadTableIndex } from "@services/loadCsv";
 import { AttrInfo, getReplaceMap } from "./replaceMap";
