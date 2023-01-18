@@ -6,6 +6,7 @@ import { Tree } from "@libs/treeUtils";
 import { ServerItemList } from "@services/itemList";
 import { loadFullOutcomesTable, makeOutcomesTree } from "@services/outcomes";
 import type { OutcomeInfo } from "@services/outcomes";
+import { getSchema, schemaItemsWithValue, SchemaItemsWithValue } from "@services/schema";
 import { searchOutcomes, searchTables } from "@services/search";
 import { getItemListFromId } from "@services/serverItemList";
 import { getAllTables, loadTableInfoDict, TableInfo } from "@services/tables";
@@ -15,6 +16,7 @@ type PageProps = {
   allTables: { table: HeaderedTable<string>; tableInfo: TableInfo }[];
   id: string;
   itemList: ServerItemList | string;
+  schemaWithValue: SchemaItemsWithValue | string;
 };
 
 export async function getStaticPaths() {
@@ -39,10 +41,13 @@ export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
   const outcomesTree = makeOutcomesTree(table, tableInfoDict);
   const allTables = getAllTables();
   const id = (context.params?.id as string) ?? "";
-  console.log(id);
   const itemList = await getServerItem(id);
+  const schemaId = typeof itemList === "string" ? "" : itemList.schema_id;
+  const schema = await getSchema(schemaId);
+  const schemaWithValue =
+    typeof itemList === "string" ? "" : schemaItemsWithValue(itemList, schema);
   return {
-    props: { outcomesTree, allTables, id, itemList },
+    props: { outcomesTree, allTables, id, itemList, schemaWithValue },
   };
 };
 
@@ -74,15 +79,38 @@ const HeaderBar = () => {
   );
 };
 
-const ListPage: NextPage<PageProps> = ({ id, outcomesTree, allTables, itemList }: PageProps) => {
-  const isLoading = !allTables || !outcomesTree || !itemList || !id;
+const ExData = ({ values }: { values: SchemaItemsWithValue }) => {
+  return (
+    <div className="m-2">
+      {values.map(({ label, key, value }) => {
+        return (
+          <section key={key} className="m-2">
+            <label>{label ?? key}</label>
+            <span className="ml-2 text-lg font-bold">{value}</span>
+          </section>
+        );
+      })}
+    </div>
+  );
+};
+
+const ListPage: NextPage<PageProps> = ({
+  id,
+  outcomesTree,
+  allTables,
+  itemList,
+  schemaWithValue,
+}: PageProps) => {
+  const isLoading = !allTables || !outcomesTree || !itemList || !id || !schemaWithValue;
   if (isLoading) return <div>Loading...</div>;
-  if (typeof itemList === "string") return <div>該当するリストが見つかりません。(id:{id})</div>;
+  if (typeof itemList === "string" || typeof schemaWithValue === "string")
+    return <div>該当するリストが見つかりません。(id:{id})</div>;
   const text = itemList?.items.join(",") ?? "";
   return (
     <>
       <div className="ml-4">
         <HeaderBar />
+        <ExData values={schemaWithValue} />
         <div>
           {searchOutcomes(outcomesTree, text).map((item) => (
             <div className="m-4" key={item.id}>

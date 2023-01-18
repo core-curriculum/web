@@ -5,6 +5,7 @@ import { startTransition } from "react";
 import useSWR from 'swr'
 import { arrayEquals, objectEquals } from "@libs/utils";
 import { ItemList, ServerItemList } from "./itemList";
+import { getSchema, isValid as isValidWithSchema, Schema, schemaItemsWithValue } from "./schema";
 import { InputItemList } from "./serverItemList";
 
 const localItemListKey = "localItemList"
@@ -15,6 +16,13 @@ const store = localforage.createInstance({
   storeName: localItemListKey,
   version: 1
 })
+
+const idToListUrl = (id: string) => {
+  const url = new URL(window.location.href);
+  return `${url.origin}/x/${id}`;
+};
+
+
 
 type AsyncStorage<T> = {
   getItem: (key: string) => Promise<T | null>;
@@ -88,14 +96,17 @@ const useServerItemList = (id: string) => {
   return useSWR<ServerItemList, Error>(id, getItemListFromServer);
 }
 
+const isListEquals = (a: LocalItemList, b: LocalItemList) => {
+  return arrayEquals(a.items, b.items) &&
+    objectEquals(a.ex_data ?? {}, b.ex_data ?? {}) &&
+    a.schema_id === b.schema_id;
+}
+
 const useSharedItemList = () => {
   const [sharedItemList, setSharedItemList] = useAtom(sharedItemListAtom);
   const isDirty = (newItemList: LocalItemList) => {
     if (sharedItemList === null) return true;
-    const equal = arrayEquals(sharedItemList.items, newItemList.items) &&
-      objectEquals(sharedItemList.ex_data, newItemList.ex_data ?? {}) &&
-      sharedItemList.schema_id === newItemList.schema_id;
-    return !equal;
+    return !isListEquals(sharedItemList, newItemList);
   }
   const shareItemList = async (newItemList: LocalItemList) => {
     if (sharedItemList === null || isDirty(newItemList)) {
@@ -109,12 +120,29 @@ const useSharedItemList = () => {
   return { isDirty, shareItemList }
 }
 
+const isValid = (itemList: LocalItemList, schema: Schema) => {
+  return isValidWithSchema(itemList, schema);
+}
+
+const schemaIdAtom = atom<string | undefined>("");
+const schemaAtom = atom((get) => getSchema(get(schemaIdAtom)));
+
+const useSchema = () => {
+  const [itemList] = useAtom(localItemListAtom);
+  const [, setSchemaId] = useAtom(schemaIdAtom);
+  const [schema] = useAtom(schemaAtom)
+  setSchemaId(itemList.schema_id);
+  const _isValid = isValid(itemList, schema);
+  const schemaWithValue = schemaItemsWithValue(itemList, schema);
+  return { schema, isValid: _isValid, schemaWithValue }
+}
+
 const useLocalItemList = () => {
   const [itemList, setItemList] = useAtom(localItemListAtom);
-  const { shareItemList: _shareItemList } = useSharedItemList();
+  const { shareItemList: _shareItemList, isDirty } = useSharedItemList();
   const items: ReadonlyArray<string> = itemList.items;
   const exData: Record<string, string> = itemList.ex_data ?? {};
-  const schemaId: string = itemList.schema_id ?? "";
+
   const addItem = (item: string) => {
     if (itemList.items.includes(item)) {
       return false;
@@ -141,9 +169,16 @@ const useLocalItemList = () => {
     const newList = { ...itemList, ex_data: { ...newData } };
     setItemList(newList);
   }
-  return { items, addItem, removeItem, shareItemList, setExData, exData, schemaId }
+  const setExDataValue = (key: string, value: string) => {
+    setExData({ ...exData, [key]: value })
+  }
+  return {
+    items, addItem, removeItem, shareItemList,
+    setExData, exData, isDirty,
+    setExDataValue
+  }
 }
 
 
 
-export { useLocalItemList, getItemListFromServer, useServerItemList }
+export { useLocalItemList, getItemListFromServer, useServerItemList, idToListUrl, useSchema }
