@@ -12,8 +12,8 @@ const getReplaceMap: () => ReplaceMap<Record<string, string>> = () => {
           ある型: "typing",
         };
         return {
-          replacedText: `「${text}」`,
-          info: { type: "en", en: map[text] },
+          text: `「${text}」`,
+          attr: { type: "en", en: map[text] },
         };
       },
     },
@@ -21,8 +21,8 @@ const getReplaceMap: () => ReplaceMap<Record<string, string>> = () => {
       reg: /\[\@tbl:(.+?)\]/,
       mapper: ([, id]: RegExpExecArray) => {
         return {
-          replacedText: `表.${tableIndex++}`,
-          info: { type: "table", id },
+          text: `表.${tableIndex++}`,
+          attr: { type: "table", id },
         };
       },
     },

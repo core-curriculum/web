@@ -1,7 +1,7 @@
 import { filterRow, HeaderedTable } from "@libs/tableUtils";
 import { Tree, searchMap } from "@libs/treeUtils";
 import type { OutcomeInfo } from "@services/outcomes";
-import { TableInfo } from "@services/tables";
+import { TableAttrInfo, TableInfo } from "@services/tables";
 
 const matchID = (targetId: string, searchTextFrag: string) => {
   if (searchTextFrag.match(/[0-9a-zA-Z\-_]{7}(\,[0-9a-zA-Z\-_]{7})*/)) {
@@ -41,28 +41,30 @@ const searchOutcomes = (outcomesTree: Tree<OutcomeInfo>, searchText: string) => 
   });
 };
 
-const searchTable = (searchText: string, table: HeaderedTable<string>, tableInfo: TableInfo) => {
+const searchTable = (
+  searchText: string, table: HeaderedTable<string>,
+) => {
   const frags = searchText
     .split(" ")
     .map((s) => s.trim())
     .filter((s) => s !== "");
-  if (frags.length < 1) return { tableInfo, table: [table[0]] };
+  if (frags.length < 1) return [table[0]];
   const filtered = filterRow(table, (rowDict, row) => {
     return frags.every((frag) => {
       if (matchID(rowDict["id"], frag)) return true;
       return row.some((cell) => cell.includes(frag));
     });
   });
-  return { tableInfo, table: filtered };
+  return filtered;
 };
 
 const searchTables = (
   searchText: string,
-  tables: { table: HeaderedTable<string>; tableInfo: TableInfo }[],
+  tables: { table: HeaderedTable<string>; tableInfo: TableInfo, attrInfo: TableAttrInfo }[],
 ) => {
   return tables
-    .map(({ table, tableInfo }) => {
-      return searchTable(searchText, table, tableInfo);
+    .map(({ table, tableInfo, attrInfo }) => {
+      return { table: searchTable(searchText, table), tableInfo, attrInfo };
     })
     .filter(({ table }) => {
       return table.length > 1;

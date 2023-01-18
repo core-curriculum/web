@@ -1,8 +1,17 @@
 import { dropColumnsByNames, HeaderedTable, toObjectList } from "@libs/tableUtils";
-import { TableInfo } from "@services/tables";
+import { TableAttrInfo, TableInfo } from "@services/tables";
 import { ItemContextMenu } from "./ItemContextMenu";
+import { StyledText } from "./StyledText";
 
-const Table = ({ table, tableInfo }: { table: HeaderedTable<string>; tableInfo: TableInfo }) => {
+const Table = ({
+  table,
+  tableInfo,
+  attrInfo,
+}: {
+  table: HeaderedTable<string>;
+  tableInfo: TableInfo;
+  attrInfo: TableAttrInfo;
+}) => {
   const [header] = dropColumnsByNames(table, ["id", "index"]);
   const rowList = toObjectList(table) as Record<string, string>[];
   return (
@@ -20,7 +29,11 @@ const Table = ({ table, tableInfo }: { table: HeaderedTable<string>; tableInfo: 
           <tr key={i}>
             {header.map((key) => (
               <td className="max-w-sm overflow-visible whitespace-normal" key={row.id}>
-                {row[key]}
+                {row.id in attrInfo && key in attrInfo[row.id] ? (
+                  <StyledText text={row[key]} map={attrInfo[row.id][key]} />
+                ) : (
+                  row[key]
+                )}
               </td>
             ))}
             <td>

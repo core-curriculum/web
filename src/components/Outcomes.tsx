@@ -12,8 +12,8 @@ import type {
   Outcomel2 as L2,
   Outcomel3 as L3,
   Outcomel4 as L4,
-  AttrInfo,
 } from "@services/outcomes";
+import { AttrInfo } from "@services/replaceMap";
 
 type PropType<T extends OutcomeInfo> = {
   item: T;
@@ -41,7 +41,7 @@ const OutcomesTree = ({ outcomesTree }: OutcomesTreeProps) => (
   </div>
 );
 
-const MappedText = ({ text, map }: { text: string; map: MappedInfo<AttrInfo>[] }) => {
+const StyledText = ({ text, map }: { text: string; map: MappedInfo<AttrInfo>[] }) => {
   return (
     <>
       {applyMappedInfo(text, map, (text, attr, key) => {
@@ -57,6 +57,8 @@ const MappedText = ({ text, map }: { text: string; map: MappedInfo<AttrInfo>[] }
                 {text}
               </Link>
             );
+          case "sub":
+            return <span className="align-super text-[20%]">{text}</span>;
         }
         return <>{"unknown:" + text + ":" + attr.type}</>;
       })}
@@ -93,7 +95,7 @@ const Outcomel3 = ({ item: { index, id, text, attrInfo }, childnodes, idList }: 
     <section className="mt-12">
       <h2 className="bg-white/30 p-4 text-lg shadow-sm" data-id-list={idList} id={id}>
         <span className="pr-2 font-thin">{index}</span>
-        <span className="mr-2">{attrInfo ? <MappedText text={text} map={attrInfo} /> : text}</span>
+        <span className="mr-2">{attrInfo ? <StyledText text={text} map={attrInfo} /> : text}</span>
         <ItemContextMenu {...{ id, index }} />
       </h2>
       <ul className="mt-2">{childnodes}</ul>
@@ -105,7 +107,7 @@ const Outcomel4 = ({ item: { id, text, attrInfo, index } }: PropType<L4>) => {
   return (
     <li className="mr-4 ml-10 list-disc py-1 marker:text-sky-200 " id={id}>
       <span className="mr-2 text-gray-500">
-        {attrInfo ? <MappedText text={text} map={attrInfo} /> : text}
+        {attrInfo ? <StyledText text={text} map={attrInfo} /> : text}
       </span>
       <ItemContextMenu {...{ id, index }} />
     </li>

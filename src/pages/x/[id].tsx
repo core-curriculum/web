@@ -9,11 +9,11 @@ import type { OutcomeInfo } from "@services/outcomes";
 import { getSchema, schemaItemsWithValue, SchemaItemsWithValue } from "@services/schema";
 import { searchOutcomes, searchTables } from "@services/search";
 import { getItemListFromId } from "@services/serverItemList";
-import { getAllTables, loadTableInfoDict, TableInfo } from "@services/tables";
+import { getAllTables, loadTableInfoDict, TableInfoSet } from "@services/tables";
 
 type PageProps = {
   outcomesTree: Tree<OutcomeInfo>;
-  allTables: { table: HeaderedTable<string>; tableInfo: TableInfo }[];
+  allTables: TableInfoSet[];
   id: string;
   itemList: ServerItemList | string;
   schemaWithValue: SchemaItemsWithValue | string;
@@ -123,14 +123,14 @@ const ListPage: NextPage<PageProps> = ({
           ))}
         </div>
         <div className="ml-4">
-          {searchTables(text, allTables).map(({ table, tableInfo }) => {
+          {searchTables(text, allTables).map(({ table, tableInfo, attrInfo }) => {
             const title = `表${tableInfo.number}. ${tableInfo.item}`;
 
             return (
               <div key={tableInfo.id}>
                 <div>
                   <div className="my-4">{title}</div>
-                  <Table table={table as HeaderedTable<string>} tableInfo={tableInfo} />
+                  <Table {...{ table: table as HeaderedTable<string>, tableInfo, attrInfo }} />
                 </div>
               </div>
             );

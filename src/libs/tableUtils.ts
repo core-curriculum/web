@@ -214,6 +214,15 @@ const getByKey = <T>(table: HeaderedTable<T>, colKey: string, rowKey: T, targetC
   return get(table, conIndex, rowIndex);
 };
 
+const mapTable = <T, U, H extends readonly string[] = string[]>(
+  table: HeaderedTable<T, H>, mapFn: (cell: T, col: number, row: number) => U
+): HeaderedTable<U, H> => {
+  const [header, ...body] = table;
+  const newBody = body.map((row, r) => row.map((cell, c) => mapFn(cell, c, r)));
+  return [[...header], ...newBody];
+
+}
+
 export type { HeaderedTable };
 
 export {
@@ -234,5 +243,6 @@ export {
   reduceTable,
   filterRow,
   prefixColumns,
-  toObjectList
+  toObjectList,
+  mapTable
 };
