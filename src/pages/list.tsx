@@ -1,7 +1,6 @@
 import type { NextPage, GetStaticProps } from "next";
 import Image from "next/image";
-import { useRouter } from "next/router";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { toast } from "react-hot-toast";
 import { CopyButton } from "@components/CopyButton";
 import { ItemContextMenu } from "@components/ItemContextMenu";
@@ -10,7 +9,7 @@ import { BackButton } from "@components/buttons/BackButton";
 import { useConfirmDialog } from "@hooks/useConfirmDialog";
 import { HeaderedTable } from "@libs/tableUtils";
 import { Tree } from "@libs/treeUtils";
-import { useLocalItemList } from "@services/localItemList";
+import { idToListUrl, useLocalItemList, useSchema } from "@services/localItemList";
 import { loadFullOutcomesTable, makeOutcomesTree } from "@services/outcomes";
 import type { OutcomeInfo } from "@services/outcomes";
 import { searchOutcomes, searchTables } from "@services/search";
@@ -60,15 +59,9 @@ const HeaderBar = () => {
   );
 };
 
-const idToListUrl = (id: string) => {
-  const url = new URL(window.location.href);
-  return `${url.origin}/x/${id}`;
-};
-
 const useShare = () => {
   const { shareItemList } = useLocalItemList();
   const { showDialog } = useConfirmDialog();
-  const router = useRouter();
   const share = async () => {
     try {
       const inserted = await shareItemList();
@@ -93,7 +86,7 @@ const useShare = () => {
 };
 
 const ShareButton = () => {
-  const { items } = useLocalItemList();
+  const { isValid } = useSchema();
   const { share } = useShare();
   const [sharing, setSharing] = useState(false);
   const _share = async () => {
@@ -103,13 +96,40 @@ const ShareButton = () => {
   };
   return (
     <>
-      <button className="btn" disabled={items.length === 0 || sharing} onClick={_share}>
+      <button className="btn" disabled={!isValid || sharing} onClick={_share}>
         共有する
-        {sharing && (
-          <Image className="m-2" width="20" height="20" src="spinner.svg" alt="...shareing" />
-        )}
       </button>
+      {sharing && (
+        <Image className="m-2" width="20" height="20" src="spinner.svg" alt="...shareing" />
+      )}
     </>
+  );
+};
+
+const ExData = () => {
+  const { schemaWithValue } = useSchema();
+  const { setExDataValue } = useLocalItemList();
+  const onChange = (key: string, e: ChangeEvent<HTMLInputElement>) => {
+    setExDataValue(key, e.target.value);
+  };
+
+  return (
+    <div className="m-4">
+      {schemaWithValue.map(({ type, key, label, value }) => {
+        return (
+          <section key={key}>
+            <label>{label ?? key}</label>
+            <input
+              type={type}
+              className="input-bordered input m-4 w-full max-w-xs"
+              placeholder={label ?? key}
+              value={value}
+              onChange={(e) => onChange(key, e)}
+            />
+          </section>
+        );
+      })}
+    </div>
   );
 };
 
@@ -120,6 +140,7 @@ const ListPage: NextPage<PageProps> = ({ outcomesTree, allTables }: PageProps) =
     <>
       <div className="ml-4">
         <HeaderBar />
+        <ExData />
         <div>
           {searchOutcomes(outcomesTree, text).map((item) => (
             <div className="m-4" key={item.id}>
