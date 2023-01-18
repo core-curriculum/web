@@ -1,5 +1,9 @@
-import { renameColumns, toObjectList } from "@libs/tableUtils";
+import {
+  HeaderedTable, mapTable, reduceTable, renameColumns, toObjectList
+} from "@libs/tableUtils";
+import { MappedText, mapText, MappedInfo } from "@libs/textMapper";
 import { loadTable, loadTableIndex } from "@services/loadCsv";
+import { AttrInfo, getReplaceMap } from "./replaceMap";
 
 const fileToTableLink = (file: string) => {
   return `/tables/${file}`
@@ -32,21 +36,34 @@ const getTableFiles = () => {
   return Object.keys(loadTableInfoDict());
 };
 
-const getTable = (file: string) => {
+const getTable = (file: string): TableInfoSet => {
   const tableInfo = loadTableInfoDict()[file];
-  const table = renameColumns(loadTable(file), tableInfo.columns);
+  const rawTable = renameColumns(loadTable(file), tableInfo.columns);
+  const map = getReplaceMap();
+  const attrTable: HeaderedTable<MappedText<AttrInfo>> =
+    mapTable(rawTable, (cell) => mapText(cell, map))
+  const table = mapTable(attrTable, (cell) => cell.text);
+  const attrInfo = reduceTable(attrTable, (dict, row) => {
+    const id = row.id.text;
+    const infoLists = Object.entries(row)
+      .flatMap(([key, value]) => value.infoList.length > 0 ? [[key, value.infoList] as const] : [])
+    const infoDict = Object.fromEntries(infoLists);
+    return { ...dict, [id]: infoDict };
+  }, {} as TableAttrInfo);
 
-  return { table, tableInfo };
+  return { table, tableInfo, attrInfo };
 };
 
-const getAllTables = () => {
+const getAllTables = (): TableInfoSet[] => {
   const files = getTableFiles();
   return files.map(getTable);
 };
 
 type TableInfoDict = ReturnType<typeof loadTableInfoDict>;
 type TableInfo = Expand<TableInfoDict[keyof TableInfoDict]>
+type TableAttrInfo = { [id: string]: { [key: string]: MappedInfo<AttrInfo>[] } }
+type TableInfoSet = { table: HeaderedTable<string>, tableInfo: TableInfo, attrInfo: TableAttrInfo }
 
 
 export { loadTableInfoDict, getTableFiles, getTable, getAllTables };
-export type { TableInfo, TableInfoDict };
+export type { TableInfo, TableInfoDict, TableAttrInfo, TableInfoSet };

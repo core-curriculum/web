@@ -1,6 +1,6 @@
 type MapperResult<T> = {
-  replacedText: string;
-  info: T;
+  text: string;
+  attr: T;
 };
 type MapperResultWithPos<T> = MapperResult<T> & {
   gap: number;
@@ -10,9 +10,13 @@ type MappedInfo<T> = {
   gap: number;
   length: number;
 };
+type MappedText<T> = {
+  text: string;
+  infoList: MappedInfo<T>[];
+}
 type TextMapper<T> = (res: RegExpExecArray) => MapperResult<T>;
 type ReplaceMap<T> = { reg: RegExp; mapper: TextMapper<T> }[];
-const mapText = <T>(text: string, replaceMap: ReplaceMap<T>) => {
+const mapText = <T>(text: string, replaceMap: ReplaceMap<T>): MappedText<T> => {
   const seek: (str: string) => (string | MapperResultWithPos<T> | null)[] = (str: string) => {
     const res = replaceMap.reduce(
       (curr, { reg, mapper }) => {
@@ -32,9 +36,9 @@ const mapText = <T>(text: string, replaceMap: ReplaceMap<T>) => {
   );
   const infoList = res
     .filter((v): v is MapperResultWithPos<T> => typeof v !== "string")
-    .map((v) => ({ info: v.info, gap: v.gap, length: v.replacedText.length } as MappedInfo<T>));
-  const replacedText = res.map((v) => (typeof v === "string" ? v : v.replacedText)).join("");
-  return { infoList, replacedText };
+    .map((v) => ({ info: v.attr, gap: v.gap, length: v.text.length } as MappedInfo<T>));
+  const replacedText = res.map((v) => (typeof v === "string" ? v : v.text)).join("");
+  return { infoList, text: replacedText };
 };
 
 const applyMappedInfo = <T, U>(
@@ -59,4 +63,4 @@ const applyMappedInfo = <T, U>(
 };
 
 export { mapText, applyMappedInfo };
-export type { TextMapper, ReplaceMap, MapperResultWithPos, MappedInfo };
+export type { TextMapper, ReplaceMap, MapperResultWithPos, MappedInfo, MappedText };

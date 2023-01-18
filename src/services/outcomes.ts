@@ -8,12 +8,12 @@ import {
   mapRow,
 } from "@libs/tableUtils";
 import { mapText } from "@libs/textMapper";
-import type { ReplaceMap } from "@libs/textMapper";
 import { tableToTree } from "@libs/treeUtils";
 import type { Tree } from "@libs/treeUtils";
 import { loadOutcomes } from "@services/loadCsv";
 import { outcomeDir } from "@services/paths";
 import type { TableInfoDict } from "@services/tables";
+import { AttrInfo, getReplaceMap } from "./replaceMap";
 
 const [outcomes_l1_file, outcomes_l2_file, outcomes_l3_file, outcomes_l4_file] = [
   "1",
@@ -56,22 +56,6 @@ const loadFullOutcomesTable = () => {
   return selectColumnsByNames(l1234, header);
 };
 
-type LinkInfo = {
-  type: "link";
-  url: string;
-};
-type TableLinkInfo = {
-  type: "tableLink";
-  url: string;
-  id: string;
-  index: string;
-  title: string;
-};
-type AbbrInfo = {
-  type: "abbr";
-  def: string;
-};
-type AttrInfo = LinkInfo | AbbrInfo | TableLinkInfo;
 
 type OutcomeBasicInfo = {
   text: string;
@@ -103,29 +87,6 @@ type OutcomeRow = {
   l4: Outcomel4;
 };
 
-const getReplaceMap: (infoDict: TableInfoDict) => ReplaceMap<AttrInfo> = (
-  infoDict: TableInfoDict,
-) => {
-  return [
-    {
-      reg: /\[\@tbl:(.+?)\]/,
-      mapper: ([, id]: RegExpExecArray) => {
-        const target = infoDict[id];
-        return {
-          replacedText: `表${target.number}`,
-          info: {
-            type: "tableLink",
-            url: target.link,
-            index: target.number,
-            title: `表${target.number}. ${target.item}`,
-            id,
-          },
-        } as const;
-      },
-    },
-  ];
-};
-
 const makeMappedOutcomesTable = (
   fullOutcomesTable: HeaderedTable<string>,
   infoDict: TableInfoDict,
@@ -133,8 +94,8 @@ const makeMappedOutcomesTable = (
   const map = getReplaceMap(infoDict);
 
   return mapRow(fullOutcomesTable, (row) => {
-    const { replacedText: l4text, infoList: l4AttrInfo } = mapText(row["l4_item"], map);
-    const { replacedText: l3text, infoList: l3AttrInfo } = mapText(row["l3_item"], map);
+    const { text: l4text, infoList: l4AttrInfo } = mapText(row["l4_item"], map);
+    const { text: l3text, infoList: l3AttrInfo } = mapText(row["l3_item"], map);
     const newRow: OutcomeRow = {
       l1: {
         layer: "l1",
@@ -176,4 +137,4 @@ const makeOutcomesTree = (fullOutcomesTable: HeaderedTable<string>, infoDict: Ta
 };
 
 export { loadFullOutcomesTable, makeMappedOutcomesTable, makeOutcomesTree };
-export type { Outcomel1, Outcomel2, Outcomel3, Outcomel4, OutcomeInfo, AttrInfo };
+export type { Outcomel1, Outcomel2, Outcomel3, Outcomel4, OutcomeInfo };
