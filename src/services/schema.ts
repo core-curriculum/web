@@ -16,7 +16,8 @@ const defaultSchema: Schema = {
   ]
 }
 
-const getSchema = async (schemaId: string | undefined) => {
+const getSchema = (schemaId: string | undefined) => {
+  console.log("getSchema")
   return defaultSchema;
 }
 

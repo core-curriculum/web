@@ -1,4 +1,5 @@
 import type { NextPage, GetStaticProps } from "next";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { QRCodeCanvas } from "qrcode.react";
 import { Table } from "@components/Table";
@@ -98,7 +99,10 @@ const ExData = ({ values }: { values: SchemaItemsWithValue }) => {
 
 const QrCode = () => {
   const router = useRouter();
-  const origin = window?.location ? window?.location?.origin : "https://core-curriculum.jp";
+  const origin =
+    typeof window !== "undefined" && window?.location
+      ? window?.location?.origin
+      : "https://core-curriculum.jp";
   const url = origin + router.asPath;
   return (
     <>
@@ -151,9 +155,15 @@ const ListPage: NextPage<PageProps> = ({
         </div>
         <div className="m-4 mt-16 flex justify-end text-xs text-gray-600">
           <div>
-            このリストは以下のコードでアクセスできます
-            <div className="mt-2 flex justify-end">
+            <div>このリストは以下のコードでアクセスできます</div>
+            <div className="my-2 flex justify-end">
               <QrCode />
+            </div>
+            <div className="mt-8 mb-2">関連する項目や授業名を変更する場合は以下から</div>
+            <div>
+              <Link href={`/list?from=${id}`} className="btn-outline  btn">
+                このリストを元に新しいリストを作成
+              </Link>
             </div>
           </div>
         </div>

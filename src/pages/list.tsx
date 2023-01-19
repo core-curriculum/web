@@ -1,6 +1,7 @@
 import type { NextPage, GetStaticProps } from "next";
 import Image from "next/image";
-import { ChangeEvent, useState } from "react";
+import { useRouter } from "next/router";
+import { ChangeEvent, Suspense, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { CopyButton } from "@components/CopyButton";
 import { ItemContextMenu } from "@components/ItemContextMenu";
@@ -9,7 +10,13 @@ import { BackButton } from "@components/buttons/BackButton";
 import { useConfirmDialog } from "@hooks/useConfirmDialog";
 import { HeaderedTable } from "@libs/tableUtils";
 import { Tree } from "@libs/treeUtils";
-import { idToListUrl, useLocalItemList, useSchema } from "@services/localItemList";
+import {
+  idToListUrl,
+  useLocalItemList,
+  useSchema,
+  useServerTemplate,
+  useShare as useShareItemList,
+} from "@services/localItemList";
 import { loadFullOutcomesTable, makeOutcomesTree } from "@services/outcomes";
 import type { OutcomeInfo } from "@services/outcomes";
 import { searchOutcomes, searchTables } from "@services/search";
@@ -60,7 +67,7 @@ const HeaderBar = () => {
 };
 
 const useShare = () => {
-  const { shareItemList } = useLocalItemList();
+  const { share: shareItemList } = useShareItemList();
   const { showDialog } = useConfirmDialog();
   const share = async () => {
     try {
@@ -107,33 +114,73 @@ const ShareButton = () => {
 };
 
 const ExData = () => {
+  console.log("called ExData");
   const { schemaWithValue } = useSchema();
+  console.log("called useSchema");
   const { setExDataValue } = useLocalItemList();
   const onChange = (key: string, e: ChangeEvent<HTMLInputElement>) => {
     setExDataValue(key, e.target.value);
   };
-
+  console.log(schemaWithValue);
   return (
-    <div className="m-4">
-      {schemaWithValue.map(({ type, key, label, value }) => {
-        return (
-          <section key={key}>
-            <label>{label ?? key}</label>
-            <input
-              type={type}
-              className="input-bordered input m-4 w-full max-w-xs"
-              placeholder={label ?? key}
-              value={value}
-              onChange={(e) => onChange(key, e)}
-            />
-          </section>
-        );
-      })}
-    </div>
+    <Suspense fallback="loading...">
+      <div className="m-4">
+        {schemaWithValue.map(({ type, key, label, value }) => {
+          return (
+            <section key={key}>
+              <label>{label ?? key}</label>
+              <input
+                type={type}
+                className="input-bordered input m-4 w-full max-w-xs"
+                placeholder={label ?? key}
+                value={value}
+                onChange={(e) => onChange(key, e)}
+              />
+            </section>
+          );
+        })}
+      </div>
+    </Suspense>
   );
 };
 
+const useTemplate = () => {
+  const { apply: doApply } = useServerTemplate();
+  const router = useRouter();
+  const [processed, setProcessed] = useState(false);
+  const { showDialog } = useConfirmDialog();
+  const { isDirty } = useShareItemList();
+  const apply = async (templateId: string) => {
+    const hasTemplate = templateId !== "";
+    console.log(`apply called with ${templateId}`);
+    if (hasTemplate && !processed) {
+      setProcessed(true);
+      if (isDirty) {
+        const choises = ["破棄して上書き", "キャンセル"];
+        const res = await showDialog({
+          content: "編集中のリストがあります。破棄して新しいリストで上書きしますか?",
+          choises,
+        });
+        if (res === choises[0]) await doApply(templateId);
+      } else {
+        await doApply(templateId);
+      }
+    }
+    router.push(router.basePath);
+  };
+  return { apply };
+};
+
 const ListPage: NextPage<PageProps> = ({ outcomesTree, allTables }: PageProps) => {
+  const { apply } = useTemplate();
+  const router = useRouter();
+  useEffect(() => {
+    const templateId = router.query?.from;
+    console.log(`called use Effect ${templateId}`);
+    if (typeof templateId === "string") {
+      apply(templateId);
+    }
+  }, [apply, router]);
   const { items } = useLocalItemList();
   const text = items.join(",");
   return (

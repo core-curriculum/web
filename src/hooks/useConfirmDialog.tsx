@@ -13,12 +13,13 @@ const Dialog = () => {
 
 const useConfirmDialog = () => {
   type PartialProps = Omit<Props, "show" | "onClose">;
-  const [show, setShow] = useAtom(showAtom);
-  const [_props, setProps] = useAtom(propAtom);
+  const [, setShow] = useAtom(showAtom);
+  const [, setProps] = useAtom(propAtom);
   const showDialog = (props: PartialProps) => {
     return new Promise<string>((resolve) => {
       const onClose = (key: string) => {
         setShow(false);
+        console.log("close");
         resolve(key);
       };
       setProps({ ...props, onClose });
