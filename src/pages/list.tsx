@@ -104,17 +104,20 @@ const ShareButton = () => {
   return (
     <>
       <button className="btn" disabled={!isValid || sharing} onClick={_share}>
-        共有する
+        {sharing ? (
+          <>
+            共有中...
+            <Image className="m-2" width="20" height="20" src="spinner.svg" alt="...shareing" />
+          </>
+        ) : (
+          "共有する"
+        )}
       </button>
-      {sharing && (
-        <Image className="m-2" width="20" height="20" src="spinner.svg" alt="...shareing" />
-      )}
     </>
   );
 };
 
 const ExData = () => {
-  console.log("called ExData");
   const { schemaWithValue } = useSchema();
   console.log("called useSchema");
   const { setExDataValue } = useLocalItemList();

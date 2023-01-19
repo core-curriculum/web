@@ -1,4 +1,4 @@
-import { atom, useAtom } from "jotai";
+import { atom, useAtom, useAtomValue } from "jotai";
 import * as localforage from "localforage";
 import { URLSearchParams } from "next/dist/compiled/@edge-runtime/primitives/url";
 import { startTransition } from "react";
@@ -99,16 +99,17 @@ const localItemListAtom = atomWithAsyncStorage<LocalItemList>(
 const sharedItemListAtom = atomWithAsyncStorage<ItemList | null>(
   "sharedItemListAtom", null, store
 )
-const schemaAtom = atom(async (get) => {
-  const schemaId = get(localItemListAtom)?.schema_id;
-  return await getSchema(schemaId)
+const schemaAtom = atom((get) => {
+  console.log(`schemaAtom derived localItemListAtom ${localItemListAtom}`)
+  //const schemaId = get(localItemListAtom)?.schema_id;
+  return getSchema("")
 });
 const isValidAtom = atom((get) => {
   return isValidWithSchema(get(localItemListAtom), get(schemaAtom));
 })
 const isDirtyAtom = atom((get) => {
   const sharedItemList = get(sharedItemListAtom);
-  if (sharedItemList === null) return true;
+  if (!sharedItemList) return true;
   return !isListEquals(sharedItemList, get(localItemListAtom));
 })
 
@@ -121,7 +122,7 @@ const useServerItemList = (id: string) => {
 const useShare = () => {
   const [sharedItemList, setSharedItemList] = useAtom(sharedItemListAtom);
   const [localItemList] = useAtom(localItemListAtom);
-  const [isDirty] = useAtom(isDirtyAtom);
+  const isDirty = sharedItemList ? !isListEquals(sharedItemList, localItemList) : true;
   const share = async () => {
     if (sharedItemList === null || isDirty) {
       const inserted = await shareItemListToServer(localItemList);
@@ -137,11 +138,8 @@ const useShare = () => {
 
 const useSchema = () => {
   const [itemList] = useAtom(localItemListAtom);
-  console.log("called inner useSchema")
-  const [schema] = useAtom(schemaAtom)
-  console.log("called inner useSchema after1")
-  const [isValid] = useAtom(isValidAtom);
-  console.log("called inner isValid after1")
+  const schema = useAtomValue(schemaAtom);
+  const isValid = isValidWithSchema(itemList, schema);
   const schemaWithValue = schemaItemsWithValue(itemList, schema);
   return { schema, isValid, schemaWithValue }
 }
@@ -161,8 +159,7 @@ const useServerTemplate = () => {
 
 const useLocalItemList = () => {
   const [itemList, setItemList] = useAtom(localItemListAtom);
-  const { share } = useShare();
-  const [isDirty] = useAtom(isDirtyAtom);
+  const { share, isDirty } = useShare();
   const items: ReadonlyArray<string> = itemList.items;
   const exData: Record<string, string> = itemList.ex_data ?? {};
 
