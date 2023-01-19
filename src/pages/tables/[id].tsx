@@ -2,11 +2,10 @@ import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
 import Head from "next/head";
 import { Table } from "@components/Table";
 import { BackButton } from "@components/buttons/BackButton";
-import type { HeaderedTable } from "@libs/tableUtils";
 import { dropColumnsByNames } from "@libs/tableUtils";
-import { getTable, TableInfo, getTableFiles } from "@services/tables";
+import { getTable, getTableFiles, TableInfoSet } from "@services/tables";
 
-type PageProps = { table: HeaderedTable<string>; tableInfo: TableInfo };
+type PageProps = TableInfoSet;
 
 type PathParams = {
   id: string;
@@ -22,15 +21,14 @@ export const getStaticPaths: GetStaticPaths<PathParams> = (context) => {
 
 export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
   const { id } = context.params as PathParams;
-  const { table, tableInfo } = getTable(id);
 
   return {
-    props: { table, tableInfo },
+    props: getTable(id),
   };
 };
 
-const TableOfId: NextPage<PageProps> = ({ table, tableInfo: info }: PageProps) => {
-  const title = `表${info.number}. ${info.item}`;
+const TableOfId: NextPage<PageProps> = ({ table, tableInfo, attrInfo }: PageProps) => {
+  const title = `表${tableInfo.number}. ${tableInfo.item}`;
   const [header, ...body] = dropColumnsByNames(table, ["id", "index", "H28ID"]);
   return (
     <>
@@ -44,7 +42,7 @@ const TableOfId: NextPage<PageProps> = ({ table, tableInfo: info }: PageProps) =
         <h1 className="m-4 text-xl font-bold">{title}</h1>
       </header>
       <div className="mx-4">
-        <Table table={table} tableInfo={info} />
+        <Table {...{ table, tableInfo, attrInfo }} />
       </div>
     </>
   );
