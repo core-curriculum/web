@@ -1,4 +1,6 @@
 import type { NextPage, GetStaticProps } from "next";
+import { useRouter } from "next/router";
+import { QRCodeCanvas } from "qrcode.react";
 import { Table } from "@components/Table";
 import { BackButton } from "@components/buttons/BackButton";
 import { HeaderedTable } from "@libs/tableUtils";
@@ -94,6 +96,17 @@ const ExData = ({ values }: { values: SchemaItemsWithValue }) => {
   );
 };
 
+const QrCode = () => {
+  const router = useRouter();
+  const origin = window?.location ? window?.location?.origin : "https://core-curriculum.jp";
+  const url = origin + router.asPath;
+  return (
+    <>
+      <QRCodeCanvas size={80} value={url} />
+    </>
+  );
+};
+
 const ListPage: NextPage<PageProps> = ({
   id,
   outcomesTree,
@@ -135,6 +148,14 @@ const ListPage: NextPage<PageProps> = ({
               </div>
             );
           })}
+        </div>
+        <div className="m-4 mt-16 flex justify-end text-xs text-gray-600">
+          <div>
+            このリストは以下のコードでアクセスできます
+            <div className="mt-2 flex justify-end">
+              <QrCode />
+            </div>
+          </div>
         </div>
       </div>
     </>
