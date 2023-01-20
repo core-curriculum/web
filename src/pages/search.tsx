@@ -104,12 +104,12 @@ const SearchPage: NextPage<PageProps> = ({ outcomesTree, allTables }: PageProps)
 
             return (
               <div key={tableInfo.id}>
-                <Link href={tableInfo.link} passHref>
-                  <div>
+                <div>
+                  <Link href={tableInfo.link} passHref>
                     <div className="my-4">{title}</div>
-                    <Table {...{ table: table as HeaderedTable<string>, tableInfo, attrInfo }} />
-                  </div>
-                </Link>
+                  </Link>
+                  <Table {...{ table: table as HeaderedTable<string>, tableInfo, attrInfo }} />
+                </div>
               </div>
             );
           })}
