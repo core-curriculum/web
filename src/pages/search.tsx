@@ -3,6 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ChangeEvent, useEffect, useState } from "react";
+import { ItemContextMenu } from "@components/ItemContextMenu";
 import { Table } from "@components/Table";
 import { BackButton } from "@components/buttons/BackButton";
 import { HeaderedTable } from "@libs/tableUtils";
@@ -91,7 +92,7 @@ const SearchPage: NextPage<PageProps> = ({ outcomesTree, allTables }: PageProps)
               <div>
                 <span className="mr-2 font-light text-sky-600">{item.index}</span>
                 {item.text}
-                <span className="ml-2 font-light text-sky-600">{item.id}</span>
+                <ItemContextMenu id={item.id} index={item.index} />
               </div>
               <Breadcrumb parents={item.parents} />
             </div>

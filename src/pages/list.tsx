@@ -84,6 +84,7 @@ const useShare = () => {
             </div>
           </>
         ),
+        choises: ["閉じる"],
       });
     } catch (e) {
       toast((e as Error).message);
