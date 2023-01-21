@@ -24,9 +24,9 @@ const ToggleIcon = () => (
 const NaviBar = () => {
   const { items } = useLocalItemList();
   return (
-    <div className="flex h-full items-center gap-2">
-      <div className="flex-none lg:hidden">
-        <label htmlFor="mobileDrawHiddenCheckBox" className="btn btn-ghost">
+    <div className="flex h-full items-center">
+      <div className="flex-none px-2 lg:hidden">
+        <label htmlFor="mobileDrawHiddenCheckBox" className="cursor-pointer">
           <ToggleIcon />
         </label>
       </div>
