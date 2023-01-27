@@ -28,6 +28,32 @@ type AsyncStorage<T> = {
   getItem: (key: string) => Promise<T | null>;
   setItem: (key: string, value: T) => Promise<unknown>;
 }
+type StragedItem = {
+  [key: string]: unknown
+}
+const atomsWithAsyncStorage = <T extends StragedItem>(
+  initialValue: T, store: AsyncStorage<T[string]>) => {
+  const baseAtom = atom(initialValue)
+  baseAtom.onMount = (setValue) => {
+    ; (async () => {
+      const entries = Object.entries(
+        initialValue).map(async ([key, init]) => [key, await store.getItem(key) ?? init] as const)
+      const items = Object.fromEntries(await Promise.all(entries)) as T;
+      setValue(items)
+    })()
+  }
+  const derivedAtom = atom(
+    (get) => get(baseAtom),
+    (get, set, update: T | ((prev: T) => T)) => {
+      const nextValue =
+        typeof update === 'function' ? update(get(baseAtom)) : update
+      set(baseAtom, nextValue)
+      Object.entries(nextValue).forEach(([key, value]) => store.setItem(key, value as T[string]))
+    }
+  )
+  return derivedAtom
+}
+
 const atomWithAsyncStorage = <T>(key: string, initialValue: T, store: AsyncStorage<T>) => {
   const baseAtom = atom<T>(initialValue)
   baseAtom.onMount = (setValue) => {

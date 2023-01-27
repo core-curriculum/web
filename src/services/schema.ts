@@ -6,20 +6,23 @@ type SchemaUnit = {
   label: string,
 }
 
-type Schema = { items: readonly SchemaUnit[], allowEmpty: boolean };
+type Schema = { id: string, items: readonly SchemaUnit[], allowEmpty: boolean };
 
-const defaultSchema: Schema = {
+const defaultSchema = Object.freeze({
+  id: "",
   allowEmpty: false,
   items: [
-    { type: "text", required: true, key: "name", label: "科目・授業名" },
-    { type: "text", required: true, key: "place", label: "施設・大学名" },
+    { type: "text" as const, required: true, key: "name", label: "科目・授業名" },
+    { type: "text" as const, required: true, key: "place", label: "施設・大学名" },
   ]
-}
+} as const satisfies Schema)
 
-const getSchema = (schemaId: string | undefined) => {
+const getSchema = async (schemaId: string | undefined) => {
   console.log("getSchema")
   return defaultSchema;
 }
+
+const getDefaultSchema = () => defaultSchema;
 
 const isValid = (
   itemList: { items: ReadonlyArray<string>, ex_data?: Record<string, string> },
@@ -48,4 +51,4 @@ const schemaItemsWithValue = (
 }
 type SchemaItemsWithValue = ReturnType<typeof schemaItemsWithValue>
 export type { Schema, SchemaUnit, SchemaItemsWithValue }
-export { defaultSchema, getSchema, isValid, schemaItemsWithValue }
+export { defaultSchema, getSchema, isValid, schemaItemsWithValue, getDefaultSchema }

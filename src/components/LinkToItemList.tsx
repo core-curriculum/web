@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useItemsValue } from "@services/itemList/local";
 
 type Prop = {
   count: number;
@@ -26,5 +28,12 @@ const LinkToItemList = ({ count, href }: Prop) => {
   );
 };
 
-export { LinkToItemList };
+const LinkToItemListWithContent = () => {
+  const items = useItemsValue();
+  const [count, setCount] = useState(0);
+  useEffect(() => setCount(items.length), [items]);
+  return <LinkToItemList href="/list" count={count} />;
+};
+
+export { LinkToItemList, LinkToItemListWithContent };
 export type { Prop as LinkToItemListProp };

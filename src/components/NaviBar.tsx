@@ -1,9 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense } from "react";
 import { MdSearch } from "react-icons/md";
 import { useLocalItemList } from "@services/localItemList";
-import { LinkToItemList } from "./LinkToItemList";
+import { LinkToItemListWithContent } from "./LinkToItemList";
 
 const ToggleIcon = () => (
   <svg
@@ -42,9 +41,7 @@ const NaviBar = () => {
         </Link>
       </div>
       <div className="mr-2 flex flex-none items-center">
-        <Suspense fallback="">
-          <LinkToItemList href="./list" count={items.length} />
-        </Suspense>
+        <LinkToItemListWithContent />
         <Link href="/search" className="flex items-center rounded-md p-2 hover:bg-sky-100" passHref>
           <div className="mr-1 text-sm text-sky-400 max-lg:hidden">検索</div>
           <MdSearch title="検索" className="" size="2rem" color="rgb(125 211 252)" />
