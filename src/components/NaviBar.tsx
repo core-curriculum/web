@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { MdSearch } from "react-icons/md";
-import { useLocalItemList } from "@services/localItemList";
 import { LinkToItemListWithContent } from "./LinkToItemList";
 
 const ToggleIcon = () => (
@@ -20,8 +19,16 @@ const ToggleIcon = () => (
   </svg>
 );
 
+const SearchLink = () => {
+  return (
+    <Link href="/search" className="flex items-center rounded-md p-2 hover:bg-sky-100" passHref>
+      <div className="mr-1 text-sm text-sky-400 max-lg:hidden">検索</div>
+      <MdSearch title="検索" className="" size="2rem" color="rgb(125 211 252)" />
+    </Link>
+  );
+};
+
 const NaviBar = () => {
-  const { items } = useLocalItemList();
   return (
     <div className="flex h-full items-center">
       <div className="flex-none px-2 lg:hidden">
@@ -29,7 +36,6 @@ const NaviBar = () => {
           <ToggleIcon />
         </label>
       </div>
-
       <div className="flex flex-1 px-2 text-lg font-extrabold text-sky-400 max-md:text-base">
         <Link
           href="/"
@@ -42,11 +48,9 @@ const NaviBar = () => {
       </div>
       <div className="mr-2 flex flex-none items-center">
         <LinkToItemListWithContent />
-        <Link href="/search" className="flex items-center rounded-md p-2 hover:bg-sky-100" passHref>
-          <div className="mr-1 text-sm text-sky-400 max-lg:hidden">検索</div>
-          <MdSearch title="検索" className="" size="2rem" color="rgb(125 211 252)" />
-        </Link>
+        <SearchLink />
       </div>
+      1
     </div>
   );
 };
