@@ -11,15 +11,15 @@ type PathParams = {
   id: string;
 };
 
-export const getStaticPaths: GetStaticPaths<PathParams> = (context) => {
-  const paths = getTableFiles().map((file) => ({ params: { id: file } }));
+export const getStaticPaths: GetStaticPaths<PathParams> = context => {
+  const paths = getTableFiles().map(file => ({ params: { id: file } }));
   return {
     paths,
     fallback: false,
   };
 };
 
-export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
+export const getStaticProps: GetStaticProps<PageProps> = async context => {
   const { id } = context.params as PathParams;
 
   return {

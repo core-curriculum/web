@@ -1,11 +1,10 @@
-import { Suspense } from "react";
 import { ContextMenu } from "@components/ContextMenu";
 import { toast } from "@components/toast";
 import { fmt, copyToClip } from "@libs/utils";
-import { useLocalItemList } from "@services/localItemList";
+import { useItems } from "@services/itemList/local";
 
 const ItemContextMenu = ({ id, index }: { id: string; index: string }) => {
-  const { addItem, removeItem, items } = useLocalItemList();
+  const { add: addItem, remove: removeItem, items } = useItems();
   const menus = (
     [
       items.includes(id)
@@ -31,11 +30,7 @@ const ItemContextMenu = ({ id, index }: { id: string; index: string }) => {
         return;
     }
   };
-  return (
-    <Suspense fallback={""}>
-      <ContextMenu items={menus} onClick={menuClick} />
-    </Suspense>
-  );
+  return <ContextMenu items={menus} onClick={menuClick} />;
 };
 
 export { ItemContextMenu };

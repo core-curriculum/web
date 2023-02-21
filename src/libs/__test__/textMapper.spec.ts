@@ -39,7 +39,7 @@ const textMappedSnapshot = {
     { gap: 1, length: 3, info: { type: "table", id: "type" } },
     { gap: 6, length: 6, info: { type: "en", en: "meaning" } },
   ],
-  replacedText,
+  text: replacedText,
 };
 
 describe("mapText", () => {
@@ -52,13 +52,13 @@ describe("mapText", () => {
     const map = getReplaceMap();
     const testText = "test text";
     const res = mapText(testText, map);
-    expect(res).toEqual({ infoList: [], replacedText: testText });
+    expect(res).toEqual({ infoList: [], text: testText });
   });
   test("test empty string", () => {
     const map = getReplaceMap();
     const testText = "";
     const res = mapText(testText, map);
-    expect(res).toEqual({ infoList: [], replacedText: testText });
+    expect(res).toEqual({ infoList: [], text: testText });
   });
   test("applyMappedInfo", () => {
     const map = textMappedSnapshot.infoList as {

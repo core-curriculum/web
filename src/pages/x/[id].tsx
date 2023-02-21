@@ -6,12 +6,16 @@ import { Table } from "@components/Table";
 import { BackButton } from "@components/buttons/BackButton";
 import { HeaderedTable } from "@libs/tableUtils";
 import { Tree } from "@libs/treeUtils";
-import { ServerItemList } from "@services/itemList";
+import {
+  ServerItemList,
+  getSchema,
+  SchemaItemsWithValue,
+  schemaItemsWithValue,
+} from "@services/itemList/local";
+import { getItemListFromId } from "@services/itemList/server";
 import { loadFullOutcomesTable, makeOutcomesTree } from "@services/outcomes";
 import type { OutcomeInfo } from "@services/outcomes";
-import { getSchema, schemaItemsWithValue, SchemaItemsWithValue } from "@services/schema";
 import { searchOutcomes, searchTables } from "@services/search";
-import { getItemListFromId } from "@services/serverItemList";
 import { getAllTables, loadTableInfoDict, TableInfoSet } from "@services/tables";
 
 type PageProps = {
@@ -38,7 +42,7 @@ const getServerItem = async (id: string) => {
   }
 };
 
-export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
+export const getStaticProps: GetStaticProps<PageProps> = async context => {
   const table = loadFullOutcomesTable();
   const tableInfoDict = loadTableInfoDict();
   const outcomesTree = makeOutcomesTree(table, tableInfoDict);
@@ -129,7 +133,7 @@ const ListPage: NextPage<PageProps> = ({
         <HeaderBar />
         <ExData values={schemaWithValue} />
         <div>
-          {searchOutcomes(outcomesTree, text).map((item) => (
+          {searchOutcomes(outcomesTree, text).map(item => (
             <div className="m-4" key={item.id}>
               <div>
                 <span className="mr-2 font-light text-sky-600">{item.index}</span>

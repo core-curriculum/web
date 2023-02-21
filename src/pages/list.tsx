@@ -11,23 +11,25 @@ import { useConfirmDialog } from "@hooks/useConfirmDialog";
 import { HeaderedTable } from "@libs/tableUtils";
 import { Tree } from "@libs/treeUtils";
 import {
-  idToListUrl,
-  useLocalItemList,
+  useListData,
+  useItems,
   useSchema,
+  useSchemaWithValue,
   useServerTemplate,
   useShare as useShareItemList,
-} from "@services/localItemList";
+} from "@services/itemList/local";
 import { loadFullOutcomesTable, makeOutcomesTree } from "@services/outcomes";
 import type { OutcomeInfo } from "@services/outcomes";
 import { searchOutcomes, searchTables } from "@services/search";
 import { getAllTables, loadTableInfoDict, TableInfoSet } from "@services/tables";
+import { listUrl } from "@services/urls";
 
 type PageProps = {
   outcomesTree: Tree<OutcomeInfo>;
   allTables: TableInfoSet[];
 };
 
-export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
+export const getStaticProps: GetStaticProps<PageProps> = async context => {
   const table = loadFullOutcomesTable();
   const tableInfoDict = loadTableInfoDict();
   const outcomesTree = makeOutcomesTree(table, tableInfoDict);
@@ -72,7 +74,7 @@ const useShare = () => {
   const share = async () => {
     try {
       const inserted = await shareItemList();
-      const url = idToListUrl(inserted.id);
+      const url = listUrl(inserted.id);
 
       await showDialog({
         content: (
@@ -119,13 +121,11 @@ const ShareButton = () => {
 };
 
 const ExData = () => {
-  const { schemaWithValue } = useSchema();
-  console.log("called useSchema");
-  const { setExDataValue } = useLocalItemList();
+  const { schemaWithValue } = useSchemaWithValue();
+  const { set: setListDataValue } = useListData();
   const onChange = (key: string, e: ChangeEvent<HTMLInputElement>) => {
-    setExDataValue(key, e.target.value);
+    setListDataValue(key, e.target.value);
   };
-  console.log(schemaWithValue);
   return (
     <Suspense fallback="loading...">
       <div className="m-4">
@@ -138,7 +138,7 @@ const ExData = () => {
                 className="input-bordered input m-4 w-full max-w-xs"
                 placeholder={label ?? key}
                 value={value}
-                onChange={(e) => onChange(key, e)}
+                onChange={e => onChange(key, e)}
               />
             </section>
           );
@@ -156,7 +156,6 @@ const useTemplate = () => {
   const { isDirty } = useShareItemList();
   const apply = async (templateId: string) => {
     const hasTemplate = templateId !== "";
-    console.log(`apply called with ${templateId}`);
     if (hasTemplate && !processed) {
       setProcessed(true);
       if (isDirty) {
@@ -180,12 +179,11 @@ const ListPage: NextPage<PageProps> = ({ outcomesTree, allTables }: PageProps) =
   const router = useRouter();
   useEffect(() => {
     const templateId = router.query?.from;
-    console.log(`called use Effect ${templateId}`);
     if (typeof templateId === "string") {
       apply(templateId);
     }
   }, [apply, router]);
-  const { items } = useLocalItemList();
+  const { items } = useItems();
   const text = items.join(",");
   return (
     <>
@@ -193,7 +191,7 @@ const ListPage: NextPage<PageProps> = ({ outcomesTree, allTables }: PageProps) =
         <HeaderBar />
         <ExData />
         <div>
-          {searchOutcomes(outcomesTree, text).map((item) => (
+          {searchOutcomes(outcomesTree, text).map(item => (
             <div className="m-4" key={item.id}>
               <div>
                 <span className="mr-2 font-light text-sky-600">{item.index}</span>
