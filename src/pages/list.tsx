@@ -73,8 +73,6 @@ const useShare = () => {
   const { showDialog } = useConfirmDialog();
   const share = async () => {
     try {
-      const inserted = await shareItemList();
-      const url = listUrl(inserted.id);
       const goBack = "戻る";
       const res = await showDialog({
         content: (
@@ -88,6 +86,8 @@ const useShare = () => {
         primary: "問題ないので共有する",
       });
       if (res === goBack) return;
+      const inserted = await shareItemList();
+      const url = listUrl(inserted.id);
       await showDialog({
         content: (
           <>
