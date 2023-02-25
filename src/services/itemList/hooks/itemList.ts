@@ -33,11 +33,11 @@ const useItems = () => {
 
 const useListDataValue = () => useAtomValue(listDataAtom);
 const useListData = () => {
-  const [exData, setListData] = useAtom(listDataAtom);
+  const [listData, setListData] = useAtom(listDataAtom);
   const set = (key: string, value: string) => {
-    setListData(exData => ({ ...exData, [key]: value }));
+    setListData(listData => ({ ...listData, [key]: value }));
   };
-  return { exData, set };
+  return { listData, set };
 };
 
 const useItemList = () => useAtomValue(itemListAtom);

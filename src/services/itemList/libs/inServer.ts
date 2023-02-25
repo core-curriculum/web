@@ -8,20 +8,20 @@ import type {
   ItemListDBView,
 } from "@services/itemList/libs/types";
 
-const insertData = async (id: string, exData: Record<string, string>) => {
-  if (Object.entries(exData).length === 0) return exData;
+const insertData = async (id: string, data: Record<string, string>) => {
+  if (Object.entries(data).length === 0) return data;
   const uuid = toUUID(id);
-  const entries = Object.entries(exData).map(([key, value]) => ({ key, value, item_list: uuid }));
-  const { data, error } = await db.from("item_list_data").insert(entries).select();
-  if (error || !data) throw error ?? new Error("Error inserting item_list_data");
-  const res = Object.fromEntries(data.map(({ key, value }) => [key, value]));
+  const entries = Object.entries(data).map(([key, value]) => ({ key, value, item_list: uuid }));
+  const { data: response, error } = await db.from("item_list_data").insert(entries).select();
+  if (error || !response) throw error ?? new Error("Error inserting item_list_data");
+  const res = Object.fromEntries(response.map(({ key, value }) => [key, value]));
   return res;
 };
 
 const getData = async (itemListId: string) => {
   const uuid = toUUID(itemListId);
   const { data, error } = await db.from("item_list_data").select().eq("item_list", uuid);
-  if (error || !data) throw error ?? new Error("Error in getting exData");
+  if (error || !data) throw error ?? new Error("Error in getting item_list_data");
   const res: Record<string, string> = Object.fromEntries(
     data.map(({ key, value }) => [key, value]),
   );

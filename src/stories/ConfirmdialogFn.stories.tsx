@@ -1,20 +1,28 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import React from "react";
 import { Toaster } from "react-hot-toast";
-import { ConfirmDialog } from "@components/ConfirmDialog";
 import type { ConfirmDialogProps } from "@components/ConfirmDialog";
+import { ConfirmDialog, showDialog } from "@hooks/useConfirmDialog";
 
 const TargetComponent = (props: ConfirmDialogProps) => {
   return (
     <div>
-      <ConfirmDialog {...props} />
+      <ConfirmDialog />
+      <button
+        onClick={async () => {
+          const res = await showDialog(props);
+          confirm(res);
+        }}
+      >
+        表示
+      </button>
       <Toaster />
     </div>
   );
 };
 
 export default {
-  title: "Components/ConfirmDialog",
+  title: "Components/ConfirmDialogFn",
   component: TargetComponent,
   parameters: {
     // More on Story layout: https://storybook.js.org/docs/react/configure/story-layout

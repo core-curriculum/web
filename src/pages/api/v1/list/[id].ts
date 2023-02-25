@@ -8,7 +8,7 @@ import type {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ServerItemList | ServerItemListResponse[]>,
+  res: NextApiResponse<ServerItemList | ServerItemListResponse[] | { error: string }>,
 ) {
   if (req.method === "POST") {
     const data: InputItemList = req.body;
@@ -22,8 +22,9 @@ export default async function handler(
       const data = await getItemListFromIds(ids);
       res.status(200).json(data);
     } catch (e) {
-      console.error(e);
-      res.status(400).json(e);
+      const message = e instanceof Error ? e.message : typeof e === "string" ? e : "";
+      console.error(message);
+      res.status(400).json({ error: message });
     }
   }
 }

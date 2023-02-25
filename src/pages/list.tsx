@@ -75,7 +75,19 @@ const useShare = () => {
     try {
       const inserted = await shareItemList();
       const url = listUrl(inserted.id);
-
+      const goBack = "戻る";
+      const res = await showDialog({
+        content: (
+          <>
+            <div className="mb-4">
+              共有した内容はurlを知っていれば誰でも閲覧可能になります。個人情報・機密情報が含まれていないことを確認した下さい。
+            </div>
+          </>
+        ),
+        choises: ["戻る", "問題ないので共有する"],
+        primary: "問題ないので共有する",
+      });
+      if (res === goBack) return;
       await showDialog({
         content: (
           <>
@@ -86,7 +98,6 @@ const useShare = () => {
             </div>
           </>
         ),
-        choises: ["閉じる"],
       });
     } catch (e) {
       toast((e as Error).message);
@@ -120,7 +131,7 @@ const ShareButton = () => {
   );
 };
 
-const ExData = () => {
+const ListData = () => {
   const { schemaWithValue } = useSchemaWithValue();
   const { set: setListDataValue } = useListData();
   const onChange = (key: string, e: ChangeEvent<HTMLInputElement>) => {
@@ -189,7 +200,7 @@ const ListPage: NextPage<PageProps> = ({ outcomesTree, allTables }: PageProps) =
     <>
       <div className="ml-4">
         <HeaderBar />
-        <ExData />
+        <ListData />
         <div>
           {searchOutcomes(outcomesTree, text).map(item => (
             <div className="m-4" key={item.id}>

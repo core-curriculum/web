@@ -1,5 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, ReactNode } from "react";
+import { MdClose } from "react-icons/md";
 
 type Props = {
   content: string | ReactNode;
@@ -10,9 +11,20 @@ type Props = {
   onClose: (res: string) => void;
 };
 
+const Title = ({ title, onClose }: { title: string; onClose: () => void }) => {
+  return (
+    <div className="flex">
+      <Dialog.Title as="h3" className="flex-1 text-lg font-medium leading-6 text-gray-900">
+        {title}
+      </Dialog.Title>
+      <MdClose className="flex-none cursor-pointer" onClick={onClose} />
+    </div>
+  );
+};
+
 const ConfirmDialog = ({ show, title, content, onClose, choises, primary }: Props) => {
   title ??= "";
-  choises ??= ["cancel"];
+  choises ??= [];
   primary ??= "";
   return (
     <>
@@ -45,13 +57,11 @@ const ConfirmDialog = ({ show, title, content, onClose, choises, primary }: Prop
                   className="w-full max-w-md overflow-hidden rounded-2xl
                   bg-white p-6 text-left align-middle shadow-xl transition-all"
                 >
-                  <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
-                    {title}
-                  </Dialog.Title>
+                  <Title title={title} onClose={() => onClose("")} />
                   <div className="mt-2">{content}</div>
 
                   <div className="mt-4 flex justify-end gap-1">
-                    {choises.map((key) => {
+                    {choises.map(key => {
                       return key === primary ? (
                         <button
                           type="button"

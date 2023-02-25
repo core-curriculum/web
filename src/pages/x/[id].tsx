@@ -86,7 +86,7 @@ const HeaderBar = () => {
   );
 };
 
-const ExData = ({ values }: { values: SchemaItemsWithValue }) => {
+const ListData = ({ values }: { values: SchemaItemsWithValue }) => {
   return (
     <div className="m-2">
       {values.map(({ label, key, value }) => {
@@ -131,7 +131,7 @@ const ListPage: NextPage<PageProps> = ({
     <>
       <div className="ml-4">
         <HeaderBar />
-        <ExData values={schemaWithValue} />
+        <ListData values={schemaWithValue} />
         <div>
           {searchOutcomes(outcomesTree, text).map(item => (
             <div className="m-4" key={item.id}>
