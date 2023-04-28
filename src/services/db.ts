@@ -1,5 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
+import * as dotenv from "dotenv";
 
+dotenv.config();
 if (typeof window !== "undefined") throw new Error(`db is for server only`);
 
 const SUPA_BASE_URL = process.env.SUPABASE_URL ?? "";
