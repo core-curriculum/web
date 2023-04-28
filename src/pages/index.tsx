@@ -4,15 +4,16 @@ import { MainLayout } from "@components/MainLayout";
 import { OutcomesTree } from "@components/Outcomes";
 import { OutcomesTOC } from "@components/OutcomesTOC";
 import type { Tree } from "@libs/treeUtils";
+import { Locale } from "@services/i18n/i18n";
 import { loadFullOutcomesTable, makeOutcomesTree } from "@services/outcomes";
 import type { OutcomeInfo } from "@services/outcomes";
 import { loadTableInfoDict } from "@services/tables";
 
 type PageProps = { outcomesTree: Tree<OutcomeInfo> };
 
-export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
-  const table = loadFullOutcomesTable();
-  const tableInfoDict = loadTableInfoDict();
+export const getStaticProps: GetStaticProps<PageProps> = async ({ locale }) => {
+  const table = loadFullOutcomesTable(locale as Locale);
+  const tableInfoDict = loadTableInfoDict(locale as Locale);
   const outcomesTree = makeOutcomesTree(table, tableInfoDict);
 
   return {
