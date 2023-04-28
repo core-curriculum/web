@@ -50,7 +50,6 @@ const NaviBar = () => {
         <LinkToItemListWithContent />
         <SearchLink />
       </div>
-      1
     </div>
   );
 };

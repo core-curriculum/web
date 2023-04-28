@@ -14,7 +14,8 @@
     "bradlc.vscode-tailwindcss",
     "ms-azuretools.vscode-docker",
     "dbaeumer.vscode-eslint",
-    "esbenp.prettier-vscode"
+    "esbenp.prettier-vscode",
+    "GitHub.copilot"
   ],
   "runArgs": [
     "--env-file",

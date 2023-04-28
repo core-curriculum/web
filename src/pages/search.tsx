@@ -18,7 +18,7 @@ type PageProps = {
   allTables: TableInfoSet[];
 };
 
-export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
+export const getStaticProps: GetStaticProps<PageProps> = async context => {
   const table = loadFullOutcomesTable();
   const tableInfoDict = loadTableInfoDict();
   const outcomesTree = makeOutcomesTree(table, tableInfoDict);
@@ -64,7 +64,7 @@ const SearchBar = ({
         className="input-bordered input m-4 w-full max-w-xs"
         placeholder="検索語もしくはカンマ区切りid"
         value={value}
-        onChange={(e) => onChange(e)}
+        onChange={e => onChange(e)}
       />
     </div>
   );
@@ -85,9 +85,9 @@ const SearchPage: NextPage<PageProps> = ({ outcomesTree, allTables }: PageProps)
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="ml-4">
-        <SearchBar value={searchText} onChange={(e) => setSearchText(e.target.value)} />
+        <SearchBar value={searchText} onChange={e => setSearchText(e.target.value)} />
         <div>
-          {searchOutcomes(outcomesTree, searchText).map((item) => (
+          {searchOutcomes(outcomesTree, searchText).map(item => (
             <div className="m-4" key={item.id}>
               <div>
                 <span className="mr-2 font-light text-sky-600">{item.index}</span>
