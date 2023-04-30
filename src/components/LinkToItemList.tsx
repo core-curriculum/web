@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useLocaleText } from "@services/i18n/i18n";
 import { useItemsValue } from "@services/itemList/local";
 
 type Prop = {
@@ -7,13 +8,14 @@ type Prop = {
   href: string;
 };
 const LinkToItemList = ({ count, href }: Prop) => {
+  const { t } = useLocaleText("@components/LinktoItemList");
   return (
     <Link
       {...{ href }}
       className="flex items-center justify-center gap-x-1 rounded-md p-2 hover:bg-sky-100"
     >
       <span className={`${count > 0 ? "text-sky-300" : "text-gray-400"} max-md:text-sm`}>
-        リスト
+        {t("title")}
       </span>
       <span
         className={

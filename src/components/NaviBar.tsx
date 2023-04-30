@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { MdSearch } from "react-icons/md";
+import { useLocaleText } from "@services/i18n/i18n";
 import { LinkToItemListWithContent } from "./LinkToItemList";
 import { LocaleSwitchButton } from "./buttons/LocaleSwitchButton";
 
@@ -21,10 +22,11 @@ const ToggleIcon = () => (
 );
 
 const SearchLink = () => {
+  const { t } = useLocaleText("@components/NaviBar");
   return (
     <Link href="/search" className="flex items-center rounded-md p-2 hover:bg-sky-100" passHref>
-      <div className="mr-1 text-sm text-sky-400 max-lg:hidden">検索</div>
-      <MdSearch title="検索" className="" size="2rem" color="rgb(125 211 252)" />
+      <div className="mr-1 text-sm text-sky-400 max-lg:hidden">{t("search")}</div>
+      <MdSearch title={t("search")} className="" size="2rem" color="rgb(125 211 252)" />
     </Link>
   );
 };
@@ -34,6 +36,7 @@ const LocaleSwithLink = () => {
 };
 
 const NaviBar = () => {
+  const { t } = useLocaleText("@components/NaviBar");
   return (
     <div className="flex h-full items-center">
       <div className="flex-none px-2 lg:hidden">
@@ -48,7 +51,7 @@ const NaviBar = () => {
           passHref
         >
           <Image className="ml-2 max-lg:hidden" src="/logo.svg" width="50" height="50" alt="" />
-          モデルコアカリキュラム
+          {t("title")}
         </Link>
       </div>
       <div className="mr-2 flex flex-none items-center">

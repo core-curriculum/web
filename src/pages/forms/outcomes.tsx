@@ -12,7 +12,7 @@ type PageProps = { outcomesTree: Tree<OutcomeInfo> };
 export const getStaticProps: GetStaticProps<PageProps> = async ({ locale }) => {
   const table = loadFullOutcomesTable(locale as Locale);
   const tableInfoDict = loadTableInfoDict(locale as Locale);
-  const outcomesTree = makeOutcomesTree(table, tableInfoDict);
+  const outcomesTree = makeOutcomesTree(table, tableInfoDict, locale as Locale);
 
   return {
     props: { outcomesTree },

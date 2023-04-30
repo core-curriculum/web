@@ -1,4 +1,5 @@
 import { ReplaceMap } from "@libs/textMapper";
+import { Locale } from "./i18n/i18n";
 import { TableInfoDict } from "./tables";
 
 type LinkInfo = {
@@ -28,26 +29,30 @@ type TextInfo = {
 type ItalicInfo = {
   type: "italic";
 };
-type AttrInfo = LinkInfo |
-  AbbrInfo | TableLinkInfo | SubTagInfo | SupTagInfo | TextInfo | ItalicInfo;
+type AttrInfo =
+  | LinkInfo
+  | AbbrInfo
+  | TableLinkInfo
+  | SubTagInfo
+  | SupTagInfo
+  | TextInfo
+  | ItalicInfo;
 
-
-const getReplaceMap = (
-  infoDict?: TableInfoDict,
-): ReplaceMap<AttrInfo> => {
+const getReplaceMap = (locale: Locale, infoDict?: TableInfoDict): ReplaceMap<AttrInfo> => {
+  const tableLabel = locale === "ja" ? "表" : "Table";
   return [
     {
       reg: /\[\@tbl:(.+?)\]/,
       mapper: ([, id]: RegExpExecArray) => {
-        if (!infoDict) return ({ text: id, attr: { type: "text" } });
+        if (!infoDict) return { text: id, attr: { type: "text" } };
         const target = infoDict[id];
         return {
-          text: `表${target.number}`,
+          text: `${tableLabel + target.number}`,
           attr: {
             type: "tableLink",
             url: target.link,
             index: target.number,
-            title: `表${target.number}. ${target.item}`,
+            title: `${tableLabel + target.number}. ${target.item}`,
             id,
           },
         } as const;
@@ -89,5 +94,5 @@ const getReplaceMap = (
   ];
 };
 
-export type { AttrInfo }
-export { getReplaceMap }
+export type { AttrInfo };
+export { getReplaceMap };

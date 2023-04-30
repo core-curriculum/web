@@ -81,8 +81,9 @@ type OutcomeRow = {
 const makeMappedOutcomesTable = (
   fullOutcomesTable: HeaderedTable<string>,
   infoDict: TableInfoDict,
+  locale: Locale,
 ) => {
-  const map = getReplaceMap(infoDict);
+  const map = getReplaceMap(locale, infoDict);
 
   return mapRow(fullOutcomesTable, row => {
     const { text: l4text, infoList: l4AttrInfo } = mapText(row["l4_item"], map);
@@ -122,8 +123,12 @@ const makeMappedOutcomesTable = (
   });
 };
 
-const makeOutcomesTree = (fullOutcomesTable: HeaderedTable<string>, infoDict: TableInfoDict) => {
-  const [, ...table] = makeMappedOutcomesTable(fullOutcomesTable, infoDict);
+const makeOutcomesTree = (
+  fullOutcomesTable: HeaderedTable<string>,
+  infoDict: TableInfoDict,
+  locale: Locale,
+) => {
+  const [, ...table] = makeMappedOutcomesTable(fullOutcomesTable, infoDict, locale);
   return tableToTree(table, (u1, u2) => u1.id === u2.id) as Tree<OutcomeInfo>;
 };
 

@@ -6,7 +6,7 @@ import { Table } from "@components/Table";
 import { BackButton } from "@components/buttons/BackButton";
 import { HeaderedTable } from "@libs/tableUtils";
 import { Tree } from "@libs/treeUtils";
-import type { Locale } from "@services/i18n/i18n";
+import { Locale, useLocaleText } from "@services/i18n/i18n";
 import {
   ServerItemList,
   getSchema,
@@ -46,7 +46,7 @@ const getServerItem = async (id: string) => {
 export const getStaticProps: GetStaticProps<PageProps> = async ({ locale, params }) => {
   const table = loadFullOutcomesTable(locale as Locale);
   const tableInfoDict = loadTableInfoDict(locale as Locale);
-  const outcomesTree = makeOutcomesTree(table, tableInfoDict);
+  const outcomesTree = makeOutcomesTree(table, tableInfoDict, locale as Locale);
   const allTables = getAllTables(locale as Locale);
   const id = (params?.id as string) ?? "";
   const itemList = await getServerItem(id);
@@ -124,6 +124,7 @@ const ListPage: NextPage<PageProps> = ({
   schemaWithValue,
 }: PageProps) => {
   const isLoading = !allTables || !outcomesTree || !itemList || !id || !schemaWithValue;
+  const { t } = useLocaleText("@pages/x/[id]");
   if (isLoading) return <div>Loading...</div>;
   if (typeof itemList === "string" || typeof schemaWithValue === "string")
     return <div>該当するリストが見つかりません。(id:{id})</div>;
@@ -146,7 +147,7 @@ const ListPage: NextPage<PageProps> = ({
         </div>
         <div className="ml-4">
           {searchTables(text, allTables).map(({ table, tableInfo, attrInfo }) => {
-            const title = `表${tableInfo.number}. ${tableInfo.item}`;
+            const title = `${t("table") + tableInfo.number}. ${tableInfo.item}`;
 
             return (
               <div key={tableInfo.id}>

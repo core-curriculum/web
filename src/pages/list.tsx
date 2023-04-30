@@ -10,7 +10,7 @@ import { BackButton } from "@components/buttons/BackButton";
 import { useConfirmDialog } from "@hooks/useConfirmDialog";
 import { HeaderedTable } from "@libs/tableUtils";
 import { Tree } from "@libs/treeUtils";
-import { Locale } from "@services/i18n/i18n";
+import { Locale, useLocaleText } from "@services/i18n/i18n";
 import {
   useListData,
   useItems,
@@ -33,7 +33,7 @@ type PageProps = {
 export const getStaticProps: GetStaticProps<PageProps> = async ({ locale }) => {
   const table = loadFullOutcomesTable(locale as Locale);
   const tableInfoDict = loadTableInfoDict(locale as Locale);
-  const outcomesTree = makeOutcomesTree(table, tableInfoDict);
+  const outcomesTree = makeOutcomesTree(table, tableInfoDict, locale as Locale);
   const allTables = getAllTables(locale as Locale);
 
   return {
@@ -187,6 +187,7 @@ const useTemplate = () => {
 };
 
 const ListPage: NextPage<PageProps> = ({ outcomesTree, allTables }: PageProps) => {
+  const { t } = useLocaleText("@pages/list");
   const { apply } = useTemplate();
   const router = useRouter();
   useEffect(() => {
@@ -216,7 +217,7 @@ const ListPage: NextPage<PageProps> = ({ outcomesTree, allTables }: PageProps) =
         </div>
         <div className="ml-4">
           {searchTables(text, allTables).map(({ table, tableInfo, attrInfo }) => {
-            const title = `表${tableInfo.number}. ${tableInfo.item}`;
+            const title = `${t("table") + tableInfo.number}. ${tableInfo.item}`;
 
             return (
               <div key={tableInfo.id}>
