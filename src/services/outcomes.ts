@@ -1,4 +1,3 @@
-import * as path from "path";
 import {
   HeaderedTable,
   prefixColumns,
@@ -11,18 +10,11 @@ import { mapText } from "@libs/textMapper";
 import { tableToTree } from "@libs/treeUtils";
 import type { Tree } from "@libs/treeUtils";
 import { loadOutcomes } from "@services/loadCsv";
-import { outcomeDir } from "@services/paths";
 import type { TableInfoDict } from "@services/tables";
+import { Locale } from "./i18n/i18n";
 import { AttrInfo, getReplaceMap } from "./replaceMap";
 
-const [outcomes_l1_file, outcomes_l2_file, outcomes_l3_file, outcomes_l4_file] = [
-  "1",
-  "2",
-  "3",
-  "4",
-].map((index) => path.resolve(outcomeDir, `layer${index}.csv`));
-
-const loadFullOutcomesTable = () => {
+const loadFullOutcomesTable = (locale: Locale) => {
   const header = [
     "l1_item",
     "l2_item",
@@ -45,8 +37,8 @@ const loadFullOutcomesTable = () => {
     l3_parent: "l2_id",
     l4_parent: "l3_id",
   };
-  const [l1, l2, l3, l4] = (["1", "2", "3", "4"] as const).map((layer) => {
-    const raw = loadOutcomes(layer);
+  const [l1, l2, l3, l4] = (["1", "2", "3", "4"] as const).map(layer => {
+    const raw = loadOutcomes(layer, locale);
     const data = prefixColumns(raw, `l${layer}_`);
     return renameColumns(data, renameDict);
   });
@@ -55,7 +47,6 @@ const loadFullOutcomesTable = () => {
   const l1234 = join(l123, l4, { on: "l3_id", nan: "", how: "right" });
   return selectColumnsByNames(l1234, header);
 };
-
 
 type OutcomeBasicInfo = {
   text: string;
@@ -93,7 +84,7 @@ const makeMappedOutcomesTable = (
 ) => {
   const map = getReplaceMap(infoDict);
 
-  return mapRow(fullOutcomesTable, (row) => {
+  return mapRow(fullOutcomesTable, row => {
     const { text: l4text, infoList: l4AttrInfo } = mapText(row["l4_item"], map);
     const { text: l3text, infoList: l3AttrInfo } = mapText(row["l3_item"], map);
     const newRow: OutcomeRow = {

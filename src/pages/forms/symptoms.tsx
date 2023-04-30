@@ -2,12 +2,13 @@ import type { NextPage, GetStaticProps } from "next";
 import Head from "next/head";
 import { getNameColumnValues, mapRow } from "@libs/tableUtils";
 import type { HeaderedTable } from "@libs/tableUtils";
+import type { Locale } from "@services/i18n/i18n";
 import { loadTable } from "@services/loadCsv";
 
 type PageProps = { table: HeaderedTable<string> };
 
-export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
-  const table = loadTable("TBL0500");
+export const getStaticProps: GetStaticProps<PageProps> = async ({ locale }) => {
+  const table = loadTable("TBL0500", locale as Locale);
 
   return {
     props: { table },
@@ -18,10 +19,10 @@ const Home: NextPage<PageProps> = ({ table }: PageProps) => {
   const skillTable = mapRow<
     string,
     { name: string; id: string; index: string; diseases: string[] }
-  >(table, (row) => ({
+  >(table, row => ({
     main: {
       name: row["item"],
-      diseases: row["ddx"].split(",").filter((v) => v.trim() !== ""),
+      diseases: row["ddx"].split(",").filter(v => v.trim() !== ""),
       id: row["id"],
       index: row["index"],
     },

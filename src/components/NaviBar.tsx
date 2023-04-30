@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { MdSearch } from "react-icons/md";
 import { LinkToItemListWithContent } from "./LinkToItemList";
+import { LocaleSwitchButton } from "./buttons/LocaleSwitchButton";
 
 const ToggleIcon = () => (
   <svg
@@ -28,6 +29,10 @@ const SearchLink = () => {
   );
 };
 
+const LocaleSwithLink = () => {
+  return <LocaleSwitchButton />;
+};
+
 const NaviBar = () => {
   return (
     <div className="flex h-full items-center">
@@ -47,6 +52,7 @@ const NaviBar = () => {
         </Link>
       </div>
       <div className="mr-2 flex flex-none items-center">
+        <LocaleSwithLink />
         <LinkToItemListWithContent />
         <SearchLink />
       </div>

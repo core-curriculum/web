@@ -6,6 +6,7 @@ import { Table } from "@components/Table";
 import { BackButton } from "@components/buttons/BackButton";
 import { HeaderedTable } from "@libs/tableUtils";
 import { Tree } from "@libs/treeUtils";
+import type { Locale } from "@services/i18n/i18n";
 import {
   ServerItemList,
   getSchema,
@@ -42,12 +43,12 @@ const getServerItem = async (id: string) => {
   }
 };
 
-export const getStaticProps: GetStaticProps<PageProps> = async context => {
-  const table = loadFullOutcomesTable();
-  const tableInfoDict = loadTableInfoDict();
+export const getStaticProps: GetStaticProps<PageProps> = async ({ locale, params }) => {
+  const table = loadFullOutcomesTable(locale as Locale);
+  const tableInfoDict = loadTableInfoDict(locale as Locale);
   const outcomesTree = makeOutcomesTree(table, tableInfoDict);
-  const allTables = getAllTables();
-  const id = (context.params?.id as string) ?? "";
+  const allTables = getAllTables(locale as Locale);
+  const id = (params?.id as string) ?? "";
   const itemList = await getServerItem(id);
   const schemaId = typeof itemList === "string" ? "" : itemList.schema_id;
   const schema = await getSchema(schemaId);

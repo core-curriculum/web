@@ -3,6 +3,7 @@ import Head from "next/head";
 import { Table } from "@components/Table";
 import { BackButton } from "@components/buttons/BackButton";
 import { dropColumnsByNames } from "@libs/tableUtils";
+import { Locale, Locales } from "@services/i18n/i18n";
 import { getTable, getTableFiles, TableInfoSet } from "@services/tables";
 
 type PageProps = TableInfoSet;
@@ -11,19 +12,21 @@ type PathParams = {
   id: string;
 };
 
-export const getStaticPaths: GetStaticPaths<PathParams> = context => {
-  const paths = getTableFiles().map(file => ({ params: { id: file } }));
+export const getStaticPaths: GetStaticPaths<PathParams> = () => {
+  const paths = (["en", "ja"] as Locales)
+    .map(locale => getTableFiles(locale as Locale).map(file => ({ params: { id: file }, locale })))
+    .flat();
   return {
     paths,
     fallback: false,
   };
 };
 
-export const getStaticProps: GetStaticProps<PageProps> = async context => {
-  const { id } = context.params as PathParams;
+export const getStaticProps: GetStaticProps<PageProps> = async ({ locale, params }) => {
+  const { id } = params as PathParams;
 
   return {
-    props: getTable(id),
+    props: getTable(id, locale as Locale),
   };
 };
 
