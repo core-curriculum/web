@@ -8,7 +8,7 @@ import { Table } from "@components/Table";
 import { BackButton } from "@components/buttons/BackButton";
 import { HeaderedTable } from "@libs/tableUtils";
 import { Tree } from "@libs/treeUtils";
-import type { Locale } from "@services/i18n/i18n";
+import { Locale, useLocaleText } from "@services/i18n/i18n";
 import { loadFullOutcomesTable, makeOutcomesTree } from "@services/outcomes";
 import type { OutcomeInfo } from "@services/outcomes";
 import { searchOutcomes, searchTables } from "@services/search";
@@ -22,7 +22,7 @@ type PageProps = {
 export const getStaticProps: GetStaticProps<PageProps> = async ({ locale }) => {
   const table = loadFullOutcomesTable(locale as Locale);
   const tableInfoDict = loadTableInfoDict(locale as Locale);
-  const outcomesTree = makeOutcomesTree(table, tableInfoDict);
+  const outcomesTree = makeOutcomesTree(table, tableInfoDict, locale as Locale);
   const allTables = getAllTables(locale as Locale);
 
   return {
@@ -55,6 +55,7 @@ const SearchBar = ({
   value: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }) => {
+  const { t } = useLocaleText("@pages/search");
   return (
     <div className="sticky top-0 flex w-full items-center bg-white/80 backdrop-blur-sm">
       <div className="ml-2">
@@ -63,7 +64,7 @@ const SearchBar = ({
       <input
         type="text"
         className="input-bordered input m-4 w-full max-w-xs"
-        placeholder="検索語もしくはカンマ区切りid"
+        placeholder={t("placeholder")}
         value={value}
         onChange={e => onChange(e)}
       />
@@ -73,6 +74,7 @@ const SearchBar = ({
 
 const SearchPage: NextPage<PageProps> = ({ outcomesTree, allTables }: PageProps) => {
   const router = useRouter();
+  const { t } = useLocaleText("@pages/search");
   const [searchText, setSearchText] = useState("");
   useEffect(() => {
     const { q } = router.query;
@@ -101,7 +103,7 @@ const SearchPage: NextPage<PageProps> = ({ outcomesTree, allTables }: PageProps)
         </div>
         <div>
           {searchTables(searchText, allTables).map(({ table, tableInfo, attrInfo }) => {
-            const title = `表${tableInfo.number}. ${tableInfo.item}`;
+            const title = `${t("table") + tableInfo.number}. ${tableInfo.item}`;
 
             return (
               <div key={tableInfo.id}>

@@ -45,7 +45,7 @@ const getTableFiles = (locale: Locale) => {
 const getTable = (file: string, locale: Locale): TableInfoSet => {
   const tableInfo = loadTableInfoDict(locale)[file];
   const rawTable = renameColumns(loadTable(file, locale), tableInfo.columns);
-  const map = getReplaceMap();
+  const map = getReplaceMap(locale as Locale);
   const attrTable: HeaderedTable<MappedText<AttrInfo>> = mapTable(rawTable, cell =>
     mapText(cell, map),
   );

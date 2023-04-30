@@ -3,7 +3,7 @@ import Head from "next/head";
 import { Table } from "@components/Table";
 import { BackButton } from "@components/buttons/BackButton";
 import { dropColumnsByNames } from "@libs/tableUtils";
-import { Locale, Locales } from "@services/i18n/i18n";
+import { Locale, Locales, useLocaleText } from "@services/i18n/i18n";
 import { getTable, getTableFiles, TableInfoSet } from "@services/tables";
 
 type PageProps = TableInfoSet;
@@ -31,7 +31,8 @@ export const getStaticProps: GetStaticProps<PageProps> = async ({ locale, params
 };
 
 const TableOfId: NextPage<PageProps> = ({ table, tableInfo, attrInfo }: PageProps) => {
-  const title = `表${tableInfo.number}. ${tableInfo.item}`;
+  const { t } = useLocaleText("@pages/list/table/[id]");
+  const title = `${t("table") + tableInfo.number}. ${tableInfo.item}`;
   const [header, ...body] = dropColumnsByNames(table, ["id", "index", "H28ID"]);
   return (
     <>
