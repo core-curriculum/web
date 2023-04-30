@@ -8,6 +8,7 @@ import { Table } from "@components/Table";
 import { BackButton } from "@components/buttons/BackButton";
 import { HeaderedTable } from "@libs/tableUtils";
 import { Tree } from "@libs/treeUtils";
+import type { Locale } from "@services/i18n/i18n";
 import { loadFullOutcomesTable, makeOutcomesTree } from "@services/outcomes";
 import type { OutcomeInfo } from "@services/outcomes";
 import { searchOutcomes, searchTables } from "@services/search";
@@ -18,11 +19,11 @@ type PageProps = {
   allTables: TableInfoSet[];
 };
 
-export const getStaticProps: GetStaticProps<PageProps> = async context => {
-  const table = loadFullOutcomesTable();
-  const tableInfoDict = loadTableInfoDict();
+export const getStaticProps: GetStaticProps<PageProps> = async ({ locale }) => {
+  const table = loadFullOutcomesTable(locale as Locale);
+  const tableInfoDict = loadTableInfoDict(locale as Locale);
   const outcomesTree = makeOutcomesTree(table, tableInfoDict);
-  const allTables = getAllTables();
+  const allTables = getAllTables(locale as Locale);
 
   return {
     props: { outcomesTree, allTables },

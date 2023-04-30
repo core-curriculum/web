@@ -10,6 +10,7 @@ import { BackButton } from "@components/buttons/BackButton";
 import { useConfirmDialog } from "@hooks/useConfirmDialog";
 import { HeaderedTable } from "@libs/tableUtils";
 import { Tree } from "@libs/treeUtils";
+import { Locale } from "@services/i18n/i18n";
 import {
   useListData,
   useItems,
@@ -29,11 +30,11 @@ type PageProps = {
   allTables: TableInfoSet[];
 };
 
-export const getStaticProps: GetStaticProps<PageProps> = async context => {
-  const table = loadFullOutcomesTable();
-  const tableInfoDict = loadTableInfoDict();
+export const getStaticProps: GetStaticProps<PageProps> = async ({ locale }) => {
+  const table = loadFullOutcomesTable(locale as Locale);
+  const tableInfoDict = loadTableInfoDict(locale as Locale);
   const outcomesTree = makeOutcomesTree(table, tableInfoDict);
-  const allTables = getAllTables();
+  const allTables = getAllTables(locale as Locale);
 
   return {
     props: { outcomesTree, allTables },

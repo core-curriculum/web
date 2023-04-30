@@ -1,4 +1,4 @@
-import type { NextPage, GetStaticProps } from "next";
+import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
 import Head from "next/head";
 import { Table } from "@components/Table";
 import { BackButton } from "@components/buttons/BackButton";
@@ -12,7 +12,7 @@ type PathParams = {
   id: string;
 };
 
-export const getStaticPaths = () => {
+export const getStaticPaths: GetStaticPaths<PathParams> = () => {
   const paths = (["en", "ja"] as Locales)
     .map(locale => getTableFiles(locale as Locale).map(file => ({ params: { id: file }, locale })))
     .flat();
