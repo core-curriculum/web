@@ -1,0 +1,46 @@
+name: Build and Deploy
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+
+jobs:
+  build:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    env:
+      BASIC_AUTH_USER: ${{ secrets.BASIC_AUTH_USER }}
+      BASIC_AUTH_PASSWORD: ${{ secrets.BASIC_AUTH_PASSWORD }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - name: Checkout output in data repo
+        uses: actions/checkout@v3
+        with:
+          repository: core-curriculum/data
+          token: ${{ secrets.GH_PAT }}
+          path: data_in_repo
+          fetch-depth: 1
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "19"
+      - name: Compile and build
+        shell: bash
+        run: |
+          yarn install
+          yarn run build
+      - uses: amondnet/vercel-action@v20
+        with:
+          # GitHub Actions の Secrets で作成した値を参照する形で
+          # Vercel デプロイ時に必要となる各種パラメタを設定する
+          vercel-token: ${{ secrets.VERCEL_TOKEN }} # Required
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID}} #Required
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID}} #Required
+          working-directory: ./
