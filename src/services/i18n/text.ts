@@ -51,7 +51,7 @@ const text = {
     },
     discription2: {
       // eslint-disable-next-line max-len
-      ja:`このページは、一般社団法人日本医学教育学会(医学教育学会)の「モデル・コア・カリキュラム改訂等に関する調査研究チーム」が文部科学省「大学における医療人養成の在り方に関する調査研究委託事業」による委託を受け、医学教育モデル・コア・カリキュラム（令和4年度改訂版）に基づいて作成しています。`,
+      ja:`一般社団法人日本医学教育学会(医学教育学会)は、文部科学省「大学における医療人養成の在り方に関する調査研究委託事業」による委託に基づき「医学教育モデル・コア・カリキュラム（令和4年度改訂版）」を作成いたしました。このページは医学教育学会「モデル・コア・カリキュラム改訂等に関する調査研究チーム」が、「医学教育モデル・コア・カリキュラム（令和4年度改訂版）」に基づいて作成しています。`,
       // eslint-disable-next-line max-len
       en:`This page was developed by the research team for the revision of the Model Core Curriculum of the Japan Society for Medical Education (JSME), a general incorporated association, based on the Medical Education Model Core Curriculum (Revised in 2023). The team was commissioned by the Ministry of Education, Culture, Sports, Science and Technology's (MEXT's) project to investigate the state of medical personnel training in universities.`
     },

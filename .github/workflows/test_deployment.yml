@@ -1,12 +1,15 @@
-name: Build and Deploy
+name: Test Deployment
 
 on:
   workflow_dispatch:
   repository_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   build:
-    name: Build and Deploy
+    name: Test Deployment
     runs-on: ubuntu-latest
     env:
       BASIC_AUTH_USER: ${{ secrets.BASIC_AUTH_USER }}
