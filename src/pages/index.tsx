@@ -1,10 +1,11 @@
 import type { NextPage, GetStaticProps } from "next";
 import Head from "next/head";
+import { GeneralGuidance } from "@components/GeneralGuidance";
 import { MainLayout } from "@components/MainLayout";
 import { OutcomesTree } from "@components/Outcomes";
 import { OutcomesTOC } from "@components/OutcomesTOC";
 import type { Tree } from "@libs/treeUtils";
-import { Locale } from "@services/i18n/i18n";
+import { Locale, useLocaleText } from "@services/i18n/i18n";
 import { loadFullOutcomesTable, makeOutcomesTree } from "@services/outcomes";
 import type { OutcomeInfo } from "@services/outcomes";
 import { loadTableInfoDict } from "@services/tables";
@@ -22,10 +23,11 @@ export const getStaticProps: GetStaticProps<PageProps> = async ({ locale }) => {
 };
 
 const Home: NextPage<PageProps> = ({ outcomesTree }: PageProps) => {
+  const { t } = useLocaleText("@pages/index");
   return (
     <>
       <Head>
-        <title>Core curriculum outcomes</title>
+        <title>{t("title")}</title>
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -35,7 +37,17 @@ const Home: NextPage<PageProps> = ({ outcomesTree }: PageProps) => {
         <meta name="theme-color" content="#ffffff" />
       </Head>
       <MainLayout
-        content={<OutcomesTree outcomesTree={outcomesTree} />}
+        content={
+          <>
+            <GeneralGuidance
+              className="m-4 mx-auto my-[min(10vh,5rem)] 
+            w-[clamp(20rem,80%,800px)]"
+            />
+            <h1 className="m-4 text-6xl font-thin">{t("outcomesTitle")}</h1>
+            <p className="m-6">{t("discription")}</p>
+            <OutcomesTree outcomesTree={outcomesTree} />
+          </>
+        }
         menu={<OutcomesTOC outcomesTree={outcomesTree} />}
       />
     </>
