@@ -77,7 +77,7 @@ const text = {
     },
     title: {
       ja: "医学教育モデル・コア・カリキュラム",
-      en: "Medical Education Model Core Curriculum"
+      en: "Model Core Curriculum for Medical Education"
     }
   }
 
