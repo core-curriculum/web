@@ -47,13 +47,13 @@ const text = {
       // eslint-disable-next-line max-len
       ja:`モデル・コア・カリキュラムは、日本の大学の医学部で医師を養成する卒前医学教育に関して、各大学が策定する「カリキュラム」のうち、全大学で共通して取り組むべき「コア」の部分を抽出し、「モデル」として体系的に整理したものです。各大学における具体的な医学教育は、学修時間数の 3 分の 2 程度を目安にモデル・コア・カリキュラムを踏まえたものとし、残りの 3 分の 1 程度の内容は、大学が自主的・自律的に編成するものとされています。`,
       // eslint-disable-next-line max-len
-      en:`The Model Core Curriculum is a systematic organization of the "core" aspects that should be commonly addressed by all universities within the "curriculum" that each university in Japan formulates for undergraduate medical education in their medical schools. Each university's specific medical education is based on the Model Core Curriculum, which accounts for approximately two-thirds of the total study hours, while the remaining one-third of the content is independently and autonomously organized by the university.`
+      en:`The Model Core Curriculum for Medical Education is a systematically organized model that is formed by extracting the core parts of the curriculum that should be commonly addressed by all Japanese universities when formulating their own medical education curricula. The Model Core Curriculum forms the basis for two-thirds of a medical school's curriculum, with the remaining third set by the university. It was revised in the 2022 academic year as part of the standard six-year revision cycle, and the revisions reflect and respond to various changes to related systems, relevant new and amended laws, and changing social circumstances.`
     },
     discription2: {
       // eslint-disable-next-line max-len
       ja:`一般社団法人日本医学教育学会(医学教育学会)は、文部科学省「大学における医療人養成の在り方に関する調査研究委託事業」による委託に基づき「医学教育モデル・コア・カリキュラム（令和4年度改訂版）」を作成いたしました。このページは医学教育学会「モデル・コア・カリキュラム改訂等に関する調査研究チーム」が、「医学教育モデル・コア・カリキュラム（令和4年度改訂版）」に基づいて作成しています。`,
       // eslint-disable-next-line max-len
-      en:`This page was developed by the research team for the revision of the Model Core Curriculum of the Japan Society for Medical Education (JSME), a general incorporated association, based on the Medical Education Model Core Curriculum (Revised in 2023). The team was commissioned by the Ministry of Education, Culture, Sports, Science and Technology's (MEXT's) project to investigate the state of medical personnel training in universities.`
+      en:`This page contains the official English translation of the original Japanese revision, produced by the Model Core Curriculum Expert Research Committee, as part of a project commissioned by the Ministry of Education, Culture, Sports, Science and Technology (MEXT).`
     },
     linkMextText: {
       ja: "文部科学省モデル・コア・カリキュラム公表ページ",
