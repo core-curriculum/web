@@ -1,7 +1,6 @@
 import * as path from "path";
 import { readTextFileSync } from "@libs/fileUtis";
 import { parseCSV } from "@libs/parseCSV";
-import type { HeaderedTable } from "@libs/tableUtils";
 import { outcomeDir, tableDir } from "@services/paths";
 import { Locale } from "./i18n/i18n";
 
@@ -30,7 +29,6 @@ const loadCsv = <HEADER extends readonly string[] = string[]>(path: string) => {
   return res.value as unknown as Table<HEADER>;
 };
 
-const tablaCache = new Map<string, HeaderedTable<string, string[]>>();
 const makeCache = <T>() => {
   const cache = new Map<string, T>();
   return (key: string, getFunc: (key: string) => T) => {
