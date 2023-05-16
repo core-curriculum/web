@@ -32,27 +32,25 @@ const matchOutcomesItem = (item: OutcomeInfo, searchTextFrag: string) => {
 const searchOutcomes = (outcomesTree: Tree<OutcomeInfo>, searchText: string) => {
   const frags = searchText
     .split(" ")
-    .map((s) => s.trim())
-    .filter((s) => s !== "");
+    .map(s => s.trim())
+    .filter(s => s !== "");
   if (frags.length === 0) return [];
   return searchMap(outcomesTree, (item, hasChildren, parents) => {
-    const match = frags.every((frag) => matchOutcomesItem(item, frag));
+    const match = frags.every(frag => matchOutcomesItem(item, frag));
     if (match) return { ...item, parents };
   });
 };
 
-const searchTable = (
-  searchText: string, table: HeaderedTable<string>,
-) => {
+const searchTable = (searchText: string, table: HeaderedTable<string>) => {
   const frags = searchText
     .split(" ")
-    .map((s) => s.trim())
-    .filter((s) => s !== "");
+    .map(s => s.trim())
+    .filter(s => s !== "");
   if (frags.length < 1) return [table[0]];
   const filtered = filterRow(table, (rowDict, row) => {
-    return frags.every((frag) => {
+    return frags.every(frag => {
       if (matchID(rowDict["id"], frag)) return true;
-      return row.some((cell) => cell.includes(frag));
+      return row.some(cell => cell.includes(frag));
     });
   });
   return filtered;
@@ -60,7 +58,7 @@ const searchTable = (
 
 const searchTables = (
   searchText: string,
-  tables: { table: HeaderedTable<string>; tableInfo: TableInfo, attrInfo: TableAttrInfo }[],
+  tables: { table: HeaderedTable<string>; tableInfo: TableInfo; attrInfo: TableAttrInfo }[],
 ) => {
   return tables
     .map(({ table, tableInfo, attrInfo }) => {
