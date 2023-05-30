@@ -17,7 +17,9 @@ module.exports = {
           implementation: require('postcss'),
         },
       },
-    }
+    },
+    "storybook-addon-next-router",
+
   ],
   webpackFinal(config) {
     config.resolve.modules = [

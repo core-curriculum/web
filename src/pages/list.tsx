@@ -11,6 +11,7 @@ import { useConfirmDialog } from "@hooks/useConfirmDialog";
 import { HeaderedTable } from "@libs/tableUtils";
 import { Tree } from "@libs/treeUtils";
 import { Locale, useLocaleText } from "@services/i18n/i18n";
+import { useAddViewHistory } from "@services/itemList/hooks/viewHistory";
 import {
   useListData,
   useItems,
@@ -72,6 +73,7 @@ const HeaderBar = () => {
 const useShare = () => {
   const { share: shareItemList } = useShareItemList();
   const { showDialog } = useConfirmDialog();
+  const addHistory = useAddViewHistory();
   const share = async () => {
     try {
       const goBack = "戻る";
@@ -88,6 +90,7 @@ const useShare = () => {
       });
       if (res === goBack) return;
       const inserted = await shareItemList();
+      addHistory(inserted);
       const url = listUrl(inserted.id);
       await showDialog({
         content: (

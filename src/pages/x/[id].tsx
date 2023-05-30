@@ -7,6 +7,7 @@ import { BackButton } from "@components/buttons/BackButton";
 import { HeaderedTable } from "@libs/tableUtils";
 import { Tree } from "@libs/treeUtils";
 import { Locale, useLocaleText } from "@services/i18n/i18n";
+import { useAddViewHistory } from "@services/itemList/hooks/viewHistory";
 import {
   ServerItemList,
   getSchema,
@@ -125,10 +126,12 @@ const ListPage: NextPage<PageProps> = ({
 }: PageProps) => {
   const isLoading = !allTables || !outcomesTree || !itemList || !id || !schemaWithValue;
   const { t } = useLocaleText("@pages/x/[id]");
+  const addHistory = useAddViewHistory();
   if (isLoading) return <div>Loading...</div>;
   if (typeof itemList === "string" || typeof schemaWithValue === "string")
     return <div>該当するリストが見つかりません。(id:{id})</div>;
   const text = itemList?.items.join(",") ?? "";
+  addHistory(itemList);
   return (
     <>
       <div className="ml-4">
