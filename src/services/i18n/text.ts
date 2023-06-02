@@ -15,6 +15,16 @@ const text = {
   "@components/LinktoItemList": {
     title: {ja:"リスト",en:"List"},
   },
+  "@components/ItemListList": {
+    name: {ja:"名前",en:"name"},
+    place: {ja:"場所",en:"place"},
+    created_at: {ja:"作成日時",en:"Created at"},
+  },
+  "@components/ItemListCheckList": {
+    name: {ja:"名前",en:"name"},
+    place: {ja:"場所",en:"place"},
+    created_at: {ja:"作成日時",en:"Created at"},
+  },
   "@components/ItemContextMenu": {
     addItem: {ja:"リストに追加",en:"Add to List"},
     copyId: {ja:"idをコピー",en:"Copy id"},
@@ -28,6 +38,47 @@ const text = {
   },
   "@pages/list": {
     table: {ja:"表",en:"Table"},
+    share: {ja:"共有する",en:"Share"},
+    sharing: {ja:"共有中...",en:"Sharing..."},
+    back: {ja:"戻る",en:"Back"},
+    proceedToShare: {ja:"問題ないので共有する",en:"Proceed to share"},
+    alertToShare: {
+      ja:"共有した内容はurlを知っていれば誰でも閲覧可能になります。個人情報・機密情報が含まれていないことを確認した下さい。",
+      // eslint-disable-next-line max-len
+      en:"The shared content will be viewable by anyone who knows the url. Please make sure that it does not contain personal or confidential information."
+    },
+    wayToShare: {
+      ja:"このリストを共有するには以下のurlを共有してください。",
+      en:"Share this list by sharing the following url."
+    },
+    cancel: {ja:"キャンセル",en:"Cancel"},
+    doOverwrite :{ja:"破棄して上書き",en:"Overwrite"},
+    waringToOverwrite: {
+      ja: "編集中のリストがあります。破棄して新しいリストで上書きしますか?", 
+      en:"There is a list being edited. Do you want to discard it and overwrite it with a new list?"
+    },
+  },
+  "@pages/map": {
+    table: {ja:"表",en:"Table"},
+    share: {ja:"共有する",en:"Share"},
+    sharing: {ja:"共有中...",en:"Sharing..."},
+    back: {ja:"戻る",en:"Back"},
+    proceedToShare: {ja:"問題ないので共有する",en:"Proceed to share"},
+    alertToShare: {
+      ja:"共有した内容はurlを知っていれば誰でも閲覧可能になります。個人情報・機密情報が含まれていないことを確認した下さい。",
+      // eslint-disable-next-line max-len
+      en:"The shared content will be viewable by anyone who knows the url. Please make sure that it does not contain personal or confidential information."
+    },
+    wayToShare: {
+      ja:"このカリキュラムマップを共有するには以下のurlを共有してください。",
+      en:"Share this curriculum map by sharing the following url."
+    },
+    cancel: {ja:"キャンセル",en:"Cancel"},
+    doOverwrite :{ja:"破棄して上書き",en:"Overwrite"},
+    waringToOverwrite: {
+      ja: "編集中のリストがあります。破棄して新しいリストで上書きしますか?", 
+      en:"There is a list being edited. Do you want to discard it and overwrite it with a new list?"
+    },
   },
   "@pages/list/table/[id]": {
     table: {ja:"表",en:"Table"},
@@ -81,9 +132,18 @@ const text = {
       ja: "医学教育モデル・コア・カリキュラム",
       en: "Model Core Curriculum for Medical Education"
     }
+  },
+  "@services/itemList/libs/schema_list": {
+    $name: {ja:"科目・授業名",en:"name"},
+    $place: {ja:"施設・大学名",en:"place"},
+  },
+  "@services/itemList/libs/schema_map": {
+    $name: {ja:"カリキュラム名",en:"name"},
+    $place: {ja:"施設・大学名",en:"place"},
   }
 
-} satisfies Text ;
+
+} as const satisfies Text ;
 
 type LocaleText = typeof text;
 

@@ -14,9 +14,18 @@ type InputItemList = Expand<
 >;
 type ServerItemList = Expand<
   ItemList & {
+    name: string;
+    place: string;
     created_at: Date;
   }
 >;
+
+type LocalCorriculumMap = {
+  items: ReadonlyArray<ServerItemList>;
+  data: Record<string, string>;
+  from_id: string;
+  schema: Schema;
+};
 
 type ItemListInDB = Expand<
   Pick<ItemList, "items" | "id"> &
@@ -28,6 +37,8 @@ type ItemListInDB = Expand<
 type ItemListDBView = Readonly<{
   id: string;
   items: readonly string[];
+  name: string;
+  place: string;
   created_at: Date;
   data: Record<string, string>;
   schema_id?: string;
@@ -53,6 +64,7 @@ export type {
   ServerItemListResponse,
   ItemListDBView,
   LocalItemList,
+  LocalCorriculumMap,
   Schema,
   SchemaUnit,
   SharedItemList,

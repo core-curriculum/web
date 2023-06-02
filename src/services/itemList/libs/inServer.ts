@@ -41,7 +41,9 @@ const insertNewList = async ({ data, ...itemList }: InputItemList): Promise<Serv
   const schema_id = res.schema_id ? toBase64(res.schema_id) : "";
   const id = toBase64(res.id);
   const insertedData: Record<string, string> = data ? await insertData(id, data) : {};
-  return { ...res, id, schema_id, from_id, data: insertedData };
+  const name = insertedData.name ?? "";
+  const place = insertedData.place ?? "";
+  return { ...res, id, schema_id, from_id, name, place, data: insertedData };
 };
 
 const getItemListFromId = async (id: string): Promise<ServerItemList> => {
@@ -62,8 +64,10 @@ const getItemListFromIds = async (ids: readonly string[]): Promise<ServerItemLis
     const id = toBase64(uuid, { ignoreError: true });
     const from_id = res.from_id ? toBase64(res.from_id) : "";
     const schema_id = res.schema_id ? toBase64(res.schema_id) : "";
+    const name = res.name ?? "";
+    const place = res.place ?? "";
     const data = res.data ?? {};
-    return { ok: true, data: { ...res, id, from_id, schema_id, data } } as const;
+    return { ok: true, data: { ...res, id, from_id, schema_id, data, name, place } } as const;
   });
 };
 

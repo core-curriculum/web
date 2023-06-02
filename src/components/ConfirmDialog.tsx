@@ -14,7 +14,7 @@ type Props = {
 const Title = ({ title, onClose }: { title: string; onClose: () => void }) => {
   return (
     <div className="flex">
-      <Dialog.Title as="h3" className="flex-1 text-lg font-medium leading-6 text-gray-900">
+      <Dialog.Title as="h3" className="flex-1 text-lg font-medium leading-6 text-base-content">
         {title}
       </Dialog.Title>
       <MdClose className="flex-none cursor-pointer" onClick={onClose} />
@@ -55,7 +55,7 @@ const ConfirmDialog = ({ show, title, content, onClose, choises, primary }: Prop
               >
                 <Dialog.Panel
                   className="w-full max-w-md overflow-hidden rounded-2xl
-                  bg-white p-6 text-left align-middle shadow-xl transition-all"
+                  bg-base-100 p-6 text-left align-middle shadow-xl transition-all"
                 >
                   <Title title={title} onClose={() => onClose("")} />
                   <div className="mt-2">{content}</div>
@@ -66,10 +66,7 @@ const ConfirmDialog = ({ show, title, content, onClose, choises, primary }: Prop
                         <button
                           type="button"
                           key={key}
-                          className="inline-flex justify-center rounded-md border border-transparent
-                      bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 
-                      focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 
-                      focus-visible:ring-offset-2"
+                          className="btn btn-primary"
                           onClick={() => onClose(key)}
                         >
                           {key}
@@ -78,10 +75,7 @@ const ConfirmDialog = ({ show, title, content, onClose, choises, primary }: Prop
                         <button
                           type="button"
                           key={key}
-                          className="inline-flex justify-center rounded-md border border-transparent
-                        px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 
-                        focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 
-                        focus-visible:ring-offset-2"
+                          className="btn"
                           onClick={() => onClose(key)}
                         >
                           {key}

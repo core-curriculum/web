@@ -12,15 +12,9 @@ import { useConfirmDialog } from "@hooks/useConfirmDialog";
 import { HeaderedTable } from "@libs/tableUtils";
 import { Tree } from "@libs/treeUtils";
 import { Locale, useLocaleText, useTranslation } from "@services/i18n/i18n";
+import { useCurriculumMapData } from "@services/itemList/hooks/curriculumMap";
 import { useAddViewHistory } from "@services/itemList/hooks/viewHistory";
-import {
-  useListData,
-  useItems,
-  useServerTemplate,
-  useShare as useShareItemList,
-  useItemListSchema,
-  schemaItemsWithValue,
-} from "@services/itemList/local";
+import { useServerTemplate, useShare as useShareItemList } from "@services/itemList/local";
 import { loadFullOutcomesTable, makeOutcomesTree } from "@services/outcomes";
 import type { OutcomeInfo } from "@services/outcomes";
 import { searchOutcomes, searchTables } from "@services/search";
@@ -48,7 +42,7 @@ const Breadcrumb = ({ parents }: { parents: OutcomeInfo[] }) => {
     <>
       {parents.map((parent, i) => {
         return (
-          <span className="text-xs text-base-content/50" key={parent.id}>
+          <span className="text-xs text-base-content/40" key={parent.id}>
             {i !== 0 ? ` / ` : ""}
             <span>
               {parent.index.slice(-2)}
@@ -74,7 +68,7 @@ const HeaderBar = () => {
 const useShare = () => {
   const { share: shareItemList } = useShareItemList();
   const { showDialog } = useConfirmDialog();
-  const { t } = useTranslation("@pages/list");
+  const { t } = useTranslation("@pages/map");
   const addHistory = useAddViewHistory();
   const share = async () => {
     try {
@@ -113,8 +107,8 @@ const useShare = () => {
 };
 
 const ShareButton = () => {
-  const { t } = useTranslation("@pages/list");
-  const { isValid } = useItemListSchema();
+  const { t } = useTranslation("@pages/map");
+  const { isValid } = useSchema();
   const { share } = useShare();
   const [sharing, setSharing] = useState(false);
   const _share = async () => {
@@ -122,30 +116,25 @@ const ShareButton = () => {
     await share();
     setSharing(false);
   };
-  const SharingStatement = () => (
-    <>
-      {t("sharing")}
-      <Image className="m-2" width="20" height="20" src="spinner.svg" alt="...shareing" />
-    </>
-  );
   return (
     <>
       <button className="btn" disabled={!isValid || sharing} onClick={_share}>
-        {sharing ? <SharingStatement /> : t("share")}
+        {sharing ? (
+          <>
+            {t("sharing")}
+            <Image className="m-2" width="20" height="20" src="spinner.svg" alt="...shareing" />
+          </>
+        ) : (
+          t("share")
+        )}
       </button>
     </>
   );
 };
 
 const ListData = () => {
-  const { listData, set: setListDataValue } = useListData();
-  const { schema } = useItemListSchema();
-  const { t } = useTranslation("@services/itemList/libs/schema_list");
-  const schemaWithValue = schemaItemsWithValue(
-    listData ?? {},
-    schema,
-    t as (key: string) => string,
-  );
+  const { schemaWithValue } = useSchemaWithValue();
+  const { set: setListDataValue } = useCurriculumMapData();
   const onChange = (key: string, e: ChangeEvent<HTMLInputElement>) => {
     setListDataValue(key, e.target.value);
   };
@@ -199,7 +188,7 @@ const useTemplate = () => {
 };
 
 const ListPage: NextPage<PageProps> = ({ outcomesTree, allTables }: PageProps) => {
-  const { t } = useLocaleText("@pages/list");
+  const { t } = useLocaleText("@pages/map");
   const { apply } = useTemplate();
   const router = useRouter();
   useEffect(() => {

@@ -1,22 +1,10 @@
-import { Ref, useCallback } from "react";
+import { Ref, forwardRef, useCallback } from "react";
 import { useDrag, useDrop, DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { MdDragIndicator, MdDeleteForever } from "react-icons/md";
+import { formatDateTimeIntl } from "@libs/utils";
+import { useTranslation } from "@services/i18n/i18n";
 import { ServerItemList } from "@services/itemList/server";
-
-const format = (date: Date) => {
-  return `${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, "0")}/${date
-    .getDate()
-    .toString()
-    .padStart(2, "0")} ${date.getHours().toString().padStart(2, "0")}:${date
-    .getMinutes()
-    .toString()
-    .padStart(2, "0")}:${date.getSeconds().toString().padStart(2, "0")}`;
-};
-type Props = {
-  itemListList: ServerItemList[];
-  onChange?: (itemListList: ServerItemList[]) => void;
-};
 
 const useCombinedRefs = <T extends Element>(...refs: Array<Ref<T>>): Ref<T> =>
   useCallback(
@@ -32,7 +20,7 @@ const useCombinedRefs = <T extends Element>(...refs: Array<Ref<T>>): Ref<T> =>
 
         (ref as any).current = element;
       }),
-    refs,
+    [refs],
   );
 
 function moveIndex<T>(array: T[], from: number, to: number) {
@@ -43,61 +31,78 @@ function moveIndex<T>(array: T[], from: number, to: number) {
   return newArray;
 }
 
-type ItemListProps = {
-  itemList: ServerItemList;
+// eslint-disable-next-line react/display-name
+const DragHandle = forwardRef<HTMLDivElement>((_props, ref) => (
+  <div ref={ref}>
+    <MdDragIndicator className="mr-1 cursor-move text-gray-400" />
+  </div>
+));
+
+const DeleteIcon = ({ onClick }: { onClick: () => void }) => (
+  <MdDeleteForever onClick={onClick} className="ml-1 cursor-pointer text-gray-400" />
+);
+
+type DraggableRowProps = {
+  items: ReadonlyArray<string>;
   index: number;
   onMoveItem?: (prevIndex: number, targetIndex: number) => void;
 };
-
-const ItemList = ({ itemList, index, onMoveItem }: ItemListProps) => {
-  const id = itemList.id;
-  const [{ isDragging }, drag] = useDrag(
-    () => ({
-      type: "Card",
-      item: { id, index },
-      collect: monitor => ({
-        isDragging: monitor.isDragging(),
-      }),
-    }),
-    [],
-  );
-  const [{ toInsertTop, toInsertBottom }, drop] = useDrop(() => ({
-    accept: "Card",
-    drop: item => onMoveItem?.((item as { index: number }).index, index),
+const DraggableRowDndType = Symbol("DraggableRowDndType");
+const DraggableRow = ({ items, index, onMoveItem }: DraggableRowProps) => {
+  const [{ isDragging }, drag, preview] = useDrag(() => ({
+    type: DraggableRowDndType,
+    item: { index },
     collect: monitor => ({
-      toInsertTop: !!monitor.isOver() && monitor.getItem<{ index: number }>().index > index,
-      toInsertBottom: !!monitor.isOver() && monitor.getItem<{ index: number }>().index < index,
+      isDragging: monitor.isDragging(),
     }),
   }));
-  const refs = useCombinedRefs(drag, drop);
-  const marginClass = `${toInsertTop ? "pt-20" : ""} ${toInsertBottom ? "pb-20" : ""}`;
+  const [{ toInsertTop, toInsertBottom }, drop] = useDrop<
+    { index: number },
+    void,
+    {
+      toInsertTop: boolean;
+      toInsertBottom: boolean;
+    }
+  >(() => ({
+    accept: DraggableRowDndType,
+    drop: item => onMoveItem?.(item.index, index),
+    collect: monitor => ({
+      toInsertTop: !!monitor.isOver() && monitor.getItem().index > index,
+      toInsertBottom: !!monitor.isOver() && monitor.getItem().index < index,
+    }),
+  }));
+  const refs = useCombinedRefs<HTMLTableRowElement>(preview, drop);
   return (
-    <tr ref={onMoveItem ? (refs as any) : null} className={`${isDragging ? "scale-y-0" : ""}`}>
-      <td className={marginClass}>
-        <div className="flex flex-row  items-center">
-          {onMoveItem ? <MdDragIndicator className="mr-1 cursor-move text-gray-400" /> : ""}
-          {itemList.data["name"]}
-        </div>
-      </td>
-      <td className={marginClass}>{itemList.data["place"]}</td>
-      <td className={marginClass}>
-        <div className="flex flex-row  items-center">
-          {format(itemList.created_at)}
-          {onMoveItem ? (
-            <MdDeleteForever
-              onClick={() => onMoveItem(index, -1)}
-              className="ml-1 cursor-pointer text-gray-400"
-            />
-          ) : (
-            ""
-          )}
-        </div>
-      </td>
+    <tr
+      ref={onMoveItem ? refs : null}
+      className={`${isDragging ? "scale-y-0" : ""} ${toInsertTop ? "border-t-8" : ""} ${
+        toInsertBottom ? "border-b-8" : ""
+      }`}
+    >
+      {items.map((item, i, { length }) => {
+        const needHandle = onMoveItem && i === 0;
+        const needDeleteIcon = onMoveItem && i === length - 1;
+        return (
+          <td key={i}>
+            <div className="flex flex-row  items-center">
+              {needHandle && <DragHandle ref={drag} />}
+              {item}
+              {needDeleteIcon && <DeleteIcon onClick={() => onMoveItem(index, -1)} />}
+            </div>
+          </td>
+        );
+      })}
     </tr>
   );
 };
 
+type Props = {
+  itemListList: ServerItemList[];
+  onChange?: (itemListList: ServerItemList[]) => void;
+};
+
 const ItemListList = ({ itemListList, onChange }: Props) => {
+  const { t } = useTranslation("@components/ItemListList");
   const onMoveItem = useCallback(
     (prevIndex: number, targetIndex: number) => {
       const newItemListList = moveIndex(itemListList, prevIndex, targetIndex);
@@ -110,17 +115,17 @@ const ItemListList = ({ itemListList, onChange }: Props) => {
       <table className="table">
         <thead>
           <tr>
-            <td>名前</td>
-            <td>場所</td>
-            <td>作成日</td>
+            <td>{t("name")}</td>
+            <td>{t("place")}</td>
+            <td>{t("created_at")}</td>
           </tr>
         </thead>
         <tbody>
-          {itemListList.map((item, i) => (
-            <ItemList
-              key={i.toString() + "_" + item.id}
+          {itemListList.map(({ id, name, place, created_at }, i) => (
+            <DraggableRow
+              key={i + "_" + id}
               index={i}
-              itemList={item}
+              items={[name, place, formatDateTimeIntl(created_at)]}
               onMoveItem={onChange ? onMoveItem : undefined}
             />
           ))}

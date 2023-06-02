@@ -1,7 +1,6 @@
-import { Meta, StoryFn } from "@storybook/react";
+import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { useState } from "react";
-import { ItemListList, ItemListListProps } from "@components/ItemListList";
-import { ServerItemList } from "@services/itemList/server";
+import { ItemListCheckList, ItemListCheckListProps } from "@components/ItemListCheckList";
 
 const dummyItemListList = [
   {
@@ -37,27 +36,27 @@ const dummyItemListList = [
   },
 ];
 
-const TargetComponent = (props: ItemListListProps) => {
-  const [list, setList] = useState(props.itemListList as ServerItemList[]);
-  const onChange = (newList: ServerItemList[]) => {
+const TargetComponent = (props: ItemListCheckListProps) => {
+  const [list, setList] = useState([] as number[]);
+  const onChange = (newList: number[]) => {
     setList(newList);
   };
   return (
     <div>
-      <ItemListList itemListList={list} onChange={onChange} />
+      <ItemListCheckList itemListList={props.itemListList} checkedList={list} onChange={onChange} />
     </div>
   );
 };
 
 export default {
-  title: "Components/ItemListList",
+  title: "Components/ItemListCheckList",
   component: TargetComponent,
   parameters: {
     // More on Story layout: https://storybook.js.org/docs/react/configure/story-layout
     layout: "centered",
   },
-} as Meta<typeof ItemListList>;
-const Template: StoryFn<typeof TargetComponent> = args => <TargetComponent {...args} />;
+} as ComponentMeta<typeof ItemListCheckList>;
+const Template: ComponentStory<typeof TargetComponent> = args => <TargetComponent {...args} />;
 
 export const SimpleItems = Template.bind({});
 SimpleItems.args = { itemListList: dummyItemListList };

@@ -6,7 +6,7 @@ import { Table } from "@components/Table";
 import { BackButton } from "@components/buttons/BackButton";
 import { HeaderedTable } from "@libs/tableUtils";
 import { Tree } from "@libs/treeUtils";
-import { Locale, useLocaleText } from "@services/i18n/i18n";
+import { Locale, translationInServer, useLocaleText } from "@services/i18n/i18n";
 import { useAddViewHistory } from "@services/itemList/hooks/viewHistory";
 import {
   ServerItemList,
@@ -53,8 +53,11 @@ export const getStaticProps: GetStaticProps<PageProps> = async ({ locale, params
   const itemList = await getServerItem(id);
   const schemaId = typeof itemList === "string" ? "" : itemList.schema_id;
   const schema = await getSchema(schemaId);
+  const { t } = translationInServer(locale as Locale, "@services/itemList/libs/schema_list");
   const schemaWithValue =
-    typeof itemList === "string" ? "" : schemaItemsWithValue(itemList, schema);
+    typeof itemList === "string"
+      ? ""
+      : schemaItemsWithValue(itemList.data, schema, t as (key: string) => string);
   return {
     props: { outcomesTree, allTables, id, itemList, schemaWithValue },
   };
@@ -170,7 +173,7 @@ const ListPage: NextPage<PageProps> = ({
             </div>
             <div className="mt-8 mb-2">関連する項目や授業名を変更する場合は以下から</div>
             <div>
-              <Link href={`/list?from=${id}`} className="btn-outline  btn">
+              <Link href={`/list?from=${id}`} className="btn-outline btn">
                 このリストを元に新しいリストを作成
               </Link>
             </div>

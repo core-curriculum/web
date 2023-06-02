@@ -1,12 +1,15 @@
-import { Schema as SchemaItems, SchemaUnit,validate as validateSchema } from "@libs/schema";
+import { 
+  Schema as SchemaItems, 
+  SchemaUnit,schemaWithValue,
+  validate as validateSchema } from "@libs/schema";
 
 type Schema = {id:string,items:SchemaItems};
 const defaultSchema = {
   id: "",
   items: [
     { key: "$items", type: "list", rules:["required"] },
-    { key: "name", type: "text", rules:["required"], label: "科目・授業名" },
-    { key: "place", type: "text", rules:["required"], label: "施設・大学名" },
+    { key: "name", type: "text", rules:["required"], label: "$name" },
+    { key: "place", type: "text", rules:["required"], label: "$place" },
   ]
 } satisfies Schema
 
@@ -22,11 +25,15 @@ const validate = (
 }
 
 const schemaItemsWithValue = (
-  itemList: { data?: Record<string, string> },
-  schema: Schema
+  data: Record<string, string>,
+  schema: Schema,
+  onTranslateLabel?: (label: string) => string
 ) => {
-  return schema.items.filter(item=>item.key!=="$items").map(unit => {
-    const value = itemList.data?.[unit.key] ?? "";
+  return schemaWithValue(data,schema.items).filter(item=>item.key!=="$items").map(unit => {
+    const value = unit.value!==undefined ? `${unit.value}` ?? "" : "";
+    if (onTranslateLabel && unit["label"]) {
+      return { ...unit, value,label: onTranslateLabel(unit["label"]) };
+    }
     return { ...unit, value };
   })
 }
