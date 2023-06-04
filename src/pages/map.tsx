@@ -5,19 +5,24 @@ import { useRouter } from "next/router";
 import { ChangeEvent, Suspense, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { CopyButton } from "@components/CopyButton";
-import { ItemContextMenu } from "@components/ItemContextMenu";
-import { Table } from "@components/Table";
+import { ItemListList } from "@components/ItemListList";
 import { BackButton } from "@components/buttons/BackButton";
 import { useConfirmDialog } from "@hooks/useConfirmDialog";
-import { HeaderedTable } from "@libs/tableUtils";
 import { Tree } from "@libs/treeUtils";
 import { Locale, useLocaleText, useTranslation } from "@services/i18n/i18n";
-import { useCurriculumMapData } from "@services/itemList/hooks/curriculumMap";
+import {
+  useCurriculumMapData,
+  useCurriculumMapItems,
+} from "@services/itemList/hooks/curriculumMap";
+import { useCurriculumMapSchema } from "@services/itemList/hooks/schema";
 import { useAddViewHistory } from "@services/itemList/hooks/viewHistory";
-import { useServerTemplate, useShare as useShareItemList } from "@services/itemList/local";
+import {
+  schemaItemsWithValue,
+  useServerTemplate,
+  useShare as useShareItemList,
+} from "@services/itemList/local";
 import { loadFullOutcomesTable, makeOutcomesTree } from "@services/outcomes";
 import type { OutcomeInfo } from "@services/outcomes";
-import { searchOutcomes, searchTables } from "@services/search";
 import { getAllTables, loadTableInfoDict, TableInfoSet } from "@services/tables";
 import { listUrl } from "@services/urls";
 
@@ -108,7 +113,7 @@ const useShare = () => {
 
 const ShareButton = () => {
   const { t } = useTranslation("@pages/map");
-  const { isValid } = useSchema();
+  const { isValid } = useCurriculumMapSchema();
   const { share } = useShare();
   const [sharing, setSharing] = useState(false);
   const _share = async () => {
@@ -118,7 +123,7 @@ const ShareButton = () => {
   };
   return (
     <>
-      <button className="btn" disabled={!isValid || sharing} onClick={_share}>
+      <button className="btn-primary btn" disabled={!isValid || sharing} onClick={_share}>
         {sharing ? (
           <>
             {t("sharing")}
@@ -132,11 +137,15 @@ const ShareButton = () => {
   );
 };
 
-const ListData = () => {
-  const { schemaWithValue } = useSchemaWithValue();
-  const { set: setListDataValue } = useCurriculumMapData();
+const CurriculumMapData = () => {
+  const { set: setDataValue, listData } = useCurriculumMapData();
+  const { schema } = useCurriculumMapSchema();
+  const { t } = useTranslation("@services/itemList/libs/schema_map");
+
+  const schemaWithValue = schemaItemsWithValue(listData, schema, t as (key: string) => string);
+
   const onChange = (key: string, e: ChangeEvent<HTMLInputElement>) => {
-    setListDataValue(key, e.target.value);
+    setDataValue(key, e.target.value);
   };
   return (
     <Suspense fallback="loading...">
@@ -187,7 +196,7 @@ const useTemplate = () => {
   return { apply };
 };
 
-const ListPage: NextPage<PageProps> = ({ outcomesTree, allTables }: PageProps) => {
+const CurriculumMapPage: NextPage<PageProps> = ({ outcomesTree, allTables }: PageProps) => {
   const { t } = useLocaleText("@pages/map");
   const { apply } = useTemplate();
   const router = useRouter();
@@ -197,39 +206,13 @@ const ListPage: NextPage<PageProps> = ({ outcomesTree, allTables }: PageProps) =
       apply(templateId);
     }
   }, [apply, router]);
-  const { items } = useItems();
-  const text = items.join(",");
+  const { items, setItems } = useCurriculumMapItems();
   return (
     <>
       <div className="ml-4">
         <HeaderBar />
-        <ListData />
-        <div>
-          {searchOutcomes(outcomesTree, text).map(item => (
-            <div className="m-4" key={item.id}>
-              <div>
-                <span className="mr-2 font-light text-sky-600">{item.index}</span>
-                {item.text}
-                <ItemContextMenu id={item.id} index={item.index} />
-              </div>
-              <Breadcrumb parents={item.parents} />
-            </div>
-          ))}
-        </div>
-        <div className="ml-4">
-          {searchTables(text, allTables).map(({ table, tableInfo, attrInfo }) => {
-            const title = `${t("table") + tableInfo.number}. ${tableInfo.item}`;
-
-            return (
-              <div key={tableInfo.id}>
-                <div>
-                  <div className="my-4">{title}</div>
-                  <Table {...{ table: table as HeaderedTable<string>, tableInfo, attrInfo }} />
-                </div>
-              </div>
-            );
-          })}
-        </div>
+        <CurriculumMapData />
+        <ItemListList itemListList={items} onChange={items => setItems(items)} />
       </div>
       <div className="m-8">
         <ShareButton />
@@ -238,4 +221,4 @@ const ListPage: NextPage<PageProps> = ({ outcomesTree, allTables }: PageProps) =
   );
 };
 
-export default ListPage;
+export default CurriculumMapPage;

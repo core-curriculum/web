@@ -32,4 +32,9 @@ const toUUID = (base64ShortId: string, option?: { ignoreError: boolean }) => {
   }
 };
 
-export { toBase64, toUUID };
+const isValidShortId = (base64ShortId: string) => {
+  const uuid = toUUID(base64ShortId, { ignoreError: true });
+  return base64ShortId !== uuid && uuid.length === 36;
+};
+
+export { toBase64, toUUID, isValidShortId };

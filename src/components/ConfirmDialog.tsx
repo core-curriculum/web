@@ -7,6 +7,7 @@ type Props = {
   title?: string;
   show: boolean;
   choises?: string[];
+  disables?: string[];
   primary?: string;
   onClose: (res: string) => void;
 };
@@ -22,7 +23,7 @@ const Title = ({ title, onClose }: { title: string; onClose: () => void }) => {
   );
 };
 
-const ConfirmDialog = ({ show, title, content, onClose, choises, primary }: Props) => {
+const ConfirmDialog = ({ show, title, content, onClose, choises, primary, disables }: Props) => {
   title ??= "";
   choises ??= [];
   primary ??= "";
@@ -66,7 +67,9 @@ const ConfirmDialog = ({ show, title, content, onClose, choises, primary }: Prop
                         <button
                           type="button"
                           key={key}
-                          className="btn btn-primary"
+                          disabled={disables?.includes(key)}
+                          autoFocus={true}
+                          className="btn-primary btn"
                           onClick={() => onClose(key)}
                         >
                           {key}
@@ -75,7 +78,8 @@ const ConfirmDialog = ({ show, title, content, onClose, choises, primary }: Prop
                         <button
                           type="button"
                           key={key}
-                          className="btn"
+                          disabled={disables?.includes(key)}
+                          className="btn-ghost btn"
                           onClick={() => onClose(key)}
                         >
                           {key}

@@ -1,4 +1,4 @@
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryFn } from "@storybook/react";
 import React from "react";
 import { Toaster } from "react-hot-toast";
 import type { ConfirmDialogProps } from "@components/ConfirmDialog";
@@ -28,9 +28,9 @@ export default {
     // More on Story layout: https://storybook.js.org/docs/react/configure/story-layout
     layout: "centered",
   },
-} as ComponentMeta<typeof TargetComponent>;
+} as Meta<typeof TargetComponent>;
 
-const Template: ComponentStory<typeof TargetComponent> = args => <TargetComponent {...args} />;
+const Template: StoryFn<typeof TargetComponent> = args => <TargetComponent {...args} />;
 
 export const SimpleItems = Template.bind({});
 SimpleItems.args = {

@@ -1,4 +1,4 @@
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryFn } from "@storybook/react";
 import React from "react";
 import { Toaster } from "react-hot-toast";
 import { ConfirmDialog } from "@components/ConfirmDialog";
@@ -20,9 +20,9 @@ export default {
     // More on Story layout: https://storybook.js.org/docs/react/configure/story-layout
     layout: "centered",
   },
-} as ComponentMeta<typeof TargetComponent>;
+} as Meta<typeof TargetComponent>;
 
-const Template: ComponentStory<typeof TargetComponent> = args => <TargetComponent {...args} />;
+const Template: StoryFn<typeof TargetComponent> = args => <TargetComponent {...args} />;
 
 export const SimpleItems = Template.bind({});
 SimpleItems.args = {
@@ -34,6 +34,16 @@ SimpleItems.args = {
   onClose: key => confirm(key),
 };
 
+export const DisableItem = Template.bind({});
+DisableItem.args = {
+  title: "test",
+  content: <span>aaaa</span>,
+  choises: ["閉じる", "キャンセル"],
+  disables: ["閉じる"],
+  primary: "キャンセル",
+  show: true,
+  onClose: key => confirm(key),
+};
 export const NoItems = Template.bind({});
 NoItems.args = {
   title: "test",

@@ -23,7 +23,7 @@ const useCombinedRefs = <T extends Element>(...refs: Array<Ref<T>>): Ref<T> =>
     [refs],
   );
 
-function moveIndex<T>(array: T[], from: number, to: number) {
+function moveIndex<T>(array: ReadonlyArray<T>, from: number, to: number) {
   const newArray = [...array];
   const target = newArray[from];
   newArray.splice(from, 1);
@@ -97,7 +97,7 @@ const DraggableRow = ({ items, index, onMoveItem }: DraggableRowProps) => {
 };
 
 type Props = {
-  itemListList: ServerItemList[];
+  itemListList: ReadonlyArray<ServerItemList>;
   onChange?: (itemListList: ServerItemList[]) => void;
 };
 
