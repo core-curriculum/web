@@ -4,14 +4,14 @@ import "tailwindcss/tailwind.css";
 import { Analytics } from "@vercel/analytics/react";
 import type { AppProps } from "next/app";
 import { Toaster } from "react-hot-toast";
-import { ConfirmDialog } from "@hooks/useConfirmDialog";
+import { ModalProvider } from "@components/Modal";
 
 function MyApp({ Component, pageProps, router }: AppProps) {
   return (
     <>
       <Component {...pageProps} />
       <Toaster />
-      <ConfirmDialog />
+      <ModalProvider />
       <Analytics />
     </>
   );

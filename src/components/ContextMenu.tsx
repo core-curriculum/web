@@ -40,7 +40,7 @@ const ContextMenu = <T extends readonly { name: string; label?: string }[]>({
                   {({ active }) => (
                     <button
                       className={`${active ? "bg-sky-400 text-white" : "text-gray-900"} 
-                group flex w-full items-center whitespace-nowrap rounded-md px-2 py-2 text-sm`}
+                group flex w-full items-center whitespace-nowrap rounded-md p-2 text-sm`}
                       onClick={() => onClick?.(name)}
                     >
                       {label ?? name}

@@ -4,11 +4,11 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { ChangeEvent, Suspense, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { showConfirmDialog } from "@components/ConfirmDialog";
 import { CopyButton } from "@components/CopyButton";
 import { ItemContextMenu } from "@components/ItemContextMenu";
 import { Table } from "@components/Table";
 import { BackButton } from "@components/buttons/BackButton";
-import { useConfirmDialog } from "@hooks/useConfirmDialog";
 import { HeaderedTable } from "@libs/tableUtils";
 import { Tree } from "@libs/treeUtils";
 import { Locale, useLocaleText, useTranslation } from "@services/i18n/i18n";
@@ -73,13 +73,12 @@ const HeaderBar = () => {
 
 const useShare = () => {
   const { share: shareItemList } = useShareItemList();
-  const { showDialog } = useConfirmDialog();
   const { t } = useTranslation("@pages/list");
   const addHistory = useAddViewHistory();
   const share = async () => {
     try {
       const goBack = t("back");
-      const res = await showDialog({
+      const res = await showConfirmDialog({
         content: (
           <>
             <div className="mb-4">{t("alertToShare")}</div>
@@ -92,7 +91,7 @@ const useShare = () => {
       const inserted = await shareItemList();
       addHistory(inserted);
       const url = listUrl(inserted.id);
-      await showDialog({
+      await showConfirmDialog({
         content: (
           <>
             <div className="mb-4">{t("wayToShare")}</div>
@@ -175,7 +174,6 @@ const useTemplate = () => {
   const { apply: doApply } = useServerTemplate();
   const router = useRouter();
   const [processed, setProcessed] = useState(false);
-  const { showDialog } = useConfirmDialog();
   const { isDirty } = useShareItemList();
   const { t } = useTranslation("@pages/list");
   const apply = async (templateId: string) => {
@@ -184,7 +182,7 @@ const useTemplate = () => {
       setProcessed(true);
       if (isDirty) {
         const choises = [t("doOverwrite"), t("cancel")];
-        const res = await showDialog({
+        const res = await showConfirmDialog({
           content: t("waringToOverwrite"),
           choises,
         });

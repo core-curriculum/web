@@ -58,8 +58,7 @@ const ChildList = ({ active, childnodes }: { active: boolean; childnodes: ReactN
   return (
     <div className="overflow-y-hidden">
       <ul
-        className={`transform overflow-y-hidden transition-all duration-500 ease-in-out
-          ${active ? "scale-y-100" : "invisible h-0"}`}
+        className={`overflow-y-hidden transition-all duration-500 ease-in-out${active ? "scale-y-100" : "invisible h-0"}`}
       >
         {childnodes}
       </ul>

@@ -1,13 +1,22 @@
 import { Meta, StoryFn } from "@storybook/react";
 import React from "react";
 import { Toaster } from "react-hot-toast";
-import { ConfirmDialog } from "@components/ConfirmDialog";
 import type { ConfirmDialogProps } from "@components/ConfirmDialog";
+import { showConfirmDialog } from "@components/ConfirmDialog";
+import { ModalProvider } from "@components/Modal";
 
 const TargetComponent = (props: ConfirmDialogProps) => {
   return (
     <div>
-      <ConfirmDialog {...props} />
+      <button
+        onClick={async () => {
+          const res = await showConfirmDialog(props);
+          confirm(res);
+        }}
+      >
+        表示
+      </button>
+      <ModalProvider />
       <Toaster />
     </div>
   );
@@ -30,24 +39,10 @@ SimpleItems.args = {
   content: <span>aaaa</span>,
   choises: ["閉じる", "キャンセル"],
   primary: "キャンセル",
-  show: true,
-  onClose: key => confirm(key),
 };
 
-export const DisableItem = Template.bind({});
-DisableItem.args = {
-  title: "test",
-  content: <span>aaaa</span>,
-  choises: ["閉じる", "キャンセル"],
-  disables: ["閉じる"],
-  primary: "キャンセル",
-  show: true,
-  onClose: key => confirm(key),
-};
 export const NoItems = Template.bind({});
 NoItems.args = {
   title: "test",
   content: <span>aaaa</span>,
-  show: true,
-  onClose: key => confirm(key),
 };
