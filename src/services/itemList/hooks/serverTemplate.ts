@@ -8,8 +8,9 @@ const useServerTemplate = () => {
   const setItemList = useSetAtom(itemListAtom);
   const setSharedItemList = useSetAtom(sharedItemListAtom);
   const apply = async (id: string) => {
-    const newItemList = await getItemListFromServer(id);
-    if (!newItemList) throw new Error(`Cannot find id (${id})`);
+    const response = (await getItemListFromServer([id]))?.[0];
+    if (!response?.ok) throw new Error(`Cannot find id (${id})`);
+    const newItemList = response.data;
     const schema = (await getSchema(newItemList.id)) || getDefaultSchema();
     const from_id = id;
     setItemList({ ...newItemList, schema, from_id });

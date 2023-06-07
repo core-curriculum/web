@@ -16,12 +16,18 @@ const listDataAtom = focusAtom(curriculumMapAtom, optic => optic.prop("data"));
 
 const useCurriculumMapItemsValue = () => useAtomValue(itemsAtom);
 const useCurriculumMapItems = () => {
-  const [items, setItemsInner] = useAtom(itemsAtom);
+  const [itemsInner, setItemsInner] = useAtom(itemsAtom);
+  const cloneItems = (items: ReadonlyArray<ServerItemList>) =>
+    items.map(item => ({ ...item, items: [...item.items] }));
+
   const setItems = (items: ServerItemList[]) => {
-    setItemsInner(items.map(item => ({ ...item, items: [...item.items] })));
+    setItemsInner(cloneItems(items));
+  };
+  const addItems = (items: ServerItemList[]) => {
+    setItemsInner(prev => cloneItems([...items, ...prev]));
   };
   const clear = () => setItemsInner([]);
-  return { items, setItems, clear };
+  return { items: itemsInner, setItems, addItems, clear };
 };
 
 const useCurriculumMapDataValue = () => useAtomValue(listDataAtom);

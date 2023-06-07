@@ -62,6 +62,8 @@ const text = {
     table: {ja:"表",en:"Table"},
     share: {ja:"共有する",en:"Share"},
     sharing: {ja:"共有中...",en:"Sharing..."},
+    loading: {ja:"ロード中...",en:"Loading..."},
+    addFromUrl: {ja:"...urlから追加",en:"...Add from url"},
     back: {ja:"戻る",en:"Back"},
     proceedToShare: {ja:"問題ないので共有する",en:"Proceed to share"},
     alertToShare: {

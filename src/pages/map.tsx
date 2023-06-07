@@ -1,4 +1,4 @@
-import type { NextPage, GetStaticProps } from "next";
+import type { NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -7,9 +7,9 @@ import { toast } from "react-hot-toast";
 import { showConfirmDialog } from "@components/ConfirmDialog";
 import { CopyButton } from "@components/CopyButton";
 import { ItemListList } from "@components/ItemListList";
+import { showItemUrlInputComponentDialog } from "@components/ItemUrlInputDialog";
 import { BackButton } from "@components/buttons/BackButton";
-import { Tree } from "@libs/treeUtils";
-import { Locale, useLocaleText, useTranslation } from "@services/i18n/i18n";
+import { useLocaleText, useTranslation } from "@services/i18n/i18n";
 import {
   useCurriculumMapData,
   useCurriculumMapItems,
@@ -21,44 +21,7 @@ import {
   useServerTemplate,
   useShare as useShareItemList,
 } from "@services/itemList/local";
-import { loadFullOutcomesTable, makeOutcomesTree } from "@services/outcomes";
-import type { OutcomeInfo } from "@services/outcomes";
-import { getAllTables, loadTableInfoDict, TableInfoSet } from "@services/tables";
 import { listUrl } from "@services/urls";
-
-type PageProps = {
-  outcomesTree: Tree<OutcomeInfo>;
-  allTables: TableInfoSet[];
-};
-
-export const getStaticProps: GetStaticProps<PageProps> = async ({ locale }) => {
-  const table = loadFullOutcomesTable(locale as Locale);
-  const tableInfoDict = loadTableInfoDict(locale as Locale);
-  const outcomesTree = makeOutcomesTree(table, tableInfoDict, locale as Locale);
-  const allTables = getAllTables(locale as Locale);
-
-  return {
-    props: { outcomesTree, allTables },
-  };
-};
-
-const Breadcrumb = ({ parents }: { parents: OutcomeInfo[] }) => {
-  return (
-    <>
-      {parents.map((parent, i) => {
-        return (
-          <span className="text-xs text-base-content/40" key={parent.id}>
-            {i !== 0 ? ` / ` : ""}
-            <span>
-              {parent.index.slice(-2)}
-              {parent.text}
-            </span>
-          </span>
-        );
-      })}
-    </>
-  );
-};
 
 const HeaderBar = () => {
   return (
@@ -67,6 +30,25 @@ const HeaderBar = () => {
         <BackButton />
       </div>
     </div>
+  );
+};
+const Spinner = () => <Image className="m-2" width="20" height="20" src="spinner.svg" alt="" />;
+const Loading = () => {
+  const { t } = useTranslation("@pages/map");
+  return (
+    <>
+      <Spinner />
+      {t("loading")}
+    </>
+  );
+};
+const Sharing = () => {
+  const { t } = useTranslation("@pages/map");
+  return (
+    <>
+      <Spinner />
+      {t("sharing")}
+    </>
   );
 };
 
@@ -121,18 +103,28 @@ const ShareButton = () => {
     setSharing(false);
   };
   return (
-    <>
-      <button className="btn-primary btn" disabled={!isValid || sharing} onClick={_share}>
-        {sharing ? (
-          <>
-            {t("sharing")}
-            <Image className="m-2" width="20" height="20" src="spinner.svg" alt="...shareing" />
-          </>
-        ) : (
-          t("share")
-        )}
-      </button>
-    </>
+    <button className="btn-primary btn" disabled={!isValid || sharing} onClick={_share}>
+      {sharing ? <Sharing /> : t("share")}
+    </button>
+  );
+};
+
+const AddFromUrlButton = () => {
+  const [loading, setLoading] = useState(false);
+  const { t } = useTranslation("@pages/map");
+  const { addItems } = useCurriculumMapItems();
+  const onClick = async () => {
+    setLoading(true);
+    const res = await showItemUrlInputComponentDialog();
+    if (res) {
+      addItems(res);
+    }
+    setLoading(false);
+  };
+  return (
+    <button className="btn" disabled={loading} onClick={onClick}>
+      {loading ? <Loading /> : t("addFromUrl")}
+    </button>
   );
 };
 
@@ -194,7 +186,7 @@ const useTemplate = () => {
   return { apply };
 };
 
-const CurriculumMapPage: NextPage<PageProps> = ({ outcomesTree, allTables }: PageProps) => {
+const CurriculumMapPage: NextPage<{}> = () => {
   const { t } = useLocaleText("@pages/map");
   const { apply } = useTemplate();
   const router = useRouter();
@@ -210,6 +202,9 @@ const CurriculumMapPage: NextPage<PageProps> = ({ outcomesTree, allTables }: Pag
       <div className="ml-4">
         <HeaderBar />
         <CurriculumMapData />
+        <div className="m-4 flex">
+          <AddFromUrlButton />
+        </div>
         <ItemListList itemListList={items} onChange={items => setItems(items)} />
       </div>
       <div className="m-8">

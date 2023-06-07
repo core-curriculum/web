@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { getItemListFromServer } from "@services/itemList/libs/callApi";
 import { itemUrlToId, isValidItemUrlOrId } from "@services/urls";
 import { showModal } from "./Modal";
 
@@ -75,11 +76,23 @@ const ItemUrlInputComponent = ({
   );
 };
 
+const idsToServerItemList = async (ids: string[]) => {
+  try {
+    const response = await getItemListFromServer(ids);
+    const items = response.flatMap(item => (item.ok ? item.data : []));
+    return items;
+  } catch (e) {
+    console.log(e);
+    return [];
+  }
+};
+
 const showItemUrlInputComponentDialog = async () => {
   const response = await showModal<string[]>((ok, cancel) => (
     <ItemUrlInputComponent onConfirm={ok} onCancel={() => cancel()} />
   ));
-  return response;
+  const ids = response.hasResponse ? response.response : [];
+  return ids.length > 0 ? await idsToServerItemList(ids) : null;
 };
 
 export { showItemUrlInputComponentDialog };
