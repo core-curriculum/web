@@ -25,6 +25,10 @@ const text = {
     place: {ja:"場所",en:"place"},
     created_at: {ja:"作成日時",en:"Created at"},
   },
+  "@components/InputFromHistoryDialog":{
+    cancel: {ja:"キャンセル",en:"Cancel"},
+    confirm: {ja:"追加する",en:"Add Items"},
+  },
   "@components/ItemContextMenu": {
     addItem: {ja:"リストに追加",en:"Add to List"},
     copyId: {ja:"idをコピー",en:"Copy id"},
@@ -64,6 +68,7 @@ const text = {
     sharing: {ja:"共有中...",en:"Sharing..."},
     loading: {ja:"ロード中...",en:"Loading..."},
     addFromUrl: {ja:"...urlから追加",en:"...Add from url"},
+    addFromHistory: {ja:"...履歴から追加",en:"...Add from history"},
     back: {ja:"戻る",en:"Back"},
     proceedToShare: {ja:"問題ないので共有する",en:"Proceed to share"},
     alertToShare: {

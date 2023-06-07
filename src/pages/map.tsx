@@ -6,6 +6,7 @@ import { ChangeEvent, Suspense, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { showConfirmDialog } from "@components/ConfirmDialog";
 import { CopyButton } from "@components/CopyButton";
+import { showInputFromHistoryDialog } from "@components/InputFromHistoryDialog";
 import { ItemListList } from "@components/ItemListList";
 import { showItemUrlInputComponentDialog } from "@components/ItemUrlInputDialog";
 import { BackButton } from "@components/buttons/BackButton";
@@ -128,6 +129,25 @@ const AddFromUrlButton = () => {
   );
 };
 
+const AddFromHistoryButton = () => {
+  const [loading, setLoading] = useState(false);
+  const { t } = useTranslation("@pages/map");
+  const { addItems } = useCurriculumMapItems();
+  const onClick = async () => {
+    setLoading(true);
+    const res = await showInputFromHistoryDialog();
+    if (res) {
+      addItems(res);
+    }
+    setLoading(false);
+  };
+  return (
+    <button className="btn" disabled={loading} onClick={onClick}>
+      {loading ? <Loading /> : t("addFromHistory")}
+    </button>
+  );
+};
+
 const CurriculumMapData = () => {
   const { set: setDataValue, listData } = useCurriculumMapData();
   const { schema } = useCurriculumMapSchema();
@@ -204,6 +224,7 @@ const CurriculumMapPage: NextPage<{}> = () => {
         <CurriculumMapData />
         <div className="m-4 flex">
           <AddFromUrlButton />
+          <AddFromHistoryButton />
         </div>
         <ItemListList itemListList={items} onChange={items => setItems(items)} />
       </div>

@@ -31,7 +31,7 @@ const CheckableRow = ({ items, checked, onChange }: CheckableRowProps) => {
 };
 
 type Props = {
-  itemListList: ServerItemList[];
+  itemListList: ReadonlyArray<ServerItemList>;
   checkedList: number[];
   onChange?: (checkedList: number[]) => void;
 };
@@ -77,14 +77,17 @@ const ItemListCheckList = ({ itemListList, checkedList, onChange }: Props) => {
         </tr>
       </thead>
       <tbody>
-        {itemListList.map(({ id, name, place, created_at }, i) => (
-          <CheckableRow
-            key={id}
-            checked={checkedList.includes(i)}
-            items={[name, place, formatDateTimeIntl(created_at, locale)]}
-            onChange={(checked: boolean) => onCheckChange(i, checked)}
-          />
-        ))}
+        {itemListList.map((item, i) => {
+          const { id, name, place, created_at } = item;
+          return (
+            <CheckableRow
+              key={id}
+              checked={checkedList.includes(i)}
+              items={[name, place, formatDateTimeIntl(created_at, locale)]}
+              onChange={(checked: boolean) => onCheckChange(i, checked)}
+            />
+          );
+        })}
       </tbody>
     </table>
   );

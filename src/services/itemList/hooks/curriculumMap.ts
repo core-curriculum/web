@@ -20,10 +20,10 @@ const useCurriculumMapItems = () => {
   const cloneItems = (items: ReadonlyArray<ServerItemList>) =>
     items.map(item => ({ ...item, items: [...item.items] }));
 
-  const setItems = (items: ServerItemList[]) => {
+  const setItems = (items: readonly ServerItemList[]) => {
     setItemsInner(cloneItems(items));
   };
-  const addItems = (items: ServerItemList[]) => {
+  const addItems = (items: readonly ServerItemList[]) => {
     setItemsInner(prev => cloneItems([...items, ...prev]));
   };
   const clear = () => setItemsInner([]);

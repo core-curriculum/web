@@ -16,7 +16,8 @@ const fmt = (text: String, dict: { [key: string]: string }, option: Option = def
 const formatDateTimeIntl = (() => {
   const formatters = new Map<string, { format: (date: Date) => string }>();
 
-  return (date: Date, locale = "default") => {
+  return (date: Date | string, locale = "default") => {
+    if (typeof date === "string") date = new Date(date);
     const formatter =
       formatters.get(locale) ??
       new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "medium" });
