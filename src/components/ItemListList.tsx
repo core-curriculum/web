@@ -1,7 +1,7 @@
 import { Ref, forwardRef, useCallback } from "react";
 import { useDrag, useDrop, DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { MdDragIndicator, MdDeleteForever } from "react-icons/md";
+import { MdDragIndicator, MdClose } from "react-icons/md";
 import { formatDateTimeIntl } from "@libs/utils";
 import { useTranslation } from "@services/i18n/i18n";
 import { ServerItemList } from "@services/itemList/server";
@@ -39,7 +39,9 @@ const DragHandle = forwardRef<HTMLDivElement>((_props, ref) => (
 ));
 
 const DeleteIcon = ({ onClick }: { onClick: () => void }) => (
-  <MdDeleteForever onClick={onClick} className="ml-1 cursor-pointer text-gray-400" />
+  <button onClick={onClick} className="btn-ghost btn ml-1">
+    <MdClose onClick={onClick} className="" />
+  </button>
 );
 
 type DraggableRowProps = {

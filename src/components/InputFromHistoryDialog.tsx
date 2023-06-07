@@ -20,10 +20,12 @@ const InputFromHistoryDialog: React.FC<Props> = ({ onConfirm, onCancel }) => {
   return (
     <>
       <ItemListCheckList itemListList={viewHistory} checkedList={checkedList} onChange={onChange} />
-      <div className="mt-4 flex flex-row justify-end">
-        <button onClick={() => onCancel?.()}>{t("cancel")}</button>
+      <div className="mt-4 flex justify-end space-x-4">
+        <button className="btn" onClick={() => onCancel?.()}>
+          {t("cancel")}
+        </button>
         <button
-          className="ml-2"
+          className="btn-primary btn"
           disabled={checkedList.length === 0}
           onClick={() => onConfirm?.(checkedList.map(i => viewHistory[i]))}
         >

@@ -222,7 +222,7 @@ const CurriculumMapPage: NextPage<{}> = () => {
       <div className="ml-4">
         <HeaderBar />
         <CurriculumMapData />
-        <div className="m-4 flex">
+        <div className="m-4 flex space-x-4">
           <AddFromUrlButton />
           <AddFromHistoryButton />
         </div>
