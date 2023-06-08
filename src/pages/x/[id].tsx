@@ -14,7 +14,7 @@ import {
   SchemaItemsWithValue,
   schemaItemsWithValue,
 } from "@services/itemList/local";
-import { getItemListFromId } from "@services/itemList/server";
+import { getItemListFromId, getItemListFromIds } from "@services/itemList/server";
 import { loadFullOutcomesTable, makeOutcomesTree } from "@services/outcomes";
 import type { OutcomeInfo } from "@services/outcomes";
 import { searchOutcomes, searchTables } from "@services/search";
@@ -24,6 +24,7 @@ type PageProps = {
   outcomesTree: Tree<OutcomeInfo>;
   allTables: TableInfoSet[];
   id: string;
+  children?: ServerItemList[] | false;
   itemList: ServerItemList | string;
   schemaWithValue: SchemaItemsWithValue | string;
 };
@@ -44,6 +45,15 @@ const getServerItem = async (id: string) => {
   }
 };
 
+const getServerItems = async (ids: readonly string[]) => {
+  try {
+    return (await getItemListFromIds(ids)).flatMap(res => (res.ok ? res.data : []));
+  } catch (e) {
+    console.error(e);
+    return [];
+  }
+};
+
 export const getStaticProps: GetStaticProps<PageProps> = async ({ locale, params }) => {
   const table = loadFullOutcomesTable(locale as Locale);
   const tableInfoDict = loadTableInfoDict(locale as Locale);
@@ -51,6 +61,8 @@ export const getStaticProps: GetStaticProps<PageProps> = async ({ locale, params
   const allTables = getAllTables(locale as Locale);
   const id = (params?.id as string) ?? "";
   const itemList = await getServerItem(id);
+  const children =
+    typeof itemList !== "string" && itemList.children && (await getServerItems(itemList.children));
   const schemaId = typeof itemList === "string" ? "" : itemList.schema_id;
   const schema = await getSchema(schemaId);
   const { t } = translationInServer(locale as Locale, "@services/itemList/libs/schema_list");
@@ -59,7 +71,7 @@ export const getStaticProps: GetStaticProps<PageProps> = async ({ locale, params
       ? ""
       : schemaItemsWithValue(itemList.data, schema, t as (key: string) => string);
   return {
-    props: { outcomesTree, allTables, id, itemList, schemaWithValue },
+    props: { outcomesTree, allTables, id, itemList, schemaWithValue, children },
   };
 };
 
@@ -125,6 +137,7 @@ const ListPage: NextPage<PageProps> = ({
   outcomesTree,
   allTables,
   itemList,
+  children,
   schemaWithValue,
 }: PageProps) => {
   const isLoading = !allTables || !outcomesTree || !itemList || !id || !schemaWithValue;
@@ -171,7 +184,7 @@ const ListPage: NextPage<PageProps> = ({
             <div className="my-2 flex justify-end">
               <QrCode />
             </div>
-            <div className="mt-8 mb-2">関連する項目や授業名を変更する場合は以下から</div>
+            <div className="mb-2 mt-8">関連する項目や授業名を変更する場合は以下から</div>
             <div>
               <Link href={`/list?from=${id}`} className="btn-outline btn">
                 このリストを元に新しいリストを作成

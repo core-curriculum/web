@@ -16,6 +16,7 @@ import {
   useCurriculumMapItems,
 } from "@services/itemList/hooks/curriculumMap";
 import { useCurriculumMapSchema } from "@services/itemList/hooks/schema";
+import { useShareCurriculumMap } from "@services/itemList/hooks/share";
 import { useAddViewHistory } from "@services/itemList/hooks/viewHistory";
 import {
   schemaItemsWithValue,
@@ -54,7 +55,7 @@ const Sharing = () => {
 };
 
 const useShare = () => {
-  const { share: shareItemList } = useShareItemList();
+  const { share: shareCurriculumMap } = useShareCurriculumMap();
   const { t } = useTranslation("@pages/map");
   const addHistory = useAddViewHistory();
   const share = async () => {
@@ -70,7 +71,7 @@ const useShare = () => {
         primary: t("proceedToShare"),
       });
       if (res === goBack) return;
-      const inserted = await shareItemList();
+      const inserted = await shareCurriculumMap();
       addHistory(inserted);
       const url = listUrl(inserted.id);
       await showConfirmDialog({

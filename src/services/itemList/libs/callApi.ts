@@ -1,5 +1,6 @@
 import { apiGet, apiPost } from "@services/api";
 import {
+  InputCurriculumMap,
   InputItemList,
   ServerItemList,
   ServerItemListResponse,
@@ -13,6 +14,16 @@ const shareItemListToServer = async (itemList: InputItemList): Promise<ServerIte
   }
 };
 
+const shareCurriculumMapToServer = async (
+  curriculumMap: InputCurriculumMap,
+): Promise<ServerItemList> => {
+  try {
+    return await apiPost("/api/v1/map", curriculumMap);
+  } catch (e) {
+    throw new Error(`Fail to share curriculumMap. ${e}`);
+  }
+};
+
 const getItemListFromServer = async (ids: string[]): Promise<ServerItemListResponse[]> => {
   const params = encodeURI(ids.join(","));
   try {
@@ -22,4 +33,4 @@ const getItemListFromServer = async (ids: string[]): Promise<ServerItemListRespo
   }
 };
 
-export { shareItemListToServer, getItemListFromServer };
+export { shareItemListToServer, getItemListFromServer, shareCurriculumMapToServer };
