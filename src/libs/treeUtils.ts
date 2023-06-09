@@ -30,7 +30,7 @@ const tableToTree: TableToTree = <T>(
     if (table[0].length > 1) {
       const folded = fold(table, ([currHead], [prevHead]) => isSameFn(currHead, prevHead));
       const grouped = folded.map(
-        (unit) => [unit[0][0], processTop(unit.map(([, ...rest]) => rest))] as const,
+        unit => [unit[0][0], processTop(unit.map(([, ...rest]) => rest))] as const,
       );
       return grouped;
     } else {
@@ -53,7 +53,7 @@ const tableToTreeMap: TableToTreeMap = <T, R>(
   const processTop: (table: T[][], parents: R[]) => Tree<R> = (table: T[][], parents: R[] = []) => {
     if (table[0].length > 1) {
       const folded = fold(table, ([currHead], [prevHead]) => isSameFn(currHead, prevHead));
-      const grouped = folded.map((unit) => {
+      const grouped = folded.map(unit => {
         const childTable = unit.map(([, ...rest]) => rest);
         const item = mapFn(unit[0][0], parents, childTable);
         return [item, processTop(childTable, [...parents, item])] as const;
@@ -79,10 +79,10 @@ const treeToList = <T>(tree: Tree<T>) => {
   return list;
 };
 
-type TreeReducer<T, R> = (item: T, children: R[], parents: T[]) => R;
+type TreeReducer<T, R> = (item: T, children: R[], parents: T[]) => R | R[];
 const reduceTree = <T, R>(tree: Tree<T>, reducer: TreeReducer<T, R>) => {
   const walkTree = (currTree: Tree<T>, currParents: T[] = []) => {
-    return currTree.map(([item, children]) => {
+    return currTree.flatMap(([item, children]) => {
       const hasChildren = children !== undefined;
       const childNodes: R[] = hasChildren ? walkTree(children, [...currParents, item]) : [];
       return reducer(item, childNodes, currParents);

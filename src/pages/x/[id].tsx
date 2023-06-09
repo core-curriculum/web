@@ -132,6 +132,64 @@ const QrCode = () => {
   );
 };
 
+const OutcomeAccessInfo = ({ id }: { id: string }) => {
+  const { t } = useLocaleText("@pages/x/[id]");
+  return (
+    <div className="m-4 mt-16 flex justify-end text-xs text-gray-600">
+      <div>
+        <div>このリストは以下のコードでアクセスできます</div>
+        <div className="my-2 flex justify-end">
+          <QrCode />
+        </div>
+        <div className="mb-2 mt-8">関連する項目や授業名を変更する場合は以下から</div>
+        <div>
+          <Link href={`/list?from=${id}`} className="btn-outline btn">
+            このリストを元に新しいリストを作成
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+type OutcomesListProps = {
+  allTables: TableInfoSet[];
+  outcomesTree: Tree<OutcomeInfo>;
+  text: string;
+};
+const OutcomesList = ({ allTables, outcomesTree, text }: OutcomesListProps) => {
+  const { t } = useLocaleText("@pages/x/[id]");
+  return (
+    <>
+      <div>
+        {searchOutcomes(outcomesTree, text).map(item => (
+          <div className="m-4" key={item.id}>
+            <div>
+              <span className="mr-2 font-light text-sky-600">{item.index}</span>
+              {item.text}
+            </div>
+            <Breadcrumb parents={item.parents} />
+          </div>
+        ))}
+      </div>
+      <div className="ml-4">
+        {searchTables(text, allTables).map(({ table, tableInfo, attrInfo }) => {
+          const title = `${t("table") + tableInfo.number}. ${tableInfo.item}`;
+
+          return (
+            <div key={tableInfo.id}>
+              <div>
+                <div className="my-4">{title}</div>
+                <Table {...{ table: table as HeaderedTable<string>, tableInfo, attrInfo }} />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </>
+  );
+};
+
 const ListPage: NextPage<PageProps> = ({
   id,
   outcomesTree,
@@ -153,45 +211,8 @@ const ListPage: NextPage<PageProps> = ({
       <div className="ml-4">
         <HeaderBar />
         <ListData values={schemaWithValue} />
-        <div>
-          {searchOutcomes(outcomesTree, text).map(item => (
-            <div className="m-4" key={item.id}>
-              <div>
-                <span className="mr-2 font-light text-sky-600">{item.index}</span>
-                {item.text}
-              </div>
-              <Breadcrumb parents={item.parents} />
-            </div>
-          ))}
-        </div>
-        <div className="ml-4">
-          {searchTables(text, allTables).map(({ table, tableInfo, attrInfo }) => {
-            const title = `${t("table") + tableInfo.number}. ${tableInfo.item}`;
-
-            return (
-              <div key={tableInfo.id}>
-                <div>
-                  <div className="my-4">{title}</div>
-                  <Table {...{ table: table as HeaderedTable<string>, tableInfo, attrInfo }} />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-        <div className="m-4 mt-16 flex justify-end text-xs text-gray-600">
-          <div>
-            <div>このリストは以下のコードでアクセスできます</div>
-            <div className="my-2 flex justify-end">
-              <QrCode />
-            </div>
-            <div className="mb-2 mt-8">関連する項目や授業名を変更する場合は以下から</div>
-            <div>
-              <Link href={`/list?from=${id}`} className="btn-outline btn">
-                このリストを元に新しいリストを作成
-              </Link>
-            </div>
-          </div>
-        </div>
+        <OutcomesList {...{ allTables, outcomesTree, text, id }} />
+        <OutcomeAccessInfo id={id} />
       </div>
     </>
   );

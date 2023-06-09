@@ -13,7 +13,7 @@ const initialCurriculumMap = {
 const curriculumMapAtom = atomWithStorage("curriculum_map_local", initialCurriculumMap);
 const itemsAtom = focusAtom(curriculumMapAtom, optic => optic.prop("items"));
 const listDataAtom = focusAtom(curriculumMapAtom, optic => optic.prop("data"));
-const curriculumMapToShareAttom = atom(get => {
+const curriculumMapToShareAtom = atom(get => {
   const { items, data, schema, from_id } = get(curriculumMapAtom);
   return { items: items.map(item => item.id), data, schema, from_id };
 });
@@ -52,5 +52,5 @@ export {
   useCurriculumMapDataValue,
   useCurriculumMapData,
   curriculumMapAtom,
-  curriculumMapToShareAttom,
+  curriculumMapToShareAtom,
 };
