@@ -5,6 +5,7 @@ import type {
   InputItemList,
   ItemListInDB,
   ServerItemListResponse,
+  ServerCurrisulumMap,
   ItemListDBView,
   InputCurriculumMap,
 } from "@services/itemList/libs/types";
@@ -35,7 +36,7 @@ const serverResponseToItemList = (
 ): ServerItemList => {
   const from_id = res.from_id ? toBase64(res.from_id) : "";
   const schema_id = res.schema_id ? toBase64(res.schema_id) : "";
-  const children = res.children?.map(id => toBase64(id));
+  const children = res.children?.map(id => toBase64(id)) ?? null;
   const id = toBase64(res.id);
   const data: Record<string, string> = { ...serverData };
   const name = data.name ?? "";
@@ -67,13 +68,24 @@ const removeDuplicate = <T>(arr: readonly T[]): T[] => {
   const set = new Set(arr);
   return [...set];
 };
-const insertNewCurriculumMap = async (map: InputCurriculumMap): Promise<ServerItemList> => {
-  const items = removeDuplicate(
-    (await getItemListFromIds(map.items)).flatMap(res => (res.ok ? res.data.items : [])),
+const insertNewCurriculumMap = async (map: InputCurriculumMap): Promise<ServerCurrisulumMap> => {
+  const serverItemLists = (await getItemListFromIds(map.items)).flatMap(res =>
+    res.ok ? res.data : [],
   );
+  const items = removeDuplicate(serverItemLists.flatMap(item => item.items));
   const itemList = { ...map, items, children: map.items };
-  return await insertNewList(itemList);
+  const res = await insertNewList(itemList);
+  return { ...res, items: serverItemLists };
 };
+
+const getCurriculumMapFromId = async (id: string): Promise<ServerCurrisulumMap> => {
+  const itemList = await getItemListFromId(id);
+  const items = (await getItemListFromIds(itemList.children ?? [])).flatMap(res =>
+    res.ok ? res.data : [],
+  );
+  return { ...itemList, items };
+};
+
 const getItemListFromId = async (id: string): Promise<ServerItemList> => {
   const list = (await getItemListFromIds([id]))?.[0];
   if (!list || !list.ok) throw new Error(`Cannot find id(${id}) of list.`);
@@ -97,4 +109,10 @@ const getItemListFromIds = async (ids: readonly string[]): Promise<ServerItemLis
   });
 };
 
-export { insertNewList, getItemListFromId, getItemListFromIds, insertNewCurriculumMap };
+export {
+  insertNewList,
+  getItemListFromId,
+  getItemListFromIds,
+  insertNewCurriculumMap,
+  getCurriculumMapFromId,
+};

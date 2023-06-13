@@ -38,7 +38,7 @@ const Home: NextPage<PageProps> = ({ table }: PageProps) => {
       <h1 className="m-4 text-xl font-bold">経験した症候</h1>
       <table className="m-4 table">
         <thead>
-          <tr className="sticky top-0 mr-4 ml-10 py-1 ">
+          <tr className="sticky top-0 ml-10 mr-4 py-1 ">
             <th className="pl-4 text-left">症候</th>
             <th className="p-2 text-center">鑑別を考慮した疾患</th>
           </tr>

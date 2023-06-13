@@ -22,7 +22,7 @@ const useScrollObserver = (props: Props) => {
 
     const observer = new IntersectionObserver(
       (entries, observer) => {
-        const items = entries.filter((e) => e.isIntersecting);
+        const items = entries.filter(e => e.isIntersecting);
         if (items.length <= 0) return;
         if (single) {
           const item = items.reduce((curr, c) => {
@@ -30,7 +30,7 @@ const useScrollObserver = (props: Props) => {
           });
           onIntersect(item.target);
         } else {
-          items.forEach((e) => onIntersect(e.target));
+          items.forEach(e => onIntersect(e.target));
         }
       },
       {
@@ -39,10 +39,10 @@ const useScrollObserver = (props: Props) => {
       },
     );
     const elms = document.querySelectorAll(selector);
-    elms.forEach((e) => observer.observe(e));
+    elms.forEach(e => observer.observe(e));
     return () => {
       console.log(`unRegister scrollObserver ${elms.length}`);
-      elms.forEach((e) => observer.unobserve(e));
+      elms.forEach(e => observer.unobserve(e));
     };
   }, [onIntersect, rootMargin, rootSelector, selector, single]);
 };

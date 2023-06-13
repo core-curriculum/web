@@ -45,7 +45,7 @@ const Home: NextPage<PageProps> = ({ table }: PageProps) => {
       <h1 className="m-4 text-xl font-bold">基本的臨床手技</h1>
       <table className="m-4 table">
         <thead>
-          <tr className="mr-4 ml-10 py-1">
+          <tr className="ml-10 mr-4 py-1">
             <th className="pl-4 text-left">基本的臨床手技</th>
             <th className="p-2 text-center">
               <div>自己評価</div>

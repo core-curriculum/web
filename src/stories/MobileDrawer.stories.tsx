@@ -15,7 +15,7 @@ const DummyMenu = () => {
   return (
     <div className=" bg-yellow-400">
       <div>{[...range(1, 101)].map(() => "LongItem")}</div>
-      {[...range(1, 101)].map((i) => (
+      {[...range(1, 101)].map(i => (
         <div key={i}>Menu item{i}</div>
       ))}
     </div>
@@ -26,7 +26,7 @@ const DummyContent = () => {
   return (
     <div className="bg-blue-500">
       <div>{[...range(1, 101)].map(() => "LongItem ")}</div>
-      {[...range(1, 101)].map((i) => (
+      {[...range(1, 101)].map(i => (
         <div key={i}>Content item{i}</div>
       ))}
     </div>
@@ -57,7 +57,7 @@ export default {
   },
 } as ComponentMeta<typeof TargetComponent>;
 
-const Template: ComponentStory<typeof TargetComponent> = (args) => <TargetComponent {...args} />;
+const Template: ComponentStory<typeof TargetComponent> = args => <TargetComponent {...args} />;
 
 export const ShowMenu = Template.bind({});
 ShowMenu.args = {

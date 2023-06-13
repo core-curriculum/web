@@ -23,7 +23,7 @@ export default {
   },
 } as ComponentMeta<typeof TargetComponent>;
 
-const Template: ComponentStory<typeof TargetComponent> = (args) => <TargetComponent {...args} />;
+const Template: ComponentStory<typeof TargetComponent> = args => <TargetComponent {...args} />;
 
 export const SimpleItems = Template.bind({});
 SimpleItems.args = {

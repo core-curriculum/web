@@ -1,6 +1,6 @@
 import * as path from "path";
+import { parseCSV } from "@libs/csv";
 import { readTextFileSync } from "@libs/fileUtis";
-import { parseCSV } from "@libs/parseCSV";
 import { outcomeDir, tableDir } from "@services/paths";
 import { Locale } from "./i18n/i18n";
 

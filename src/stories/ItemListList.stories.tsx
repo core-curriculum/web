@@ -7,7 +7,7 @@ const dummyItemListList = [
   {
     id: "1",
     data: {},
-    name: "name1",
+    name: "1_apple",
     place: "place1",
 
     created_at: new Date("2021-01-01T00:00:00Z"),
@@ -18,7 +18,7 @@ const dummyItemListList = [
   {
     id: "2",
     data: {},
-    name: "name2",
+    name: "2_banana",
     place: "place2",
     created_at: new Date("2021-01-02T00:00:00Z"),
     items: [],
@@ -28,7 +28,7 @@ const dummyItemListList = [
   {
     id: "3",
     data: {},
-    name: "name3",
+    name: "3_orange",
     place: "place3",
     created_at: new Date("2021-01-03T00:00:00Z"),
     items: [],

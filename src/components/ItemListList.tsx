@@ -77,16 +77,18 @@ const DraggableRow = ({ items, index, onMoveItem }: DraggableRowProps) => {
   return (
     <tr
       ref={onMoveItem ? refs : null}
-      className={`${isDragging ? "scale-y-0" : ""} ${toInsertTop ? "border-t-8" : ""} ${
-        toInsertBottom ? "border-b-8" : ""
-      }`}
+      className={`transition ease-in-out ${isDragging ? "opacity-0" : ""}`}
     >
       {items.map((item, i, { length }) => {
         const needHandle = onMoveItem && i === 0;
         const needDeleteIcon = onMoveItem && i === length - 1;
         return (
           <td key={i}>
-            <div className="flex flex-row  items-center">
+            <div
+              className={`flex flex-row  items-center transition ease-in-out ${
+                toInsertTop ? "translate-y-5" : ""
+              } ${toInsertBottom ? "-translate-y-5" : ""}`}
+            >
               {needHandle && <DragHandle ref={drag} />}
               {item}
               {needDeleteIcon && <DeleteIcon onClick={() => onMoveItem(index, -1)} />}
@@ -105,13 +107,10 @@ type Props = {
 
 const ItemListList = ({ itemListList, onChange }: Props) => {
   const { t } = useTranslation("@components/ItemListList");
-  const onMoveItem = useCallback(
-    (prevIndex: number, targetIndex: number) => {
-      const newItemListList = moveIndex(itemListList, prevIndex, targetIndex);
-      onChange?.(newItemListList);
-    },
-    [itemListList, onChange],
-  );
+  const onMoveItem = (prevIndex: number, targetIndex: number) => {
+    const newItemListList = moveIndex(itemListList, prevIndex, targetIndex);
+    onChange?.(newItemListList);
+  };
   return (
     <DndProvider backend={HTML5Backend}>
       <table className="table">

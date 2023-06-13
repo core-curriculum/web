@@ -6,7 +6,7 @@ type ItemList = {
   data: Record<string, string>;
   schema_id: string;
   from_id: string;
-  children?: readonly string[];
+  children?: readonly string[] | null;
 };
 
 type Expand<T> = { [K in keyof T]: T[K] };
@@ -32,11 +32,26 @@ type ServerItemList = Expand<
   }
 >;
 
-type LocalCorriculumMap = {
+type ServerCurrisulumMap = {
+  items: ReadonlyArray<ServerItemList>;
+  data: Record<string, string>;
+  from_id: string;
+  schema_id: string;
+  name: string;
+  place: string;
+  created_at: Date;
+  id: string;
+};
+
+type LocalCurriculumMap = {
   items: ReadonlyArray<ServerItemList>;
   data: Record<string, string>;
   from_id: string;
   schema: Schema;
+};
+
+type SharedCurriculumMap = LocalCurriculumMap & {
+  id: string;
 };
 
 type ItemListInDB = Expand<
@@ -76,10 +91,12 @@ export type {
   ServerItemList,
   ItemListInDB,
   ServerItemListResponse,
+  ServerCurrisulumMap,
   ItemListDBView,
   LocalItemList,
-  LocalCorriculumMap,
+  LocalCurriculumMap,
   Schema,
   SchemaUnit,
   SharedItemList,
+  SharedCurriculumMap,
 };

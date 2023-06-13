@@ -2,15 +2,16 @@ import { useAtom, useAtomValue, atom } from "jotai";
 import { focusAtom } from "jotai-optics";
 import { atomWithStorage } from "jotai/utils";
 import { getDefaultSchema } from "@services/itemList/libs/schema";
-import { LocalCorriculumMap, ServerItemList } from "@services/itemList/libs/types";
+import { LocalCurriculumMap, ServerItemList } from "@services/itemList/libs/types";
 
 const initialCurriculumMap = {
   items: [],
   data: {},
   from_id: "",
   schema: getDefaultSchema(),
-} as LocalCorriculumMap;
+} as LocalCurriculumMap;
 const curriculumMapAtom = atomWithStorage("curriculum_map_local", initialCurriculumMap);
+// @ts-ignore
 const itemsAtom = focusAtom(curriculumMapAtom, optic => optic.prop("items"));
 const listDataAtom = focusAtom(curriculumMapAtom, optic => optic.prop("data"));
 const curriculumMapToShareAtom = atom(get => {

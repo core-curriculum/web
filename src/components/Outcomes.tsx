@@ -26,7 +26,7 @@ type OutcomesTreeProps = { outcomesTree: Tree<OutcomeInfo> };
 const OutcomesTree = ({ outcomesTree }: OutcomesTreeProps) => (
   <div className="max-w-none pb-96">
     {reduceTree<OutcomeInfo, ReactNode>(outcomesTree, (item, childnodes, parents) => {
-      const idList = [...parents.map((u) => u.id), item.id].join(",");
+      const idList = [...parents.map(u => u.id), item.id].join(",");
       const props = { childnodes, parents, idList, key: item.id };
       switch (item.layer) {
         case "l1":
@@ -68,7 +68,7 @@ const StyledText = ({ text, map }: { text: string; map: MappedInfo<AttrInfo>[] }
 
 const Outcomel1 = ({ item: { index, id, text, desc }, childnodes, idList }: PropType<L1>) => (
   <section className="mb-64">
-    <h1 className="mb-4 bg-white/30 py-6 px-4 text-3xl shadow-md" id={id} data-id-list={idList}>
+    <h1 className="mb-4 bg-white/30 px-4 py-6 text-3xl shadow-md" id={id} data-id-list={idList}>
       <span className="pr-2 font-thin">{index}</span>
       <span className="mr-4 font-bold">{text}</span>
       <ItemContextMenu {...{ index, id }} />
@@ -105,7 +105,7 @@ const Outcomel3 = ({ item: { index, id, text, attrInfo }, childnodes, idList }: 
 
 const Outcomel4 = ({ item: { id, text, attrInfo, index } }: PropType<L4>) => {
   return (
-    <li className="mr-4 ml-10 list-disc py-1 marker:text-sky-200 " id={id}>
+    <li className="ml-10 mr-4 list-disc py-1 marker:text-sky-200 " id={id}>
       <span className="mr-2 text-gray-500">
         {attrInfo ? <StyledText text={text} map={attrInfo} /> : text}
       </span>

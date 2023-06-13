@@ -38,5 +38,12 @@ const useSwitchTargetLocale = () => {
   return switchTargetLocale;
 };
 
-export { useLocale, useSwitchTargetLocale, useLocaleText, useTranslation, translationInServer };
+export {
+  useLocale,
+  useSwitchTargetLocale,
+  useLocaleText,
+  useTranslation,
+  translationInServer,
+  locales,
+};
 export type { Locale, Locales };

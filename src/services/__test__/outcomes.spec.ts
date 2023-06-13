@@ -1,4 +1,5 @@
 import * as path from "path";
+import { Locale } from "@services/i18n/i18n";
 import {
   loadFullOutcomesTable,
   makeMappedOutcomesTable,
@@ -7,26 +8,27 @@ import {
 import { loadTableInfoDict } from "@services/tables";
 
 const testDataFile = path.resolve(__dirname, "testData.csv");
+const locale: Locale = "ja";
 
 describe("loadFullOutcomes", () => {
   test("loadFullOutcomes", () => {
-    const data = loadFullOutcomesTable();
+    const data = loadFullOutcomesTable(locale);
     const sampeData = [
-      'プロフェッショナリズム',
-      '信頼',
-      '誠実さ',
-      '患者や社会に対して誠実である行動とはどのようなものかを考え、そのように行動する (利益相反等)。',
-      'JnGV10M',
-      'JnGUEbM',
-      'JnIA6vg',
-      'JkxiJUs',
-      'PR',
-      'PR-01',
-      'PR-01-01',
-      'PR-01-01-01',
-      '人の命に深く関わり健康を守るという医師の職責を十分に自覚し、多様性・人間性を尊重し、利他的な態度で診療にあたりながら、医師としての道を究めていく。',
-      '社会から信頼を得る上で必要なことを常に考え行動する。',
-      '**Pr**ofessionalism'
+      "プロフェッショナリズム",
+      "信頼",
+      "誠実さ",
+      "患者や社会に対して誠実である行動とはどのようなものかを考え、そのように行動する (利益相反等)。",
+      "JnGV10M",
+      "JnGUEbM",
+      "JnIA6vg",
+      "JkxiJUs",
+      "PR",
+      "PR-01",
+      "PR-01-01",
+      "PR-01-01-01",
+      "人の命に深く関わり健康を守るという医師の職責を十分に自覚し、多様性・人間性を尊重し、利他的な態度で診療にあたりながら、医師としての道を究めていく。",
+      "社会から信頼を得る上で必要なことを常に考え行動する。",
+      "**Pr**ofessionalism",
     ];
     expect(data.length).toBe(596);
     expect(data[0].length).toBe(15);
@@ -36,9 +38,9 @@ describe("loadFullOutcomes", () => {
 
 describe("makeMappedOutcomesTable", () => {
   test("makeMappedOutcomesTable", () => {
-    const table = loadFullOutcomesTable();
-    const tableInfo = loadTableInfoDict();
-    const data = makeMappedOutcomesTable(table, tableInfo);
+    const table = loadFullOutcomesTable(locale);
+    const tableInfo = loadTableInfoDict(locale);
+    const data = makeMappedOutcomesTable(table, tableInfo, locale);
     const sampleData = [
       {
         layer: "l1",
@@ -70,9 +72,9 @@ describe("makeMappedOutcomesTable", () => {
 
 describe("makeOutcomesTree", () => {
   test("makeOutcomesTree", () => {
-    const table = loadFullOutcomesTable();
-    const tableInfo = loadTableInfoDict();
-    const data = makeOutcomesTree(table, tableInfo);
+    const table = loadFullOutcomesTable(locale);
+    const tableInfo = loadTableInfoDict(locale);
+    const data = makeOutcomesTree(table, tableInfo, locale);
     expect(data.length).toBe(10);
   });
 });

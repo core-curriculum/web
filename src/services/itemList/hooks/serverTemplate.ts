@@ -1,8 +1,9 @@
 import { useSetAtom } from "jotai";
 import { itemListAtom } from "@services/itemList/hooks/itemList";
-import { getItemListFromServer } from "@services/itemList/libs/callApi";
+import { getCurriculuMapFromServer, getItemListFromServer } from "@services/itemList/libs/callApi";
 import { getSchema, getDefaultSchema } from "@services/itemList/libs/schema";
-import { sharedItemListAtom } from "./share";
+import { curriculumMapAtom } from "./curriculumMap";
+import { sharedCurriculumMapAtom, sharedItemListAtom } from "./share";
 
 const useServerTemplate = () => {
   const setItemList = useSetAtom(itemListAtom);
@@ -11,7 +12,7 @@ const useServerTemplate = () => {
     const response = (await getItemListFromServer([id]))?.[0];
     if (!response?.ok) throw new Error(`Cannot find id (${id})`);
     const newItemList = response.data;
-    const schema = (await getSchema(newItemList.id)) || getDefaultSchema();
+    const schema = (await getSchema(newItemList.schema_id)) || getDefaultSchema();
     const from_id = id;
     setItemList({ ...newItemList, schema, from_id });
     setSharedItemList({ ...newItemList, schema, from_id });
@@ -19,4 +20,19 @@ const useServerTemplate = () => {
   return { apply };
 };
 
-export { useServerTemplate };
+const useCurricullumMapServerTemplate = () => {
+  const setItemList = useSetAtom(curriculumMapAtom);
+  const setSharedItemList = useSetAtom(sharedCurriculumMapAtom);
+  const apply = async (id: string) => {
+    const response = await getCurriculuMapFromServer(id);
+    if (!response?.ok) throw new Error(`Cannot find id (${id})`);
+    const newItemList = response.data;
+    const schema = (await getSchema(newItemList.schema_id)) || getDefaultSchema();
+    const from_id = id;
+    setItemList({ ...newItemList, schema, from_id });
+    setSharedItemList({ ...newItemList, schema, from_id });
+  };
+  return { apply };
+};
+
+export { useServerTemplate, useCurricullumMapServerTemplate };

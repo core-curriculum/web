@@ -4,10 +4,23 @@ import { arrayEquals, objectEquals } from "@libs/utils";
 import { itemListAtom } from "@services/itemList/hooks/itemList";
 import { shareCurriculumMapToServer, shareItemListToServer } from "@services/itemList/libs/callApi";
 import { getDefaultSchema } from "@services/itemList/libs/schema";
-import { LocalItemList, SharedItemList } from "@services/itemList/libs/types";
-import { curriculumMapToShareAtom } from "./curriculumMap";
+import {
+  LocalItemList,
+  SharedItemList,
+  SharedCurriculumMap,
+  LocalCurriculumMap,
+} from "@services/itemList/libs/types";
+import { curriculumMapAtom, curriculumMapToShareAtom } from "./curriculumMap";
 
 const initialSharedItemList: SharedItemList = {
+  items: [],
+  data: {},
+  schema: getDefaultSchema(),
+  from_id: "",
+  id: "",
+};
+
+const initialSharedCurriculumMap: SharedCurriculumMap = {
   items: [],
   data: {},
   schema: getDefaultSchema(),
@@ -23,12 +36,26 @@ const isListEquals = (a: LocalItemList, b: LocalItemList) => {
   return res;
 };
 
+const isCurriculumMapEquals = (a: LocalCurriculumMap, b: LocalCurriculumMap) => {
+  const res =
+    arrayEquals(
+      a.items.map(item => item.id),
+      b.items.map(item => item.id),
+    ) &&
+    objectEquals(a.data ?? {}, b.data ?? {}) &&
+    (!a.schema?.id || a.schema?.id === b.schema?.id);
+  return res;
+};
+
 const sharedItemListAtom = atomWithStorage("itemlist_shared", initialSharedItemList);
 const isItemListDirtyAtom = atom(get => !isListEquals(get(itemListAtom), get(sharedItemListAtom)));
 
-const sharedCurriculumMapAtom = atomWithStorage("curriculum_map_shared", initialSharedItemList);
+const sharedCurriculumMapAtom = atomWithStorage(
+  "curriculum_map_shared",
+  initialSharedCurriculumMap,
+);
 const isCurriculumMapDirtyAtom = atom(
-  get => !isListEquals(get(curriculumMapToShareAtom), get(sharedCurriculumMapAtom)),
+  get => !isCurriculumMapEquals(get(curriculumMapAtom), get(sharedCurriculumMapAtom)),
 );
 
 const useShare = () => {
@@ -63,4 +90,4 @@ const useShareCurriculumMap = () => {
   return { isDirty, share };
 };
 
-export { useShare, useShareCurriculumMap, sharedItemListAtom };
+export { useShare, useShareCurriculumMap, sharedItemListAtom, sharedCurriculumMapAtom };

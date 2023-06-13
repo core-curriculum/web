@@ -12,7 +12,7 @@ const addViewHistoryAtom = atom(null, (get, set, entry: ServerItemList) => {
   const prevHistoryWithoutNew = get(viewHistoryAtom).filter(old => old.id !== entry.id);
   const items = [...entry.items];
   const newEntry = { ...entry, items } as const satisfies ServerItemList;
-  set(viewHistoryAtom, [newEntry, ...prevHistoryWithoutNew].slice(0, 1000+1));
+  set(viewHistoryAtom, [newEntry, ...prevHistoryWithoutNew].slice(0, 1000 + 1));
 });
 
 const useAddViewHistory = () => {

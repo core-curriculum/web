@@ -2,10 +2,13 @@ import type { NextPage, GetStaticProps } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { QRCodeCanvas } from "qrcode.react";
+import { MdDownload } from "react-icons/md";
 import { Table } from "@components/Table";
 import { BackButton } from "@components/buttons/BackButton";
+import { toDataUrl } from "@libs/csv";
 import { HeaderedTable } from "@libs/tableUtils";
 import { Tree } from "@libs/treeUtils";
+import { makeOutcomeTableData, makeTableItemTableData } from "@services/curriculumMapTable";
 import { Locale, translationInServer, useLocaleText } from "@services/i18n/i18n";
 import { useAddViewHistory } from "@services/itemList/hooks/viewHistory";
 import {
@@ -24,7 +27,7 @@ type PageProps = {
   outcomesTree: Tree<OutcomeInfo>;
   allTables: TableInfoSet[];
   id: string;
-  children?: ServerItemList[] | false;
+  children: ServerItemList[] | false;
   itemList: ServerItemList | string;
   schemaWithValue: SchemaItemsWithValue | string;
 };
@@ -46,6 +49,7 @@ const getServerItem = async (id: string) => {
 };
 
 const getServerItems = async (ids: readonly string[]) => {
+  console.log(ids);
   try {
     return (await getItemListFromIds(ids)).flatMap(res => (res.ok ? res.data : []));
   } catch (e) {
@@ -62,10 +66,18 @@ export const getStaticProps: GetStaticProps<PageProps> = async ({ locale, params
   const id = (params?.id as string) ?? "";
   const itemList = await getServerItem(id);
   const children =
-    typeof itemList !== "string" && itemList.children && (await getServerItems(itemList.children));
+    (typeof itemList !== "string" &&
+      itemList.children &&
+      (await getServerItems(itemList.children))) ??
+    false;
   const schemaId = typeof itemList === "string" ? "" : itemList.schema_id;
   const schema = await getSchema(schemaId);
-  const { t } = translationInServer(locale as Locale, "@services/itemList/libs/schema_list");
+  const { t: t_list } = translationInServer(
+    locale as Locale,
+    "@services/itemList/libs/schema_list",
+  );
+  const { t: t_map } = translationInServer(locale as Locale, "@services/itemList/libs/schema_map");
+  const t = children ? t_map : t_list;
   const schemaWithValue =
     typeof itemList === "string"
       ? ""
@@ -126,25 +138,76 @@ const QrCode = () => {
       : "https://core-curriculum.jp";
   const url = origin + router.asPath;
   return (
-    <>
+    <Link href={url} className="hover:bg-primary-focus">
       <QRCodeCanvas size={80} value={url} />
-    </>
+    </Link>
   );
 };
 
-const OutcomeAccessInfo = ({ id }: { id: string }) => {
+type CSVDownloadLinkProps = {
+  data: string[][];
+  label: string;
+  filename: string;
+};
+const CSVDownloadLink = ({ data, label, filename }: CSVDownloadLinkProps) => {
+  console.log(data);
+  const url = toDataUrl(data, { withBom: true });
+  return (
+    <Link download={filename} href={url} className="link-hover link-primary link">
+      <span className="flex items-center gap-2">
+        <MdDownload />
+        {label}
+      </span>
+    </Link>
+  );
+};
+
+const CSVDownloadLinks = ({
+  items,
+  allTables,
+  outcomesTree,
+}: {
+  items: ServerItemList[];
+  allTables: TableInfoSet[];
+  outcomesTree: Tree<OutcomeInfo>;
+}) => {
   const { t } = useLocaleText("@pages/x/[id]");
+  const l1Data = makeOutcomeTableData(items, outcomesTree, 1);
+  const l4Data = makeOutcomeTableData(items, outcomesTree, 4);
+  const tableData = makeTableItemTableData(items, allTables);
+  const linkDataList = [
+    { data: l1Data, label: t("downloadL1"), filename: "outcomes_l1.csv" },
+    { data: l4Data, label: t("downloadL4"), filename: "outcomes_l1_to_l4.csv" },
+    { data: tableData, label: t("downloadTable"), filename: "tables.csv" },
+  ];
+  return (
+    <div className="mt-8 flex flex-col gap-4 lg:mt-12">
+      {linkDataList.map(props => (
+        <CSVDownloadLink key={props.filename} {...props} />
+      ))}
+    </div>
+  );
+};
+
+const OutcomeAccessInfo = ({ id, isMap }: { id: string; isMap: boolean }) => {
+  const { t } = useLocaleText("@pages/x/[id]");
+  const link = isMap ? `/map?from=${id}` : `/list?from=${id}`;
   return (
     <div className="m-4 mt-16 flex justify-end text-xs text-gray-600">
       <div>
-        <div>このリストは以下のコードでアクセスできます</div>
-        <div className="my-2 flex justify-end">
+        <div>{t("accessQRToThisPage")}</div>
+        <div className="my-2">
           <QrCode />
         </div>
-        <div className="mb-2 mt-8">関連する項目や授業名を変更する場合は以下から</div>
+        <div className="mb-2 mt-8">{t("descriptionToEdit")}</div>
         <div>
-          <Link href={`/list?from=${id}`} className="btn-outline btn">
-            このリストを元に新しいリストを作成
+          <Link href={link} className="btn-outline btn">
+            {t("startEdit")}
+          </Link>
+        </div>
+        <div className="mt-4">
+          <Link href="/map" className="link-hover link-primary link">
+            {t("makeCurriculumMap")}
           </Link>
         </div>
       </div>
@@ -203,7 +266,11 @@ const ListPage: NextPage<PageProps> = ({
   const addHistory = useAddViewHistory();
   if (isLoading) return <div>Loading...</div>;
   if (typeof itemList === "string" || typeof schemaWithValue === "string")
-    return <div>該当するリストが見つかりません。(id:{id})</div>;
+    return (
+      <div>
+        {t("notFound")}(id:{id})
+      </div>
+    );
   const text = itemList?.items.join(",") ?? "";
   addHistory(itemList);
   return (
@@ -211,8 +278,12 @@ const ListPage: NextPage<PageProps> = ({
       <div className="ml-4">
         <HeaderBar />
         <ListData values={schemaWithValue} />
-        <OutcomesList {...{ allTables, outcomesTree, text, id }} />
-        <OutcomeAccessInfo id={id} />
+        {children ? (
+          <CSVDownloadLinks {...{ items: children, allTables, outcomesTree }} />
+        ) : (
+          <OutcomesList {...{ allTables, outcomesTree, text, id }} />
+        )}
+        <OutcomeAccessInfo id={id} isMap={(children && children?.length > 0) ?? false} />
       </div>
     </>
   );

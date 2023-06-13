@@ -15,7 +15,7 @@ const ItemContextMenu = ({ id, index }: { id: string; index: string }) => {
       [{ name: "id", label: fmt(t("copyId"), { id }) }],
     ] as const
   ).flat();
-  const menuClick = async (name: typeof menus[number]["name"]) => {
+  const menuClick = async (name: (typeof menus)[number]["name"]) => {
     switch (name) {
       case "addToList":
         addItem(id);

@@ -42,7 +42,7 @@ const RatingCheck = ({ name }: RatingCheckProp) => (
 
 const Outcomel1 = ({ item, childnodes }: PropType<L1>) => (
   <section>
-    <h3 className="bg-white py-6 px-4 text-3xl shadow-md" id={item.id} style={{ zIndex: 2 }}>
+    <h3 className="bg-white px-4 py-6 text-3xl shadow-md" id={item.id} style={{ zIndex: 2 }}>
       <span className="pr-2 font-thin">{item.index}</span>
       <span className="font-bold">{item.text}</span>
     </h3>
@@ -57,7 +57,7 @@ const Outcomel2 = ({ item, childnodes }: PropType<L2>) => {
       <div className="overflow-x-auto">
         <table className="m-3 table">
           <thead>
-            <tr className="mr-4 ml-10 py-1" id={item.id}>
+            <tr className="ml-10 mr-4 py-1" id={item.id}>
               <th className="pl-4 text-left">{index + " " + item.text}</th>
               <th className="p-2 text-center">
                 <div>自己評価</div>
@@ -82,7 +82,7 @@ const Outcomel2 = ({ item, childnodes }: PropType<L2>) => {
 const Outcomel3 = ({ item, childnodes }: PropType<L3>) => {
   const index = item.index.match(/..$/)?.[0] ?? "??";
   return (
-    <tr className="mr-4 ml-10 py-1" id={item.id}>
+    <tr className="ml-10 mr-4 py-1" id={item.id}>
       <td className="whitespace-normal p-2 ">{index + " " + item.text}</td>
       <td className="p-2 text-center">
         <RatingCheck name={item.id + "-self"} />
@@ -97,7 +97,7 @@ const Outcomel3 = ({ item, childnodes }: PropType<L3>) => {
 const Outcomel4 = ({ item }: PropType<L4>) => {
   const index = item.index.match(/..$/)?.[0] ?? "??";
   return (
-    <tr className="mr-4 ml-10 py-1" id={item.id}>
+    <tr className="ml-10 mr-4 py-1" id={item.id}>
       <td className="whitespace-normal p-2 ">{index + " " + item.text}</td>
       <td className="p-2 text-center">
         <RatingCheck name={item.id + "-self"} />

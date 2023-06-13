@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { isValidShortId } from "@libs/uuid_translator";
+import { locales } from "./i18n/i18n";
 
 const origin =
   typeof window !== "undefined" && window?.location
@@ -16,8 +17,11 @@ const listUrl = (id: string) => {
 };
 
 const itemUrlToId = (url: string) => {
-  const id = url.replace(`${origin}/x/`, "").replaceAll("/", "").trim();
-  return id;
+  const params = url.replace(`${origin}/x/`, "");
+  const id = locales.reduce((acc, locale) => {
+    return acc.replace(`${locale}`, "");
+  }, params);
+  return id.replaceAll("/", "").trim();
 };
 
 const isValidItemUrlOrId = (urlOrId: string) => {

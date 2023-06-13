@@ -58,7 +58,9 @@ const ChildList = ({ active, childnodes }: { active: boolean; childnodes: ReactN
   return (
     <div className="overflow-y-hidden">
       <ul
-        className={`overflow-y-hidden transition-all duration-500 ease-in-out${active ? "scale-y-100" : "invisible h-0"}`}
+        className={`overflow-y-hidden transition-all duration-500 ease-in-out${
+          active ? "scale-y-100" : "invisible h-0"
+        }`}
       >
         {childnodes}
       </ul>
@@ -143,7 +145,7 @@ const L2List = ({ item, childnodes, active, targeted }: PropType<L2>) => {
       <span className="hover:text-sky-600">
         <a
           className={`w-82 block truncate rounded-md border-l-4 py-3 
-          pr-1 pl-6 hover:text-clip  hover:bg-sky-100 hover:underline
+          pl-6 pr-1 hover:text-clip  hover:bg-sky-100 hover:underline
           ${targeted ? " border-sky-400 bg-sky-100" : "border-transparent"} 
           `}
           href={id}
@@ -164,7 +166,7 @@ const L3List = ({ item, active, targeted }: PropType<L3>) => {
       <span className="hover:text-sky-600">
         <a
           className={`block truncate rounded-md border-l-4 py-3 
-          pr-1 pl-12 hover:text-clip  hover:bg-sky-100 hover:underline 
+          pl-12 pr-1 hover:text-clip  hover:bg-sky-100 hover:underline 
           ${targeted ? " border-sky-400 bg-sky-100" : "border-transparent"} 
           `}
           href={id}

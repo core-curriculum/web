@@ -4,7 +4,19 @@ import {
   InputItemList,
   ServerItemList,
   ServerItemListResponse,
+  ServerCurrisulumMap,
 } from "@services/itemList/libs/types";
+
+type Response<T> =
+  | {
+      ok: true;
+      data: T;
+    }
+  | {
+      ok: false;
+      error: string;
+      errorType: string;
+    };
 
 const shareItemListToServer = async (itemList: InputItemList): Promise<ServerItemList> => {
   try {
@@ -16,11 +28,19 @@ const shareItemListToServer = async (itemList: InputItemList): Promise<ServerIte
 
 const shareCurriculumMapToServer = async (
   curriculumMap: InputCurriculumMap,
-): Promise<ServerItemList> => {
+): Promise<ServerCurrisulumMap> => {
   try {
     return await apiPost("/api/v1/map", curriculumMap);
   } catch (e) {
     throw new Error(`Fail to share curriculumMap. ${e}`);
+  }
+};
+
+const getCurriculuMapFromServer = async (id: string): Promise<Response<ServerCurrisulumMap>> => {
+  try {
+    return await apiGet(`/api/v1/map/${id}`);
+  } catch (e) {
+    throw new Error(`Fail to get curriculumMap. ${e}`);
   }
 };
 
@@ -33,4 +53,9 @@ const getItemListFromServer = async (ids: string[]): Promise<ServerItemListRespo
   }
 };
 
-export { shareItemListToServer, getItemListFromServer, shareCurriculumMapToServer };
+export {
+  shareItemListToServer,
+  getItemListFromServer,
+  shareCurriculumMapToServer,
+  getCurriculuMapFromServer,
+};

@@ -13,7 +13,9 @@ const apiPost = async <PostData extends object, Response extends object>(
     const response = (await posted.json()) as Response;
     return response;
   }
-  throw new Error(`Cannot post to api:${api},${posted}`);
+  const message = `Cannot post to api:${api},${posted}`;
+  console.error(message);
+  throw new Error(message);
 };
 
 const apiGet = async <Response extends object>(api: string): Promise<Response> => {
