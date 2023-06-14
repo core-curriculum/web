@@ -4,7 +4,7 @@ import {
   InputItemList,
   ServerItemList,
   ServerItemListResponse,
-  ServerCurrisulumMap,
+  ServerCurriculumMap,
 } from "@services/itemList/libs/types";
 
 type Response<T> =
@@ -28,7 +28,7 @@ const shareItemListToServer = async (itemList: InputItemList): Promise<ServerIte
 
 const shareCurriculumMapToServer = async (
   curriculumMap: InputCurriculumMap,
-): Promise<ServerCurrisulumMap> => {
+): Promise<ServerCurriculumMap> => {
   try {
     return await apiPost("/api/v1/map", curriculumMap);
   } catch (e) {
@@ -36,7 +36,7 @@ const shareCurriculumMapToServer = async (
   }
 };
 
-const getCurriculuMapFromServer = async (id: string): Promise<Response<ServerCurrisulumMap>> => {
+const getCurriculuMapFromServer = async (id: string): Promise<Response<ServerCurriculumMap>> => {
   try {
     return await apiGet(`/api/v1/map/${id}`);
   } catch (e) {

@@ -1,4 +1,4 @@
-import { atom, useAtomValue, useSetAtom } from "jotai";
+import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { arrayEquals, objectEquals } from "@libs/utils";
 import { itemListAtom } from "@services/itemList/hooks/itemList";
@@ -9,6 +9,8 @@ import {
   SharedItemList,
   SharedCurriculumMap,
   LocalCurriculumMap,
+  ServerCurriculumMap,
+  ServerItemList,
 } from "@services/itemList/libs/types";
 import { curriculumMapAtom, curriculumMapToShareAtom } from "./curriculumMap";
 
@@ -58,6 +60,17 @@ const isCurriculumMapDirtyAtom = atom(
   get => !isCurriculumMapEquals(get(curriculumMapAtom), get(sharedCurriculumMapAtom)),
 );
 
+const removeDuplicate = <T>(arr: readonly T[]) => [...new Set(arr)];
+
+const serverCurriculumMapToItemList = (
+  serverCurriculumMap: ServerCurriculumMap,
+): ServerItemList => {
+  const items = removeDuplicate(serverCurriculumMap.items.flatMap(item => item.items));
+  const children = serverCurriculumMap.items.map(item => item.id);
+  const data = { ...serverCurriculumMap.data };
+  return { ...serverCurriculumMap, items, children, data };
+};
+
 const useShare = () => {
   const setSharedItemList = useSetAtom(sharedItemListAtom);
   const localItemList = useAtomValue(itemListAtom);
@@ -75,7 +88,7 @@ const useShare = () => {
 };
 
 const useShareCurriculumMap = () => {
-  const setSharedCurriculumMap = useSetAtom(sharedCurriculumMapAtom);
+  const [sharedCurriculumMap, setSharedCurriculumMap] = useAtom(sharedCurriculumMapAtom);
   const localCurriculumMap = useAtomValue(curriculumMapToShareAtom);
   const schema = localCurriculumMap.schema?.id ? localCurriculumMap.schema?.id : undefined;
   const isDirty = useAtomValue(isCurriculumMapDirtyAtom);
@@ -85,7 +98,8 @@ const useShareCurriculumMap = () => {
       schema,
     });
     setSharedCurriculumMap(current => ({ ...current, ...inserted }));
-    return inserted;
+    const itemList = serverCurriculumMapToItemList({ ...sharedCurriculumMap, ...inserted });
+    return { insertedAsCurriculumMap: inserted, insertedAsItemList: itemList };
   };
   return { isDirty, share };
 };

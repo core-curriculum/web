@@ -32,7 +32,7 @@ type ServerItemList = Expand<
   }
 >;
 
-type ServerCurrisulumMap = {
+type ServerCurriculumMap = {
   items: ReadonlyArray<ServerItemList>;
   data: Record<string, string>;
   from_id: string;
@@ -91,7 +91,7 @@ export type {
   ServerItemList,
   ItemListInDB,
   ServerItemListResponse,
-  ServerCurrisulumMap,
+  ServerCurriculumMap,
   ItemListDBView,
   LocalItemList,
   LocalCurriculumMap,

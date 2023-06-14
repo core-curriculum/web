@@ -16,13 +16,10 @@ import {
   useCurriculumMapItems,
 } from "@services/itemList/hooks/curriculumMap";
 import { useCurriculumMapSchema } from "@services/itemList/hooks/schema";
+import { useCurricullumMapServerTemplate } from "@services/itemList/hooks/serverTemplate";
 import { useShareCurriculumMap } from "@services/itemList/hooks/share";
 import { useAddViewHistory } from "@services/itemList/hooks/viewHistory";
-import {
-  schemaItemsWithValue,
-  useServerTemplate,
-  useShare as useShareItemList,
-} from "@services/itemList/local";
+import { schemaItemsWithValue, useShare as useShareItemList } from "@services/itemList/local";
 import { listUrl } from "@services/urls";
 
 const HeaderBar = () => {
@@ -71,7 +68,7 @@ const useShare = () => {
         primary: t("proceedToShare"),
       });
       if (res === goBack) return;
-      const inserted = await shareCurriculumMap();
+      const { insertedAsItemList: inserted } = await shareCurriculumMap();
       addHistory(inserted);
       const url = listUrl(inserted.id);
       await showConfirmDialog({
@@ -182,11 +179,12 @@ const CurriculumMapData = () => {
 };
 
 const useTemplate = () => {
-  const { apply: doApply } = useServerTemplate();
+  const { apply: doApply } = useCurricullumMapServerTemplate();
   const router = useRouter();
   const [processed, setProcessed] = useState(false);
   const { isDirty } = useShareItemList();
   const { t } = useTranslation("@pages/list");
+  const shouldApply = router.query?.from;
   const apply = async (templateId: string) => {
     const hasTemplate = templateId !== "";
     if (hasTemplate && !processed) {
@@ -204,7 +202,7 @@ const useTemplate = () => {
     }
     router.push(router.basePath);
   };
-  return { apply };
+  return { apply, shouldApply };
 };
 
 const CurriculumMapPage: NextPage<{}> = () => {
