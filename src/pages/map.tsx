@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -149,32 +150,42 @@ const AddFromHistoryButton = () => {
 const CurriculumMapData = () => {
   const { set: setDataValue, listData } = useCurriculumMapData();
   const { schema } = useCurriculumMapSchema();
-  const { t } = useTranslation("@services/itemList/libs/schema_map");
+  const { t: schemaTranslator } = useTranslation("@services/itemList/libs/schema_map");
+  const { t } = useTranslation("@pages/map");
 
-  const schemaWithValue = schemaItemsWithValue(listData, schema, t as (key: string) => string);
+  const schemaWithValue = schemaItemsWithValue(
+    listData,
+    schema,
+    schemaTranslator as (key: string) => string,
+  );
 
   const onChange = (key: string, e: ChangeEvent<HTMLInputElement>) => {
     setDataValue(key, e.target.value);
   };
   return (
-    <Suspense fallback="loading...">
-      <div className="m-4">
-        {schemaWithValue.map(({ type, key, label, value }) => {
-          return (
-            <section key={key}>
-              <label>{label ?? key}</label>
-              <input
-                type={type}
-                className="input-bordered input m-4 w-full max-w-xs"
-                placeholder={label ?? key}
-                value={value}
-                onChange={e => onChange(key, e)}
-              />
-            </section>
-          );
-        })}
-      </div>
-    </Suspense>
+    <>
+      <Head>
+        <title>{t("title")}</title>
+      </Head>
+      <Suspense fallback="loading...">
+        <div className="m-4">
+          {schemaWithValue.map(({ type, key, label, value }) => {
+            return (
+              <section key={key}>
+                <label>{label ?? key}</label>
+                <input
+                  type={type}
+                  className="input-bordered input m-4 w-full max-w-xs"
+                  placeholder={label ?? key}
+                  value={value}
+                  onChange={e => onChange(key, e)}
+                />
+              </section>
+            );
+          })}
+        </div>
+      </Suspense>
+    </>
   );
 };
 

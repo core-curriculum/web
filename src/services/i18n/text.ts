@@ -50,6 +50,10 @@ const text = {
     target: { ja: "学修目標一覧へ", en: "Back to Outcomes" },
   },
   "@pages/list": {
+    title: {
+      ja: "授業との関連付けリスト | モデルコアカリキュラム",
+      en: "List of associations with classes | Model Core Curriculum",
+    },
     table: { ja: "表", en: "Table" },
     share: { ja: "共有する", en: "Share" },
     sharing: { ja: "共有中...", en: "Sharing..." },
@@ -72,6 +76,10 @@ const text = {
     },
   },
   "@pages/map": {
+    title: {
+      ja: "カリキュラムマップ | モデルコアカリキュラム",
+      en: "Curriculum Map | Model Core Curriculum",
+    },
     table: { ja: "表", en: "Table" },
     share: { ja: "共有する", en: "Share" },
     sharing: { ja: "共有中...", en: "Sharing..." },
@@ -97,9 +105,11 @@ const text = {
     },
   },
   "@pages/list/table/[id]": {
+    title: { ja: "{name} | モデルコアカリキュラム", en: "{name} | Model Core Curriculum" },
     table: { ja: "表", en: "Table" },
   },
   "@pages/x/[id]": {
+    title: { ja: "{name} | モデルコアカリキュラム", en: "{name} | Model Core Curriculum" },
     table: { ja: "表", en: "Table" },
     downloadL1: {
       ja: "第1層と授業の関連付けデータをダウンロード(csv)",
@@ -135,6 +145,7 @@ const text = {
     },
   },
   "@pages/search": {
+    title: { ja: "検索 | モデルコアカリキュラム", en: "Search | Model Core Curriculum" },
     table: { ja: "表", en: "Table" },
     placeholder: { ja: "検索語もしくはカンマ区切りid", en: "Search term or comma separated ids" },
   },

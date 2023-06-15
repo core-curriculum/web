@@ -1,4 +1,5 @@
 import type { NextPage, GetStaticProps } from "next";
+import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { QRCodeCanvas } from "qrcode.react";
@@ -8,6 +9,7 @@ import { BackButton } from "@components/buttons/BackButton";
 import { toDataUrl } from "@libs/csv";
 import { HeaderedTable } from "@libs/tableUtils";
 import { Tree } from "@libs/treeUtils";
+import { fmt } from "@libs/utils";
 import { makeOutcomeTableData, makeTableItemTableData } from "@services/curriculumMapTable";
 import { Locale, translationInServer, useLocaleText } from "@services/i18n/i18n";
 import { useAddViewHistory } from "@services/itemList/hooks/viewHistory";
@@ -271,6 +273,9 @@ const ListPage: NextPage<PageProps> = ({
   addHistory(itemList);
   return (
     <>
+      <Head>
+        <title>{fmt(t("title"), { name: itemList.name })}</title>
+      </Head>
       <div className="ml-4">
         <HeaderBar />
         <ListData values={schemaWithValue} />
