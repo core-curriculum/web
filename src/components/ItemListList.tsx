@@ -8,6 +8,7 @@ import {
   UniqueIdentifier,
   useSensor,
   useSensors,
+  MeasuringStrategy,
 } from "@dnd-kit/core";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import {
@@ -15,6 +16,8 @@ import {
   verticalListSortingStrategy,
   arrayMove,
   useSortable,
+  defaultAnimateLayoutChanges,
+  AnimateLayoutChanges,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { forwardRef, useMemo, useState } from "react";
@@ -22,14 +25,6 @@ import { MdDragIndicator, MdClose } from "react-icons/md";
 import { formatDateTimeIntl } from "@libs/utils";
 import { useTranslation } from "@services/i18n/i18n";
 import { ServerItemList } from "@services/itemList/server";
-
-function moveIndex<T>(array: ReadonlyArray<T>, from: number, to: number) {
-  const newArray = [...array];
-  const target = newArray[from];
-  newArray.splice(from, 1);
-  if (to >= 0) newArray.splice(to, 0, target);
-  return newArray;
-}
 
 // eslint-disable-next-line react/display-name
 const DragHandle = forwardRef<HTMLDivElement>((_props, ref) => (
@@ -65,43 +60,48 @@ const StaticRow = ({ row: { items } }: { row: { items: ReadonlyArray<string> } }
   );
 };
 
+const animateLayoutChanges: AnimateLayoutChanges = args => {
+  const { isSorting, wasDragging } = args;
+
+  if (isSorting || wasDragging) {
+    return defaultAnimateLayoutChanges(args);
+  }
+
+  return true;
+};
+
 type DraggableRowProps = {
   row: {
     id: UniqueIdentifier;
     items: ReadonlyArray<string>;
     index: number;
   };
-  onMoveItem?: (prevIndex: number, targetIndex: number) => void;
+  onRemove?: (index: number) => void;
 };
-const DraggableRow = ({ row: { items, index, id }, onMoveItem }: DraggableRowProps) => {
+const DraggableRow = ({ row: { items, index, id }, onRemove }: DraggableRowProps) => {
   const { attributes, listeners, transform, transition, setNodeRef, isDragging } = useSortable({
-    id: id,
+    animateLayoutChanges,
+    id,
   });
   const style = {
     transform: CSS.Transform.toString(transform),
     transition: transition,
   };
   return (
-    <tr ref={setNodeRef} style={style} key={id}>
-      {isDragging ? (
-        <td colSpan={items.length} className="bg-primary/5">
-          &nbsp;
-        </td>
-      ) : (
-        items.map((item, i, { length }) => {
-          const needHandle = i === 0;
-          const needDeleteIcon = i === length - 1;
-          return (
-            <td key={i}>
-              <div className={`flex flex-row  items-center`}>
-                {needHandle && <DragHandle {...attributes} {...listeners} />}
-                {item}
-                {needDeleteIcon && <DeleteIcon onClick={() => onMoveItem?.(index, -1)} />}
-              </div>
-            </td>
-          );
-        })
-      )}
+    <tr ref={setNodeRef} style={style} key={id} className={`${isDragging && "bg-primary/5"}`}>
+      {items.map((item, i, { length }) => {
+        const needHandle = i === 0;
+        const needDeleteIcon = i === length - 1;
+        return (
+          <td key={i}>
+            <div className={`flex flex-row  items-center`}>
+              {needHandle && <DragHandle {...attributes} {...listeners} />}
+              {item}
+              {needDeleteIcon && <DeleteIcon onClick={() => onRemove?.(index)} />}
+            </div>
+          </td>
+        );
+      })}
     </tr>
   );
 };
@@ -114,11 +114,14 @@ type Props = {
 const ItemListList = ({ itemListList, onChange }: Props) => {
   const { t } = useTranslation("@components/ItemListList");
   const [activeName, setActiveName] = useState("");
-  const onMoveItem = (prevIndex: number, targetIndex: number) => {
-    const newItemListList = moveIndex(itemListList, prevIndex, targetIndex);
+  const handleRemove = (index: number) => {
+    const newItemListList = itemListList.filter((_, i) => i !== index);
     onChange?.(newItemListList);
   };
-  const items = [...itemListList.map((itemList, i) => `${itemList.id}_${i}`)];
+  const items = useMemo(
+    () => [...itemListList.map((itemList, i) => `${itemList.id}_${i}`)],
+    [itemListList],
+  );
   const sensors = useSensors(
     useSensor(MouseSensor, {}),
     useSensor(TouchSensor, {}),
@@ -154,7 +157,7 @@ const ItemListList = ({ itemListList, onChange }: Props) => {
     const id = activeName;
     const _items = [name, place, formatDateTimeIntl(created_at)];
     return { ...itemListList[index], index, id, items: _items };
-  }, [activeName, itemListList]);
+  }, [activeName, itemListList, items]);
 
   return (
     <DndContext
@@ -164,8 +167,9 @@ const ItemListList = ({ itemListList, onChange }: Props) => {
       onDragCancel={handleDragCancel}
       collisionDetection={closestCenter}
       modifiers={[restrictToVerticalAxis]}
+      measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
     >
-      <table className="table transition">
+      <table className="table">
         <thead>
           <tr>
             <td>{t("name")}</td>
@@ -182,18 +186,17 @@ const ItemListList = ({ itemListList, onChange }: Props) => {
                 index: i,
               }))
               .map(row => (
-                <DraggableRow
-                  key={row.id}
-                  row={row}
-                  onMoveItem={onChange ? onMoveItem : undefined}
-                />
+                <DraggableRow key={row.id} row={row} onRemove={handleRemove} />
               ))}
           </SortableContext>
         </tbody>
       </table>
       <DragOverlay>
         {activeName && (
-          <table style={{ width: "100%" }} className="bg-base-100 drop-shadow-lg transition">
+          <table
+            style={{ width: "100%" }}
+            className="table -translate-x-2 -translate-y-2 bg-base-100 drop-shadow-lg"
+          >
             <tbody>{selectedItem && <StaticRow key={selectedItem.id} row={selectedItem} />}</tbody>
           </table>
         )}
