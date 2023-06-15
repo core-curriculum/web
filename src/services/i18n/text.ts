@@ -40,6 +40,12 @@ const text = {
     },
     removeItemDone: { ja: "リストから削除しました", en: "Removed from List" },
   },
+  "@components/ItemUrlInputDialog": {
+    description: {
+      ja: "授業担当者から送られたurlを入力してください(1行につき1つのurlを入力)",
+      en: "Enter the url sent by the class instructor (one url per line)",
+    },
+  },
   "@components/buttons/BackButton": {
     target: { ja: "学修目標一覧へ", en: "Back to Outcomes" },
   },

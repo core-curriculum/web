@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "@services/i18n/i18n";
 import { getItemListFromServer } from "@services/itemList/libs/callApi";
 import { itemUrlToId, isValidItemUrlOrId } from "@services/urls";
 import { showModal } from "./Modal";
@@ -43,6 +44,7 @@ const ItemUrlInputComponent = ({
   onValidateChange,
 }: ItemUrlInputComponentProps) => {
   const [inputText, setInputText] = useState("");
+  const { t } = useTranslation("@components/ItemUrlInputDialog");
   const isValid = validateText(inputText);
   const errorText = !isValid ? "Invalid URL" : "";
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -54,6 +56,7 @@ const ItemUrlInputComponent = ({
   };
   return (
     <>
+      <div>{t("description")}</div>
       <span className="text-xs text-error">{errorText}</span>
       <textarea
         className="textarea-bordered textarea w-full"

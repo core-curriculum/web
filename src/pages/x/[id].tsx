@@ -137,11 +137,7 @@ const QrCode = () => {
       ? window?.location?.origin
       : "https://core-curriculum.jp";
   const url = origin + router.asPath;
-  return (
-    <Link href={url} className="hover:bg-primary-focus">
-      <QRCodeCanvas size={80} value={url} />
-    </Link>
-  );
+  return <QRCodeCanvas size={80} value={url} />;
 };
 
 type CSVDownloadLinkProps = {
@@ -153,7 +149,7 @@ const CSVDownloadLink = ({ data, label, filename }: CSVDownloadLinkProps) => {
   console.log(data);
   const url = toDataUrl(data, { withBom: true });
   return (
-    <Link download={filename} href={url} className="link-hover link-primary link">
+    <Link download={filename} href={url} className="link-hover link-info link">
       <span className="flex items-center gap-2">
         <MdDownload />
         {label}
@@ -206,7 +202,7 @@ const OutcomeAccessInfo = ({ id, isMap }: { id: string; isMap: boolean }) => {
           </Link>
         </div>
         <div className="mt-4">
-          <Link href="/map" className="link-hover link-primary link">
+          <Link href="/map" className="link-hover link-info link">
             {t("makeCurriculumMap")}
           </Link>
         </div>

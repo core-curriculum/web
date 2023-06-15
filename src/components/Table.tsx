@@ -17,7 +17,7 @@ const Table = ({
   return (
     <table className="table">
       <thead>
-        <tr className="sticky top-0">
+        <tr className="sticky top-0 bg-base-100">
           {header.map((cell, i) => (
             <th key={i}>{cell}</th>
           ))}

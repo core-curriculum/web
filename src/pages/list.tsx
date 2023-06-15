@@ -96,7 +96,7 @@ const useShare = () => {
           <>
             <div className="mb-4">{t("wayToShare")}</div>
             <div className="flex align-middle">
-              <Link href={url} className="hover:underline">
+              <Link href={url} className="link-hover link-info link">
                 {url}
               </Link>
               <CopyButton className="pl-2" content={url} />
@@ -217,7 +217,7 @@ const ListPage: NextPage<PageProps> = ({ outcomesTree, allTables }: PageProps) =
           {searchOutcomes(outcomesTree, text).map(item => (
             <div className="m-4" key={item.id}>
               <div>
-                <span className="mr-2 font-light text-sky-600">{item.index}</span>
+                <span className="mr-2 font-light text-info">{item.index}</span>
                 {item.text}
                 <ItemContextMenu id={item.id} index={item.index} />
               </div>

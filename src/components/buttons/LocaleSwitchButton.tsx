@@ -9,15 +9,15 @@ const LocaleSwitchButton = () => {
     <Link
       href="/"
       locale={switchTargetLocale}
-      className="flex items-center justify-center gap-x-1 rounded-md p-2 hover:bg-sky-100"
+      className="flex items-center justify-center gap-x-1 rounded-md p-2 hover:bg-info/30"
     >
-      <span className="text-sky-300 max-lg:hidden  max-md:text-sm">{title}</span>
+      <span className="text-info max-lg:hidden  max-md:text-sm">{title}</span>
       <MdLanguage
         size="2rem"
         title={title}
         color="rgb(125 211 252"
         className="cursor-pointer rounded-md 
-    p-1 hover:bg-sky-100"
+    p-1 hover:bg-info/30"
       />
     </Link>
   );

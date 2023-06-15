@@ -42,7 +42,7 @@ const RatingCheck = ({ name }: RatingCheckProp) => (
 
 const Outcomel1 = ({ item, childnodes }: PropType<L1>) => (
   <section>
-    <h3 className="bg-white px-4 py-6 text-3xl shadow-md" id={item.id} style={{ zIndex: 2 }}>
+    <h3 className="bg-base-100 px-4 py-6 text-3xl shadow-md" id={item.id} style={{ zIndex: 2 }}>
       <span className="pr-2 font-thin">{item.index}</span>
       <span className="font-bold">{item.text}</span>
     </h3>

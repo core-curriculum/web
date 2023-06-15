@@ -14,7 +14,7 @@ const StyledText = ({ text, map }: { text: string; map: MappedInfo<AttrInfo>[] }
                 href={attr.url}
                 key={attr.id}
                 title={attr.title}
-                className="cursor-pointer text-sky-500 hover:underline"
+                className="link-hover link-info link"
               >
                 {text}
               </Link>

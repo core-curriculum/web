@@ -14,9 +14,9 @@ const LinkToItemList = ({ count, href }: Prop) => {
     <>
       <Link
         {...{ href }}
-        className="flex items-center justify-center gap-x-1 rounded-md p-2 hover:bg-sky-100"
+        className="flex items-center justify-center gap-x-1 rounded-md p-2 hover:bg-info/30"
       >
-        <span className={`${count > 0 ? "text-sky-300" : "text-gray-400"} max-md:text-sm`}>
+        <span className={`${count > 0 ? "text-info" : "text-base-content/50"} max-md:text-sm`}>
           {t("title")}
         </span>
         <span

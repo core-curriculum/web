@@ -76,7 +76,7 @@ const useShare = () => {
           <>
             <div className="mb-4">{t("wayToShare")}</div>
             <div className="flex align-middle">
-              <Link href={url} className="hover:underline">
+              <Link href={url} className="link-hover link-info link">
                 {url}
               </Link>
               <CopyButton className="pl-2" content={url} />
