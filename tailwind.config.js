@@ -10,8 +10,6 @@ module.exports = {
     extend: {
       animation: {
         enter: 'enter 200ms ease-out',
-        "progress-in": "slide-x-in 5s ease-in-out",
-        "progress-out": "slide-x-out 5s ease-in-out  forwards",
         'slide-in': 'slide-in 1.2s cubic-bezier(.41,.73,.51,1.02)',
         leave: 'leave 150ms ease-in forwards',
       },
@@ -27,14 +25,6 @@ module.exports = {
         'slide-in': {
           '0%': { transform: 'translateY(-100%)' },
           '100%': { transform: 'translateY(0)' },
-        },
-        'slide-x-out': {
-          '0%': { transform: 'translateX(0)' },
-          '100%': { transform: 'translateX(-100%)' },
-        },
-        'slide-x-in': {
-          '0%': { transform: 'translateX(0)' },
-          '100%': { transform: 'translateX(-100%)' },
         },
       },
     },

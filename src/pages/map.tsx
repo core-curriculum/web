@@ -20,7 +20,11 @@ import { useCurriculumMapSchema } from "@services/itemList/hooks/schema";
 import { useCurricullumMapServerTemplate } from "@services/itemList/hooks/serverTemplate";
 import { useShareCurriculumMap } from "@services/itemList/hooks/share";
 import { useAddViewHistory } from "@services/itemList/hooks/viewHistory";
-import { schemaItemsWithValue, useShare as useShareItemList } from "@services/itemList/local";
+import {
+  ServerItemList,
+  schemaItemsWithValue,
+  useShare as useShareItemList,
+} from "@services/itemList/local";
 import { listUrl } from "@services/urls";
 
 const HeaderBar = () => {
@@ -214,6 +218,19 @@ const useTemplate = () => {
     router.push(router.basePath);
   };
   return { apply, shouldApply };
+};
+
+const itemListListToTableData = (
+  itemListList: ServerItemList[],
+  dateFormatter: (date: Date | string) => string,
+) => {
+  const header = ["name", "place", "created_at"] as const;
+  const data = itemListList.map(row => {
+    const { id, name, place, created_at } = row;
+    const formattedCreatedAt = dateFormatter(created_at);
+    return { id, name, place, creaetd_at: formattedCreatedAt } as const;
+  });
+  return { header, data };
 };
 
 const CurriculumMapPage: NextPage<{}> = () => {
