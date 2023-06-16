@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import React from "react";
-import toast, { Toaster } from "react-hot-toast";
+import { ToastProvider, toast } from "@components/toast";
 import { ContextMenu, ContextMenuProps } from "../components/ContextMenu";
 
 const TargetComponent = <T extends readonly { name: string; label?: string }[]>(
@@ -9,7 +9,7 @@ const TargetComponent = <T extends readonly { name: string; label?: string }[]>(
   return (
     <div>
       <ContextMenu {...props} />
-      <Toaster />
+      <ToastProvider />
     </div>
   );
 };

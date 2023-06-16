@@ -4,13 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ChangeEvent, Suspense, useEffect, useState } from "react";
-import { toast } from "react-hot-toast";
 import { showConfirmDialog } from "@components/ConfirmDialog";
 import { CopyButton } from "@components/CopyButton";
 import { showInputFromHistoryDialog } from "@components/InputFromHistoryDialog";
 import { ItemListList } from "@components/ItemListList";
 import { showItemUrlInputComponentDialog } from "@components/ItemUrlInputDialog";
 import { BackButton } from "@components/buttons/BackButton";
+import { toast } from "@components/toast";
 import { useLocaleText, useTranslation } from "@services/i18n/i18n";
 import {
   useCurriculumMapData,

@@ -1,6 +1,5 @@
 import { Meta, StoryFn } from "@storybook/react";
 import React from "react";
-import { Toaster } from "react-hot-toast";
 import type { ConfirmDialogProps } from "@components/ConfirmDialog";
 import { showConfirmDialog } from "@components/ConfirmDialog";
 import { ModalProvider } from "@components/Modal";
@@ -17,7 +16,6 @@ const TargetComponent = (props: ConfirmDialogProps) => {
         表示
       </button>
       <ModalProvider />
-      <Toaster />
     </div>
   );
 };

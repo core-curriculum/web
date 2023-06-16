@@ -4,18 +4,23 @@ import { Fragment } from "react";
 type Props<T extends readonly { name: string; label?: string }[]> = {
   items: readonly [...T];
   onClick?: (name: T[number]["name"]) => void;
+  marked?: boolean;
 };
 const ContextMenu = <T extends readonly { name: string; label?: string }[]>({
   items,
   onClick,
+  marked,
 }: Props<T>) => {
   return (
     <Menu as="span" className="relative inline-block text-left">
       <div>
         <Menu.Button
-          className="inline-flex w-full justify-center rounded-md border-base-content/10 bg-base-content/5 px-2
-          py-1 text-sm font-medium text-base-content/80 transition hover:bg-base-content/30 focus:outline-none 
-          focus-visible:ring-2 focus-visible:ring-base-100/75"
+          className={`inline-flex w-full justify-center rounded-md 
+          border-base-content/10 transition 
+          ${marked ? "bg-info/20" : "bg-base-content/5"} px-2
+          py-1 text-sm font-medium text-base-content/80 transition hover:bg-base-content/30 
+          focus:outline-none 
+          focus-visible:ring-2 focus-visible:ring-base-100/75`}
         >
           ...
         </Menu.Button>

@@ -1,6 +1,6 @@
-import { toast } from "react-hot-toast";
 import { MdContentCopy } from "react-icons/md";
 import { copyToClip } from "@libs/utils";
+import { toast } from "./toast";
 
 const CopyButton = ({ content, className }: { content: string; className?: string }) => {
   const onClick = async () => {

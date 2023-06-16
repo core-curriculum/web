@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import React from "react";
-import { Toaster } from "react-hot-toast";
+import { ToastProvider } from "@components/toast";
 import { LinkToItemList } from "../components/LinkToItemList";
 import type { LinkToItemListProp } from "../components/LinkToItemList";
 
@@ -8,7 +8,7 @@ const TargetComponent = (props: LinkToItemListProp) => {
   return (
     <div>
       <LinkToItemList {...props} />
-      <Toaster />
+      <ToastProvider />
     </div>
   );
 };

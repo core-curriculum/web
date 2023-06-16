@@ -119,7 +119,7 @@ const ItemListList = ({ itemListList, onChange }: Props) => {
     onChange?.(newItemListList);
   };
   const items = useMemo(
-    () => [...itemListList.map((itemList, i) => `${itemList.id}_${i}`)],
+    () => [...itemListList.map((itemList, i) => `${itemList.id}`)],
     [itemListList],
   );
   const sensors = useSensors(
@@ -181,7 +181,7 @@ const ItemListList = ({ itemListList, onChange }: Props) => {
           <SortableContext items={items} strategy={verticalListSortingStrategy}>
             {itemListList
               .map(({ id, name, place, created_at }, i) => ({
-                id: `${id}_${i}`,
+                id: `${id}`,
                 items: [name, place, formatDateTimeIntl(created_at)],
                 index: i,
               }))

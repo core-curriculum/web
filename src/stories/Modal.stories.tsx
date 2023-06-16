@@ -1,8 +1,8 @@
 import { Meta, StoryFn } from "@storybook/react";
 import React from "react";
-import { Toaster, toast } from "react-hot-toast";
 import { ModalContentFunction, ModalProvider, showModal } from "@components/Modal";
 import type { ModalProps } from "@components/Modal";
+import { ToastProvider, toast } from "@components/toast";
 
 const dialogContent: ModalContentFunction<string> = (ok, cancel) => {
   return (
@@ -32,7 +32,7 @@ const TargetComponent = (props: ModalProps) => {
         open
       </button>
       <ModalProvider />
-      <Toaster />
+      <ToastProvider />
     </div>
   );
 };
