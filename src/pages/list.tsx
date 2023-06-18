@@ -26,7 +26,7 @@ import { loadFullOutcomesTable, makeOutcomesTree } from "@services/outcomes";
 import type { OutcomeInfo } from "@services/outcomes";
 import { searchOutcomes, searchTables } from "@services/search";
 import { getAllTables, loadTableInfoDict, TableInfoSet } from "@services/tables";
-import { listUrl } from "@services/urls";
+import { itemIdToUrl } from "@services/urls";
 
 type PageProps = {
   outcomesTree: Tree<OutcomeInfo>;
@@ -91,7 +91,7 @@ const useShare = () => {
       if (res === goBack) return;
       const inserted = await shareItemList();
       addHistory(inserted);
-      const url = listUrl(inserted.id);
+      const url = itemIdToUrl(inserted.id);
       await showConfirmDialog({
         content: (
           <>

@@ -20,12 +20,8 @@ import { useCurriculumMapSchema } from "@services/itemList/hooks/schema";
 import { useCurricullumMapServerTemplate } from "@services/itemList/hooks/serverTemplate";
 import { useShareCurriculumMap } from "@services/itemList/hooks/share";
 import { useAddViewHistory } from "@services/itemList/hooks/viewHistory";
-import {
-  ServerItemList,
-  schemaItemsWithValue,
-  useShare as useShareItemList,
-} from "@services/itemList/local";
-import { listUrl } from "@services/urls";
+import { ServerItemList, schemaItemsWithValue } from "@services/itemList/local";
+import { itemIdToUrl } from "@services/urls";
 
 const HeaderBar = () => {
   return (
@@ -75,13 +71,13 @@ const useShare = () => {
       if (res === goBack) return;
       const { insertedAsItemList: inserted } = await shareCurriculumMap();
       addHistory(inserted);
-      const url = listUrl(inserted.id);
+      const url = itemIdToUrl(inserted.id);
       await showConfirmDialog({
         content: (
           <>
             <div className="mb-4">{t("wayToShare")}</div>
             <div className="flex align-middle">
-              <Link href={url} className="link-hover link-info link">
+              <Link href={url} target="_blank" className="link-hover link-info link">
                 {url}
               </Link>
               <CopyButton className="pl-2" content={url} />
@@ -197,7 +193,7 @@ const useTemplate = () => {
   const { apply: doApply } = useCurricullumMapServerTemplate();
   const router = useRouter();
   const [processed, setProcessed] = useState(false);
-  const { isDirty } = useShareItemList();
+  const { isDirty } = useShareCurriculumMap();
   const { t } = useTranslation("@pages/list");
   const shouldApply = router.query?.from;
   const apply = async (templateId: string) => {

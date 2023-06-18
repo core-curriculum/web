@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getCurriculumMapFromId, insertNewCurriculumMap } from "@services/itemList/libs/inServer";
-import { InputCurriculumMap, ServerCurrisulumMap } from "@services/itemList/libs/types";
+import { InputCurriculumMap, ServerCurriculumMap } from "@services/itemList/libs/types";
 
 type Response<T> =
   | {
@@ -15,7 +15,7 @@ type Response<T> =
 
 const insertCurriculumMap = async (
   item: InputCurriculumMap,
-): Promise<Response<ServerCurrisulumMap>> => {
+): Promise<Response<ServerCurriculumMap>> => {
   try {
     const data = await insertNewCurriculumMap(item);
     return { ok: true, data };
@@ -26,7 +26,7 @@ const insertCurriculumMap = async (
   }
 };
 
-const getMap = async (id: string): Promise<Response<ServerCurrisulumMap>> => {
+const getMap = async (id: string): Promise<Response<ServerCurriculumMap>> => {
   try {
     const data = await getCurriculumMapFromId(id);
     return { ok: true, data };
@@ -39,7 +39,7 @@ const getMap = async (id: string): Promise<Response<ServerCurrisulumMap>> => {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ServerCurrisulumMap | { error: string }>,
+  res: NextApiResponse<ServerCurriculumMap | { error: string }>,
 ) {
   if (req.method === "POST") {
     const response = await insertCurriculumMap(req.body);

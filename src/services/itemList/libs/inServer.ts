@@ -5,7 +5,7 @@ import type {
   InputItemList,
   ItemListInDB,
   ServerItemListResponse,
-  ServerCurrisulumMap,
+  ServerCurriculumMap,
   ItemListDBView,
   InputCurriculumMap,
 } from "@services/itemList/libs/types";
@@ -68,7 +68,7 @@ const removeDuplicate = <T>(arr: readonly T[]): T[] => {
   const set = new Set(arr);
   return [...set];
 };
-const insertNewCurriculumMap = async (map: InputCurriculumMap): Promise<ServerCurrisulumMap> => {
+const insertNewCurriculumMap = async (map: InputCurriculumMap): Promise<ServerCurriculumMap> => {
   const serverItemLists = (await getItemListFromIds(map.items)).flatMap(res =>
     res.ok ? res.data : [],
   );
@@ -78,7 +78,7 @@ const insertNewCurriculumMap = async (map: InputCurriculumMap): Promise<ServerCu
   return { ...res, items: serverItemLists };
 };
 
-const getCurriculumMapFromId = async (id: string): Promise<ServerCurrisulumMap> => {
+const getCurriculumMapFromId = async (id: string): Promise<ServerCurriculumMap> => {
   const itemList = await getItemListFromId(id);
   const items = (await getItemListFromIds(itemList.children ?? [])).flatMap(res =>
     res.ok ? res.data : [],

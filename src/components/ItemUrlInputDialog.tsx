@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "@services/i18n/i18n";
-import { getItemListFromServer } from "@services/itemList/libs/callApi";
+import { getItemListFromServer } from "@services/itemList/local";
 import { itemUrlToId, isValidItemUrlOrId } from "@services/urls";
 import { showModal } from "./Modal";
 

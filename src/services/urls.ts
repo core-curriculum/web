@@ -12,10 +12,6 @@ const useFullUrl = () => {
   return origin + router.asPath;
 };
 
-const listUrl = (id: string) => {
-  return `${origin}/x/${id}`;
-};
-
 const itemUrlToId = (url: string) => {
   const params = url.replace(`${origin}/x/`, "");
   const id = locales.reduce((acc, locale) => {
@@ -24,9 +20,13 @@ const itemUrlToId = (url: string) => {
   return id.replaceAll("/", "").trim();
 };
 
+const itemIdToUrl = (id: string) => {
+  return `${origin}/x/${id}`;
+};
+
 const isValidItemUrlOrId = (urlOrId: string) => {
   const id = itemUrlToId(urlOrId);
   return isValidShortId(id);
 };
 
-export { origin, useFullUrl, listUrl, itemUrlToId, isValidItemUrlOrId };
+export { origin, useFullUrl, itemUrlToId, isValidItemUrlOrId, itemIdToUrl };
