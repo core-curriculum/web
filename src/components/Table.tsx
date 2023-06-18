@@ -17,7 +17,7 @@ const Table = ({
   return (
     <table className="table">
       <thead>
-        <tr className="sticky top-0">
+        <tr className="sticky top-0 bg-base-100">
           {header.map((cell, i) => (
             <th key={i}>{cell}</th>
           ))}
@@ -27,7 +27,7 @@ const Table = ({
       <tbody>
         {rowList.map((row, i) => (
           <tr key={i}>
-            {header.map((key) => (
+            {header.map(key => (
               <td className="max-w-sm overflow-visible whitespace-normal" key={row.id}>
                 {row.id in attrInfo && key in attrInfo[row.id] ? (
                   <StyledText text={row[key]} map={attrInfo[row.id][key]} />

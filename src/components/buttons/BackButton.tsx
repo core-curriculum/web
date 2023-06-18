@@ -9,9 +9,9 @@ const BackButton = () => {
       <MdArrowBack
         size="2rem"
         title={t("target")}
-        color="rgb(125 211 252"
+        color="hsl(var(--in))"
         className="cursor-pointer rounded-md 
-    p-1 hover:bg-sky-100"
+    p-1 hover:bg-info/30"
       />
     </Link>
   );

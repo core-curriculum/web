@@ -2,7 +2,7 @@ type ValueDict = {
   text: string;
   email: string;
   date: Date;
-  list: readonly string[]
+  list: readonly string[];
 };
 type SchemaUnitType = keyof ValueDict;
 type RuleCore = "required";
@@ -11,15 +11,15 @@ type RuleDict = {
     text: "email" | RuleCore;
     email: RuleCore;
     date: RuleCore;
-    list: "onlyListed"| RuleCore;
+    list: "onlyListed" | RuleCore;
   }[K];
 };
 const ruleForType = {
-  text:[],
-  email:["email"],
-  date:["date"],
-  list:[],
-} as const satisfies {[Key in SchemaUnitType]:unknown}
+  text: [],
+  email: ["email"],
+  date: ["date"],
+  list: [],
+} as const satisfies { [Key in SchemaUnitType]: unknown };
 type SchemaUnitCore<Type extends SchemaUnitType> = {
   readonly type: Type;
   readonly key: string;
@@ -32,7 +32,7 @@ type SchemaUnitDict = {
     text: SchemaUnitCore<"text">;
     email: SchemaUnitCore<"email">;
     date: SchemaUnitCore<"date">;
-    list: SchemaUnitCore<"list"> & {options?:string[]};
+    list: SchemaUnitCore<"list"> & { options?: string[] };
   }[K];
 };
 type SchemaUnitWithValueDict = {
@@ -47,7 +47,7 @@ type SchemaValues = {
 
 type Schema = readonly SchemaUnit[];
 type SchemaWithValue = readonly SchemaUnitWithValue[];
-type Rule = SchemaUnit["rules"][number]|(typeof ruleForType)[keyof typeof ruleForType][number];
+type Rule = SchemaUnit["rules"][number] | (typeof ruleForType)[keyof typeof ruleForType][number];
 
 const isOk = (value: SchemaValue, rule: Rule) => {
   if (!value) return rule !== "required";
@@ -63,14 +63,15 @@ const isOk = (value: SchemaValue, rule: Rule) => {
   }
 };
 const validateUnit = (value: SchemaValue, unit: SchemaUnit) => {
-  const invalids = ([...unit.rules,...ruleForType[unit.type]] as string[])
-  .filter(rule => !isOk(value, rule as Rule)) as Rule[];
+  const invalids = ([...unit.rules, ...ruleForType[unit.type]] as string[]).filter(
+    rule => !isOk(value, rule as Rule),
+  ) as Rule[];
   return invalids.length > 0 ? [{ key: unit.key, rules: invalids }] : [];
 };
 
 const validate = (values: SchemaValues, schema: Schema) => {
   const errors = schema.flatMap(unit => validateUnit(values[unit.key], unit));
-  return errors.length > 0 ? { ok: false, errors } as const : { ok: true } as const;
+  return errors.length > 0 ? ({ ok: false, errors } as const) : ({ ok: true } as const);
 };
 
 const schemaWithValue = (values: SchemaValues, schema: Schema): SchemaUnitWithValue[] => {

@@ -1,25 +1,34 @@
 import { atom, useAtomValue } from "jotai";
 import { focusAtom } from "jotai-optics";
-import { itemListAtom, useListData } from "@services/itemList/hooks/itemList";
-import { schemaItemsWithValue, validate } from "@services/itemList/libs/schema";
+import { itemListAtom } from "@services/itemList/hooks/itemList";
+import { validate } from "@services/itemList/libs/schema";
+import { curriculumMapAtom } from "./curriculumMap";
 
-const schemaAtom = focusAtom(itemListAtom, optic => optic.prop("schema"));
-const schemaWithValueAtom = atom(get => schemaItemsWithValue(get(itemListAtom), get(schemaAtom)));
-const validationResultAtom = atom(get => validate(get(itemListAtom), get(schemaAtom)));
-const isValidAtom = atom(get => get(validationResultAtom).ok);
+const itemListSchemaAtom = focusAtom(itemListAtom, optic => optic.prop("schema"));
+const itemListValidationResultAtom = atom(get =>
+  validate(get(itemListAtom), get(itemListSchemaAtom)),
+);
+const isItemListValidAtom = atom(get => get(itemListValidationResultAtom).ok);
 
-const useSchema = () => {
-  const schema = useAtomValue(schemaAtom);
-  const isValid = useAtomValue(isValidAtom);
-  const validationResult = useAtomValue(validationResultAtom);
+const useItemListSchema = () => {
+  const schema = useAtomValue(itemListSchemaAtom);
+  const isValid = useAtomValue(isItemListValidAtom);
+  const validationResult = useAtomValue(itemListValidationResultAtom);
   return { schema, isValid, validationResult };
 };
 
-const useSchemaWithValue = () => {
-  const schemaWithValue = useAtomValue(schemaWithValueAtom);
-  const { set: setListData } = useListData();
-  const set = (key: string, value: string) => setListData(key, value);
-  return { schemaWithValue, set };
+const curriculumMapSchemaAtom = focusAtom(curriculumMapAtom, optic => optic.prop("schema"));
+const curriculumMapValidationResultAtom = atom(get => {
+  const item = get(curriculumMapAtom);
+  const toValidate = { items: item.items.map(item => item.id), data: item.data };
+  return validate(toValidate, get(curriculumMapSchemaAtom));
+});
+const isCurriculumMapValidAtom = atom(get => get(curriculumMapValidationResultAtom).ok);
+const useCurriculumMapSchema = () => {
+  const schema = useAtomValue(curriculumMapSchemaAtom);
+  const isValid = useAtomValue(isCurriculumMapValidAtom);
+  const validationResult = useAtomValue(curriculumMapValidationResultAtom);
+  return { schema, isValid, validationResult };
 };
 
-export { useSchema, useSchemaWithValue };
+export { useItemListSchema, useCurriculumMapSchema };

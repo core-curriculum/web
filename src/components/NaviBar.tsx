@@ -24,8 +24,8 @@ const ToggleIcon = () => (
 const SearchLink = () => {
   const { t } = useLocaleText("@components/NaviBar");
   return (
-    <Link href="/search" className="flex items-center rounded-md p-2 hover:bg-sky-100" passHref>
-      <div className="mr-1 text-sm text-sky-400 max-lg:hidden">{t("search")}</div>
+    <Link href="/search" className="flex items-center rounded-md p-2 hover:bg-info/30">
+      <div className="mr-1 text-sm text-info max-lg:hidden">{t("search")}</div>
       <MdSearch title={t("search")} className="" size="2rem" color="rgb(125 211 252)" />
     </Link>
   );
@@ -44,10 +44,10 @@ const NaviBar = () => {
           <ToggleIcon />
         </label>
       </div>
-      <div className="flex flex-1 px-2 text-lg font-extrabold text-sky-400 max-md:text-base">
+      <div className="flex flex-1 px-2 text-lg font-extrabold text-info max-md:text-base">
         <Link
           href="/"
-          className="flex flex-none items-center gap-2 rounded-md pr-2 hover:bg-sky-100"
+          className="flex flex-none items-center gap-2 rounded-md pr-2 hover:bg-info/30"
           passHref
         >
           <Image className="ml-2 max-lg:hidden" src="/logo.svg" width="50" height="50" alt="" />

@@ -1,29 +1,32 @@
 import type { NextPage, GetStaticProps } from "next";
+import Head from "next/head";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { ChangeEvent, Suspense, useEffect, useState } from "react";
-import { toast } from "react-hot-toast";
+import { showConfirmDialog } from "@components/ConfirmDialog";
 import { CopyButton } from "@components/CopyButton";
 import { ItemContextMenu } from "@components/ItemContextMenu";
 import { Table } from "@components/Table";
 import { BackButton } from "@components/buttons/BackButton";
-import { useConfirmDialog } from "@hooks/useConfirmDialog";
+import { toast } from "@components/toast";
 import { HeaderedTable } from "@libs/tableUtils";
 import { Tree } from "@libs/treeUtils";
-import { Locale, useLocaleText } from "@services/i18n/i18n";
+import { Locale, useLocaleText, useTranslation } from "@services/i18n/i18n";
+import { useAddViewHistory } from "@services/itemList/hooks/viewHistory";
 import {
   useListData,
   useItems,
-  useSchema,
-  useSchemaWithValue,
   useServerTemplate,
   useShare as useShareItemList,
+  useItemListSchema,
+  schemaItemsWithValue,
 } from "@services/itemList/local";
 import { loadFullOutcomesTable, makeOutcomesTree } from "@services/outcomes";
 import type { OutcomeInfo } from "@services/outcomes";
 import { searchOutcomes, searchTables } from "@services/search";
 import { getAllTables, loadTableInfoDict, TableInfoSet } from "@services/tables";
-import { listUrl } from "@services/urls";
+import { itemIdToUrl } from "@services/urls";
 
 type PageProps = {
   outcomesTree: Tree<OutcomeInfo>;
@@ -46,7 +49,7 @@ const Breadcrumb = ({ parents }: { parents: OutcomeInfo[] }) => {
     <>
       {parents.map((parent, i) => {
         return (
-          <span className="text-xs text-gray-400" key={parent.id}>
+          <span className="text-xs text-base-content/50" key={parent.id}>
             {i !== 0 ? ` / ` : ""}
             <span>
               {parent.index.slice(-2)}
@@ -61,7 +64,7 @@ const Breadcrumb = ({ parents }: { parents: OutcomeInfo[] }) => {
 
 const HeaderBar = () => {
   return (
-    <div className="sticky top-0 flex w-full items-center bg-white/80 backdrop-blur-sm">
+    <div className="sticky top-0 flex w-full items-center bg-base-100/80 backdrop-blur-sm">
       <div className="ml-2">
         <BackButton />
       </div>
@@ -71,30 +74,32 @@ const HeaderBar = () => {
 
 const useShare = () => {
   const { share: shareItemList } = useShareItemList();
-  const { showDialog } = useConfirmDialog();
+  const { t } = useTranslation("@pages/list");
+  const addHistory = useAddViewHistory();
   const share = async () => {
     try {
-      const goBack = "戻る";
-      const res = await showDialog({
+      const goBack = t("back");
+      const res = await showConfirmDialog({
         content: (
           <>
-            <div className="mb-4">
-              共有した内容はurlを知っていれば誰でも閲覧可能になります。個人情報・機密情報が含まれていないことを確認した下さい。
-            </div>
+            <div className="mb-4">{t("alertToShare")}</div>
           </>
         ),
-        choises: ["戻る", "問題ないので共有する"],
-        primary: "問題ないので共有する",
+        choises: [t("back"), t("proceedToShare")],
+        primary: t("proceedToShare"),
       });
       if (res === goBack) return;
       const inserted = await shareItemList();
-      const url = listUrl(inserted.id);
-      await showDialog({
+      addHistory(inserted);
+      const url = itemIdToUrl(inserted.id);
+      await showConfirmDialog({
         content: (
           <>
-            <div className="mb-4">このリストを共有するには以下のurlを共有してください。 </div>
+            <div className="mb-4">{t("wayToShare")}</div>
             <div className="flex align-middle">
-              {url}
+              <Link href={url} className="link-hover link-info link">
+                {url}
+              </Link>
               <CopyButton className="pl-2" content={url} />
             </div>
           </>
@@ -108,7 +113,8 @@ const useShare = () => {
 };
 
 const ShareButton = () => {
-  const { isValid } = useSchema();
+  const { t } = useTranslation("@pages/list");
+  const { isValid } = useItemListSchema();
   const { share } = useShare();
   const [sharing, setSharing] = useState(false);
   const _share = async () => {
@@ -116,47 +122,58 @@ const ShareButton = () => {
     await share();
     setSharing(false);
   };
+  const SharingStatement = () => (
+    <>
+      {t("sharing")}
+      <Image className="m-2" width="20" height="20" src="spinner.svg" alt="...shareing" />
+    </>
+  );
   return (
     <>
       <button className="btn" disabled={!isValid || sharing} onClick={_share}>
-        {sharing ? (
-          <>
-            共有中...
-            <Image className="m-2" width="20" height="20" src="spinner.svg" alt="...shareing" />
-          </>
-        ) : (
-          "共有する"
-        )}
+        {sharing ? <SharingStatement /> : t("share")}
       </button>
     </>
   );
 };
 
 const ListData = () => {
-  const { schemaWithValue } = useSchemaWithValue();
-  const { set: setListDataValue } = useListData();
+  const { listData, set: setListDataValue } = useListData();
+  const { schema } = useItemListSchema();
+  const { t: schemaTranslator } = useTranslation("@services/itemList/libs/schema_list");
+  const { t } = useTranslation("@pages/list");
+  const schemaWithValue = schemaItemsWithValue(
+    listData ?? {},
+    schema,
+    schemaTranslator as (key: string) => string,
+  );
   const onChange = (key: string, e: ChangeEvent<HTMLInputElement>) => {
     setListDataValue(key, e.target.value);
   };
   return (
-    <Suspense fallback="loading...">
-      <div className="m-4">
-        {schemaWithValue.map(({ type, key, label, value }) => {
-          return (
-            <section key={key}>
-              <label>{label ?? key}</label>
-              <input
-                type={type}
-                className="input-bordered input m-4 w-full max-w-xs"
-                placeholder={label ?? key}
-                value={value}
-                onChange={e => onChange(key, e)}
-              />
-            </section>
-          );
-        })}
-      </div>
-    </Suspense>
+    <>
+      <Head>
+        <title>{t("title")}</title>
+      </Head>
+      <Suspense fallback="loading...">
+        <div className="m-4">
+          {schemaWithValue.map(({ type, key, label, value }) => {
+            return (
+              <section key={key}>
+                <label>{label ?? key}</label>
+                <input
+                  type={type}
+                  className="input-bordered input m-4 w-full max-w-xs"
+                  placeholder={label ?? key}
+                  value={value}
+                  onChange={e => onChange(key, e)}
+                />
+              </section>
+            );
+          })}
+        </div>
+      </Suspense>
+    </>
   );
 };
 
@@ -164,16 +181,16 @@ const useTemplate = () => {
   const { apply: doApply } = useServerTemplate();
   const router = useRouter();
   const [processed, setProcessed] = useState(false);
-  const { showDialog } = useConfirmDialog();
   const { isDirty } = useShareItemList();
+  const { t } = useTranslation("@pages/list");
   const apply = async (templateId: string) => {
     const hasTemplate = templateId !== "";
     if (hasTemplate && !processed) {
       setProcessed(true);
       if (isDirty) {
-        const choises = ["破棄して上書き", "キャンセル"];
-        const res = await showDialog({
-          content: "編集中のリストがあります。破棄して新しいリストで上書きしますか?",
+        const choises = [t("doOverwrite"), t("cancel")];
+        const res = await showConfirmDialog({
+          content: t("waringToOverwrite"),
           choises,
         });
         if (res === choises[0]) await doApply(templateId);
@@ -207,7 +224,7 @@ const ListPage: NextPage<PageProps> = ({ outcomesTree, allTables }: PageProps) =
           {searchOutcomes(outcomesTree, text).map(item => (
             <div className="m-4" key={item.id}>
               <div>
-                <span className="mr-2 font-light text-sky-600">{item.index}</span>
+                <span className="mr-2 font-light text-info">{item.index}</span>
                 {item.text}
                 <ItemContextMenu id={item.id} index={item.index} />
               </div>

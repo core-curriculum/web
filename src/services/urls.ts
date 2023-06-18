@@ -1,17 +1,32 @@
 import { useRouter } from "next/router";
+import { isValidShortId } from "@libs/uuid_translator";
+import { locales } from "./i18n/i18n";
 
-
-const origin = typeof window !== "undefined" && window?.location
-  ? window?.location?.origin
-  : "https://core-curriculum.jp";
+const origin =
+  typeof window !== "undefined" && window?.location
+    ? window?.location?.origin
+    : "https://core-curriculum.jp";
 
 const useFullUrl = () => {
   const router = useRouter();
   return origin + router.asPath;
-}
+};
 
-const listUrl = (id: string) => {
+const itemUrlToId = (url: string) => {
+  const params = url.replace(`${origin}/x/`, "");
+  const id = locales.reduce((acc, locale) => {
+    return acc.replace(`${locale}`, "");
+  }, params);
+  return id.replaceAll("/", "").trim();
+};
+
+const itemIdToUrl = (id: string) => {
   return `${origin}/x/${id}`;
 };
 
-export { origin, useFullUrl, listUrl }
+const isValidItemUrlOrId = (urlOrId: string) => {
+  const id = itemUrlToId(urlOrId);
+  return isValidShortId(id);
+};
+
+export { origin, useFullUrl, itemUrlToId, isValidItemUrlOrId, itemIdToUrl };

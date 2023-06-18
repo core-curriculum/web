@@ -2,12 +2,7 @@ import { ReactNode, useCallback, useState } from "react";
 import { useScrollObserver } from "@hooks/IntersecterObserver";
 import type { Tree } from "@libs/treeUtils";
 import { reduceTree } from "@libs/treeUtils";
-import type {
-  OutcomeInfo,
-  Outcomel1 as L1,
-  Outcomel2 as L2,
-  Outcomel3 as L3,
-} from "@services/outcomes";
+import type { OutcomeInfo } from "@services/outcomes";
 
 type PropType<L extends OutcomeInfo> = {
   item: L;
@@ -58,8 +53,9 @@ const ChildList = ({ active, childnodes }: { active: boolean; childnodes: ReactN
   return (
     <div className="overflow-y-hidden">
       <ul
-        className={`transform overflow-y-hidden transition-all duration-500 ease-in-out
-          ${active ? "scale-y-100" : "invisible h-0"}`}
+        className={`overflow-y-hidden transition-all duration-500 ease-in-out${
+          active ? "scale-y-100" : "invisible h-0"
+        }`}
       >
         {childnodes}
       </ul>
@@ -88,13 +84,13 @@ const ItemList = <L extends OutcomeInfo>({ item, childnodes, active, targeted }:
     <li
       title={item.text}
       className={`${
-        targeted ? "text-sky-500" : "text-gray-400"
+        targeted ? "text-info" : "text-base-content"
       } transition-all duration-500 ease-in-out`}
     >
-      <div className="z-10 bg-white hover:text-sky-600">
+      <div className="z-10 bg-base-100 hover:text-info">
         <a
           className={`block w-full truncate border-l-4 py-3 ${padding} ${size}
-          hover:bg-sky-100 hover:underline ${targeted ? " border-sky-400 " : "border-transparent"}`}
+          hover:bg-info/20 hover:underline ${targeted ? " border-info " : "border-transparent"}`}
           href={id}
         >
           <ItemText targeted={targeted}>
@@ -104,75 +100,6 @@ const ItemList = <L extends OutcomeInfo>({ item, childnodes, active, targeted }:
         </a>
       </div>
       {item.layer !== "l3" ? <ChildList active={active} childnodes={childnodes} /> : ""}
-    </li>
-  );
-};
-
-const L1List = ({ item, childnodes, active, targeted }: PropType<L1>) => {
-  const id = `#${item.id}`;
-  return (
-    <li title={item.text} className="text-sky-500 transition-all duration-500 ease-in-out">
-      <div className="z-10 bg-white hover:text-sky-600">
-        <a
-          className={`block w-full truncate rounded-md border-l-4 py-3
-          pl-2 hover:bg-sky-100 hover:underline ${
-            targeted ? " border-sky-400 bg-sky-100" : "border-transparent"
-          }`}
-          href={id}
-        >
-          <ItemText targeted={targeted}>
-            <span className={`pr-1 font-thin`}>{item.index}</span>
-            {item.text}
-          </ItemText>
-        </a>
-      </div>
-      <ChildList active={active} childnodes={childnodes} />
-    </li>
-  );
-};
-
-const L2List = ({ item, childnodes, active, targeted }: PropType<L2>) => {
-  const text = `${item.index}: ${item.text}`;
-  const id = `#${item.id}`;
-  return (
-    <li
-      title={item.text}
-      className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-sm
-      text-sky-500 
-      "
-    >
-      <span className="hover:text-sky-600">
-        <a
-          className={`w-82 block truncate rounded-md border-l-4 py-3 
-          pr-1 pl-6 hover:text-clip  hover:bg-sky-100 hover:underline
-          ${targeted ? " border-sky-400 bg-sky-100" : "border-transparent"} 
-          `}
-          href={id}
-        >
-          <ItemText targeted={targeted}>{item.text}</ItemText>
-        </a>
-      </span>
-      <ChildList active={active} childnodes={childnodes} />
-    </li>
-  );
-};
-
-const L3List = ({ item, active, targeted }: PropType<L3>) => {
-  const text = `${item.index}: ${item.text}`;
-  const id = `#${item.id}`;
-  return (
-    <li className="overflow-hidden text-sky-500" title={item.text}>
-      <span className="hover:text-sky-600">
-        <a
-          className={`block truncate rounded-md border-l-4 py-3 
-          pr-1 pl-12 hover:text-clip  hover:bg-sky-100 hover:underline 
-          ${targeted ? " border-sky-400 bg-sky-100" : "border-transparent"} 
-          `}
-          href={id}
-        >
-          <ItemText targeted={targeted}>{item.text}</ItemText>
-        </a>
-      </span>
     </li>
   );
 };

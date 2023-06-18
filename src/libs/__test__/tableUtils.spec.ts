@@ -35,7 +35,7 @@ const table2 = [
 
 describe("mapRow", () => {
   test("add new row from mapFn", () => {
-    const res = mapRow<string, string>(table1, (row) => {
+    const res = mapRow<string, string>(table1, row => {
       row["new"] = row["k1"] + row["k4"];
       return row;
     });
@@ -51,7 +51,7 @@ describe("mapRow", () => {
     ]);
   });
   test("delete row from", () => {
-    const res = mapRow<string, string>(table1, (row) => {
+    const res = mapRow<string, string>(table1, row => {
       delete row.k1;
       return row;
     });
@@ -222,7 +222,7 @@ describe("get", () => {
 
 describe("filterRow", () => {
   test("filterRow", () => {
-    const res = filterRow(table1, (row) => row["k3"] === "c4");
+    const res = filterRow(table1, row => row["k3"] === "c4");
     expect(res).toEqual([
       ["k1", "k2", "k3", "k4"],
       ["a4", "b4", "c4", "d4"],

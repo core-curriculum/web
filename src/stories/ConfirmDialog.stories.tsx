@@ -1,36 +1,35 @@
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryFn } from "@storybook/react";
 import React from "react";
-import { Toaster } from "react-hot-toast";
 import type { ConfirmDialogProps } from "@components/ConfirmDialog";
-import { ConfirmDialog, showDialog } from "@hooks/useConfirmDialog";
+import { showConfirmDialog } from "@components/ConfirmDialog";
+import { ModalProvider } from "@components/Modal";
 
 const TargetComponent = (props: ConfirmDialogProps) => {
   return (
     <div>
-      <ConfirmDialog />
       <button
         onClick={async () => {
-          const res = await showDialog(props);
+          const res = await showConfirmDialog(props);
           confirm(res);
         }}
       >
         表示
       </button>
-      <Toaster />
+      <ModalProvider />
     </div>
   );
 };
 
 export default {
-  title: "Components/ConfirmDialogFn",
+  title: "Components/ConfirmDialog",
   component: TargetComponent,
   parameters: {
     // More on Story layout: https://storybook.js.org/docs/react/configure/story-layout
     layout: "centered",
   },
-} as ComponentMeta<typeof TargetComponent>;
+} as Meta<typeof TargetComponent>;
 
-const Template: ComponentStory<typeof TargetComponent> = args => <TargetComponent {...args} />;
+const Template: StoryFn<typeof TargetComponent> = args => <TargetComponent {...args} />;
 
 export const SimpleItems = Template.bind({});
 SimpleItems.args = {
@@ -38,14 +37,10 @@ SimpleItems.args = {
   content: <span>aaaa</span>,
   choises: ["閉じる", "キャンセル"],
   primary: "キャンセル",
-  show: true,
-  onClose: key => confirm(key),
 };
 
 export const NoItems = Template.bind({});
 NoItems.args = {
   title: "test",
   content: <span>aaaa</span>,
-  show: true,
-  onClose: key => confirm(key),
 };

@@ -5,6 +5,7 @@ import {
   search,
   searchMap,
   tableToTreeMap,
+  Tree,
 } from "@libs/treeUtils";
 
 const testTable = [
@@ -107,7 +108,7 @@ describe("tableToTreeMap", () => {
     const res = tableToTreeMap<string, string>(testTable, (item, parents, childTable) => {
       if (childTable.length === 0) return item;
       return `${item}(${childTable.length}) in [${parents
-        .map((text) => text[0] + text[1])
+        .map(text => text[0] + text[1])
         .join("/")}]`;
     });
     expect(res).toEqual(testTree2);
@@ -124,7 +125,7 @@ describe("treeToList", () => {
 const indent = (text: string, space: string) =>
   text
     .split("\n")
-    .map((line) => space + line)
+    .map(line => space + line)
     .join("\n");
 describe("reduceTree", () => {
   test("reduceTree", () => {
@@ -134,6 +135,77 @@ describe("reduceTree", () => {
       return children.length > 0 ? head + "\n" + tail : head;
     }).join("\n");
     expect("\n" + res).toEqual(treeText);
+  });
+});
+
+describe("reduceTree with preserved layper", () => {
+  const preservedLayer = (tree: Tree<string>, depth: number) => {
+    return reduceTree<string, string>(tree, (item, children, parents) => {
+      const currentDepth = parents.length + 1;
+      const head = item;
+      if (currentDepth >= depth) {
+        const tail = indent(children.join(`\n`), "  ");
+        return children.length > 0 ? head + "\n" + tail : head;
+      } else {
+        return [head, ...children];
+      }
+    });
+  };
+  test("reduceTree2 preserve more than 2nd layer", () => {
+    const res = preservedLayer(testTree, 2);
+    expect(res).toEqual([
+      "a1",
+      "b1\n  c1\n    d1",
+      "b2\n  c1\n    d1",
+      "a2",
+      "b2\n  c1\n    d1",
+      "a3",
+      "b2\n  c1\n    d1\n    d2",
+      "b4\n  c1\n    d2",
+    ]);
+  });
+  test("reduceTree3 preserve more than 3rd layer", () => {
+    const res = preservedLayer(testTree, 3);
+    expect(res).toEqual([
+      "a1",
+      "b1",
+      "c1\n  d1",
+      "b2",
+      "c1\n  d1",
+      "a2",
+      "b2",
+      "c1\n  d1",
+      "a3",
+      "b2",
+      "c1\n  d1\n  d2",
+      "b4",
+      "c1\n  d2",
+    ]);
+  });
+
+  test("reduceTree4 preserve more than 4th layer", () => {
+    const res = preservedLayer(testTree, 4);
+    expect(res).toEqual([
+      "a1",
+      "b1",
+      "c1",
+      "d1",
+      "b2",
+      "c1",
+      "d1",
+      "a2",
+      "b2",
+      "c1",
+      "d1",
+      "a3",
+      "b2",
+      "c1",
+      "d1",
+      "d2",
+      "b4",
+      "c1",
+      "d2",
+    ]);
   });
 });
 
