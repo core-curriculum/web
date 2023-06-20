@@ -25,6 +25,7 @@ const ContextMenu = <T extends readonly { name: string; label?: string }[]>({
     middleware: [flip(), shift(), offset(3)],
     open: isOpen,
     onOpenChange: setIsOpen,
+    placement: "bottom-start",
   });
   const dismiss = useDismiss(context);
   const click = useClick(context);
@@ -35,7 +36,7 @@ const ContextMenu = <T extends readonly { name: string; label?: string }[]>({
       <div
         ref={refs.setReference}
         className={` 
-          ${marked ? "bg-info/20" : "btn-info btn-outline"} btn-sm btn-circle btn text-info`}
+          ${marked ? "bg-info/20" : "btn-ghost btn-info"} btn-sm btn-circle btn text-xl text-info`}
         {...getReferenceProps()}
       >
         <MdMoreVert />

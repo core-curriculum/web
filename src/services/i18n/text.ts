@@ -72,6 +72,7 @@ const text = {
     doOverwrite: { ja: "破棄して上書き", en: "Overwrite" },
     waringToOverwrite: {
       ja: "編集中のリストがあります。破棄して新しいリストで上書きしますか?",
+      // eslint-disable-next-line max-len
       en: "There is a list being edited. Do you want to discard it and overwrite it with a new list?",
     },
   },
@@ -101,6 +102,7 @@ const text = {
     doOverwrite: { ja: "破棄して上書き", en: "Overwrite" },
     waringToOverwrite: {
       ja: "編集中のリストがあります。破棄して新しいリストで上書きしますか?",
+      // eslint-disable-next-line max-len
       en: "There is a list being edited. Do you want to discard it and overwrite it with a new list?",
     },
   },
@@ -133,6 +135,7 @@ const text = {
     },
     descriptionToEdit: {
       ja: "このページの内容は編集できません。内容を変更したページを作るには以下から",
+      // eslint-disable-next-line max-len
       en: "The contents of this page cannot be edited. To create a page with modified content, click here",
     },
     startEdit: {
@@ -142,6 +145,16 @@ const text = {
     makeCurriculumMap: {
       ja: "(管理者用) カリキュラムマップを作成・編集する",
       en: "(Admin) Create and edit a curriculum map",
+    },
+    downLoadQrCode: {
+      ja: "QRコードをダウンロードする",
+      en: "Download QR code",
+    },
+    descriptionOfItemList: {
+      // eslint-disable-next-line max-len
+      ja: "このページは、授業・科目に関連するモデル・コア・カリキュラムの学修目標を示しています。以下に示された学修目標について点数や成績がつけられたり、フィードバックが行われたりします。",
+      // eslint-disable-next-line max-len
+      en: "This page shows the learning objectives of the Model Core Curriculum related to classes and subjects. The learning outcomes shown below are scored, graded, and given feedback.",
     },
   },
   "@pages/search": {

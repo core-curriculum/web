@@ -47,9 +47,9 @@ export default async function handler(
       ? res.status(200).json(response.data)
       : res.status(400).json({ error: response.error });
   } else if (req.method === "GET") {
-    const ids =
-      (Array.isArray(req.query?.id) ? (req.query?.id as string[]) : req.query?.id?.split(",")) ||
-      [];
+    const ids = (
+      (Array.isArray(req.query?.id) ? (req.query?.id as string[]) : req.query?.id?.split(",")) || []
+    ).flatMap(id => id.split(","));
     const response = await getMap(ids[0]);
     response.ok
       ? res.status(200).json(response.data)

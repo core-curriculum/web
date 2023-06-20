@@ -1,4 +1,3 @@
-// TODO: fix 予想外の並び替えや項目の消失の問題を解決する
 import { useCallback, useState } from "react";
 import { formatDateTimeIntl } from "@libs/utils";
 import { useLocale, useTranslation } from "@services/i18n/i18n";

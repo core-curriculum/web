@@ -15,12 +15,15 @@ import { useLocaleText, useTranslation } from "@services/i18n/i18n";
 import {
   useCurriculumMapData,
   useCurriculumMapItems,
+  useCurriculumMapSchema,
 } from "@services/itemList/hooks/curriculumMap";
-import { useCurriculumMapSchema } from "@services/itemList/hooks/schema";
-import { useCurricullumMapServerTemplate } from "@services/itemList/hooks/serverTemplate";
-import { useShareCurriculumMap } from "@services/itemList/hooks/share";
 import { useAddViewHistory } from "@services/itemList/hooks/viewHistory";
-import { ServerItemList, schemaItemsWithValue } from "@services/itemList/local";
+import {
+  useShareCurriculumMap,
+  useCurricullumMapServerTemplate,
+  ServerItemList,
+  schemaItemsWithValue,
+} from "@services/itemList/local";
 import { itemIdToUrl } from "@services/urls";
 
 const HeaderBar = () => {
@@ -113,11 +116,13 @@ const AddFromUrlButton = () => {
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation("@pages/map");
   const { addItems } = useCurriculumMapItems();
+  const addViewHistory = useAddViewHistory();
   const onClick = async () => {
     setLoading(true);
     const res = await showItemUrlInputComponentDialog();
     if (res) {
       addItems(res);
+      res.forEach(item => addViewHistory(item));
     }
     setLoading(false);
   };
@@ -131,10 +136,10 @@ const AddFromUrlButton = () => {
 const AddFromHistoryButton = () => {
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation("@pages/map");
-  const { addItems } = useCurriculumMapItems();
+  const { addItems, items } = useCurriculumMapItems();
   const onClick = async () => {
     setLoading(true);
-    const res = await showInputFromHistoryDialog();
+    const res = await showInputFromHistoryDialog(items.map(i => i.id));
     if (res) {
       addItems(res);
     }
@@ -251,7 +256,7 @@ const CurriculumMapPage: NextPage<{}> = () => {
         </div>
         <ItemListList itemListList={items} onChange={items => setItems(items)} />
       </div>
-      <div className="m-8">
+      <div className="m-8 pb-16">
         <ShareButton />
       </div>
     </>

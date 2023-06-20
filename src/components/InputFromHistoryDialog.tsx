@@ -8,18 +8,24 @@ import { showModal } from "./Modal";
 type Props = {
   onConfirm?: (items: ReadonlyArray<ServerItemList>) => void;
   onCancel?: () => void;
+  idsToExclude?: ReadonlyArray<string>;
 };
 
-const InputFromHistoryDialog: React.FC<Props> = ({ onConfirm, onCancel }) => {
+const InputFromHistoryDialog: React.FC<Props> = ({ onConfirm, onCancel, idsToExclude }) => {
   const { t } = useTranslation("@components/InputFromHistoryDialog");
   const { viewHistory } = useViewHistory();
   const [checkedList, setCheckedList] = useState<number[]>([]);
+  const filteredHistory = viewHistory.filter(history => !(idsToExclude ?? []).includes(history.id));
   const onChange = (checked: number[]) => {
     setCheckedList(checked);
   };
   return (
     <>
-      <ItemListCheckList itemListList={viewHistory} checkedList={checkedList} onChange={onChange} />
+      <ItemListCheckList
+        itemListList={filteredHistory}
+        checkedList={checkedList}
+        onChange={onChange}
+      />
       <div className="mt-4 flex justify-end space-x-4">
         <button className="btn" onClick={() => onCancel?.()}>
           {t("cancel")}
@@ -27,7 +33,7 @@ const InputFromHistoryDialog: React.FC<Props> = ({ onConfirm, onCancel }) => {
         <button
           className="btn-primary btn"
           disabled={checkedList.length === 0}
-          onClick={() => onConfirm?.(checkedList.map(i => viewHistory[i]))}
+          onClick={() => onConfirm?.(checkedList.map(i => filteredHistory[i]))}
         >
           {t("confirm")}
         </button>
@@ -36,9 +42,9 @@ const InputFromHistoryDialog: React.FC<Props> = ({ onConfirm, onCancel }) => {
   );
 };
 
-const showInputFromHistoryDialog = async () => {
+const showInputFromHistoryDialog = async (idsToExclude?: readonly string[]) => {
   const response = await showModal<ReadonlyArray<ServerItemList>>((ok, cancel) => (
-    <InputFromHistoryDialog onConfirm={ok} onCancel={() => cancel()} />
+    <InputFromHistoryDialog onConfirm={ok} onCancel={() => cancel()} idsToExclude={idsToExclude} />
   ));
   return response.hasResponse ? response.response : null;
 };

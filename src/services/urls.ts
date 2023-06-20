@@ -24,9 +24,13 @@ const itemIdToUrl = (id: string) => {
   return `${origin}/x/${id}`;
 };
 
+const objectiveIdToUrl = (id: string) => {
+  return `${origin}/#${id}`;
+};
+
 const isValidItemUrlOrId = (urlOrId: string) => {
   const id = itemUrlToId(urlOrId);
   return isValidShortId(id);
 };
 
-export { origin, useFullUrl, itemUrlToId, isValidItemUrlOrId, itemIdToUrl };
+export { origin, useFullUrl, itemUrlToId, isValidItemUrlOrId, itemIdToUrl, objectiveIdToUrl };

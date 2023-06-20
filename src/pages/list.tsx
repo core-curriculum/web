@@ -26,7 +26,7 @@ import { loadFullOutcomesTable, makeOutcomesTree } from "@services/outcomes";
 import type { OutcomeInfo } from "@services/outcomes";
 import { searchOutcomes, searchTables } from "@services/search";
 import { getAllTables, loadTableInfoDict, TableInfoSet } from "@services/tables";
-import { itemIdToUrl } from "@services/urls";
+import { itemIdToUrl, objectiveIdToUrl } from "@services/urls";
 
 type PageProps = {
   outcomesTree: Tree<OutcomeInfo>;
@@ -52,8 +52,10 @@ const Breadcrumb = ({ parents }: { parents: OutcomeInfo[] }) => {
           <span className="text-xs text-base-content/50" key={parent.id}>
             {i !== 0 ? ` / ` : ""}
             <span>
-              {parent.index.slice(-2)}
-              {parent.text}
+              <Link href={objectiveIdToUrl(parent.id)} className="link-hover link">
+                <span className="mr-1">{parent.index.slice(-2)}</span>
+                {parent.text}
+              </Link>
             </span>
           </span>
         );
@@ -97,7 +99,7 @@ const useShare = () => {
           <>
             <div className="mb-4">{t("wayToShare")}</div>
             <div className="flex align-middle">
-              <Link href={url} className="link-hover link-info link">
+              <Link href={url} target="_blank" className="link-hover link-info link">
                 {url}
               </Link>
               <CopyButton className="pl-2" content={url} />
@@ -130,7 +132,7 @@ const ShareButton = () => {
   );
   return (
     <>
-      <button className="btn" disabled={!isValid || sharing} onClick={_share}>
+      <button className="btn-primary btn" disabled={!isValid || sharing} onClick={_share}>
         {sharing ? <SharingStatement /> : t("share")}
       </button>
     </>
@@ -222,13 +224,19 @@ const ListPage: NextPage<PageProps> = ({ outcomesTree, allTables }: PageProps) =
         <ListData />
         <div>
           {searchOutcomes(outcomesTree, text).map(item => (
-            <div className="m-4" key={item.id}>
-              <div>
-                <span className="mr-2 font-light text-info">{item.index}</span>
-                {item.text}
-                <ItemContextMenu id={item.id} index={item.index} />
+            <div className="m-4 flex items-center" key={item.id}>
+              <div className="">
+                <div className="flex items-center">
+                  <span className="mr-2 whitespace-nowrap text-xs font-light text-base-content/70">
+                    {item.index}
+                  </span>
+                  <Link href={objectiveIdToUrl(item.id)} className="link-hover link mr-3">
+                    {item.text}
+                  </Link>
+                  <ItemContextMenu id={item.id} index={item.index} />
+                </div>
+                <Breadcrumb parents={item.parents} />
               </div>
-              <Breadcrumb parents={item.parents} />
             </div>
           ))}
         </div>
@@ -247,7 +255,7 @@ const ListPage: NextPage<PageProps> = ({ outcomesTree, allTables }: PageProps) =
           })}
         </div>
       </div>
-      <div className="m-8">
+      <div className="m-8 pb-16">
         <ShareButton />
       </div>
     </>
