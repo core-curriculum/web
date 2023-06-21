@@ -23,7 +23,7 @@
     "@types/dataframe-js": "^1.4.0",
     "@vercel/analytics": "^0.1.8",
     "add": "^2.0.6",
-    "daisyui": "^3.0.0",
+    "daisyui": "^3.1.5",
     "danfojs-node": "^1.1.1",
     "dataframe-js": "^1.4.4",
     "dotenv": "^16.0.3",

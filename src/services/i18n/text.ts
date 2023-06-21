@@ -11,6 +11,8 @@ const text = {
   "@components/NaviBar": {
     title: { ja: "モデルコアカリキュラム", en: "Model Core Curriculum" },
     search: { ja: "検索", en: "Search" },
+    associateItems: { ja: "授業との関連付け", en: "Associate with classes" },
+    curriculumMap: { ja: "カリキュラムマップの作成", en: "Create a curriculum map" },
   },
   "@components/LinktoItemList": {
     title: { ja: "リスト", en: "List" },

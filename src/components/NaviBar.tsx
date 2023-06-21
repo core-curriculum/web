@@ -1,8 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { MdSearch } from "react-icons/md";
 import { useLocaleText } from "@services/i18n/i18n";
-import { LinkToItemListWithContent } from "./LinkToItemList";
+import { ContextMenu } from "./ContextMenu";
 import { LocaleSwitchButton } from "./buttons/LocaleSwitchButton";
 
 const ToggleIcon = () => (
@@ -31,8 +32,33 @@ const SearchLink = () => {
   );
 };
 
-const LocaleSwithLink = () => {
+const LocaleSwitchLink = () => {
   return <LocaleSwitchButton />;
+};
+
+const OtherMenu = () => {
+  const { t } = useLocaleText("@components/NaviBar");
+  const router = useRouter();
+  const handleClick = (name: string) => {
+    switch (name) {
+      case "associateItems":
+        router.push("/list");
+        break;
+      case "curriculumMap":
+        router.push("/map");
+        break;
+    }
+  };
+  return (
+    <ContextMenu
+      buttonSize="2xl"
+      onClick={handleClick}
+      items={[
+        { name: "associateItems", label: t("associateItems") },
+        { name: "curriculumMap", label: t("curriculumMap") },
+      ]}
+    />
+  );
 };
 
 const NaviBar = () => {
@@ -54,10 +80,10 @@ const NaviBar = () => {
           {t("title")}
         </Link>
       </div>
-      <div className="mr-2 flex flex-none items-center">
-        <LocaleSwithLink />
-        <LinkToItemListWithContent />
+      <div className="mr-4 flex flex-none items-center">
+        <LocaleSwitchLink />
         <SearchLink />
+        <OtherMenu />
       </div>
     </div>
   );
