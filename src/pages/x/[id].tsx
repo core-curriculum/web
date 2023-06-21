@@ -11,7 +11,7 @@ import { Tree } from "@libs/treeUtils";
 import { fmt } from "@libs/utils";
 import { makeOutcomeTableData, makeTableItemTableData } from "@services/curriculumMapTable";
 import { Locale, translationInServer, useLocaleText } from "@services/i18n/i18n";
-import { useAddViewHistory } from "@services/itemList/hooks/viewHistory";
+import { useViewHistory } from "@services/itemList/hooks/viewHistory";
 import {
   ServerItemList,
   getSchema,
@@ -285,7 +285,7 @@ const ListPage: NextPage<PageProps> = ({
 }: PageProps) => {
   const isLoading = !allTables || !outcomesTree || !itemList || !id || !schemaWithValue;
   const { t } = useLocaleText("@pages/x/[id]");
-  const addHistory = useAddViewHistory();
+  const { add: addHistory } = useViewHistory();
   if (isLoading) return <div>Loading...</div>;
   if (typeof itemList === "string" || typeof schemaWithValue === "string")
     return (

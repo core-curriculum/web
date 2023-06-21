@@ -13,7 +13,7 @@ import { toast } from "@components/toast";
 import { HeaderedTable } from "@libs/tableUtils";
 import { Tree } from "@libs/treeUtils";
 import { Locale, useLocaleText, useTranslation } from "@services/i18n/i18n";
-import { useAddViewHistory } from "@services/itemList/hooks/viewHistory";
+import { useViewHistory } from "@services/itemList/hooks/viewHistory";
 import {
   useListData,
   useItems,
@@ -77,7 +77,7 @@ const HeaderBar = () => {
 const useShare = () => {
   const { share: shareItemList } = useShareItemList();
   const { t } = useTranslation("@pages/list");
-  const addHistory = useAddViewHistory();
+  const { add: addHistory } = useViewHistory();
   const share = async () => {
     try {
       const goBack = t("back");

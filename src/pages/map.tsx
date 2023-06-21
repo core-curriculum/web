@@ -17,7 +17,7 @@ import {
   useCurriculumMapItems,
   useCurriculumMapSchema,
 } from "@services/itemList/hooks/curriculumMap";
-import { useAddViewHistory } from "@services/itemList/hooks/viewHistory";
+import { useViewHistory } from "@services/itemList/hooks/viewHistory";
 import {
   useShareCurriculumMap,
   useCurricullumMapServerTemplate,
@@ -58,7 +58,7 @@ const Sharing = () => {
 const useShare = () => {
   const { share: shareCurriculumMap } = useShareCurriculumMap();
   const { t } = useTranslation("@pages/map");
-  const addHistory = useAddViewHistory();
+  const { add: addHistory } = useViewHistory();
   const share = async () => {
     try {
       const goBack = t("back");
@@ -116,7 +116,7 @@ const AddFromUrlButton = () => {
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation("@pages/map");
   const { addItems } = useCurriculumMapItems();
-  const addViewHistory = useAddViewHistory();
+  const { add: addViewHistory } = useViewHistory();
   const onClick = async () => {
     setLoading(true);
     const res = await showItemUrlInputComponentDialog();

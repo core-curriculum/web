@@ -1,4 +1,4 @@
-import { atom, useAtomValue, useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { ServerItemList } from "../server";
 
@@ -7,27 +7,30 @@ const viewHistoryAtom = atomWithStorage(
   [] as ReadonlyArray<ServerItemList>,
 );
 
-const addViewHistoryAtom = atom(null, (get, set, entry: ServerItemList) => {
-  if (get(viewHistoryAtom)[0]?.id === entry.id) return;
-  const prevHistoryWithoutNew = get(viewHistoryAtom).filter(old => old.id !== entry.id);
-  const items = [...entry.items];
-  const newEntry = { ...entry, items } as const satisfies ServerItemList;
-  set(viewHistoryAtom, [newEntry, ...prevHistoryWithoutNew].slice(0, 100));
-});
+let mounted = false;
 
-const useAddViewHistory = () => {
-  const add = useSetAtom(addViewHistoryAtom);
-  return add;
+viewHistoryAtom.onMount = () => {
+  mounted = true;
 };
 
 const useViewHistory = () => {
-  const viewHistory = useAtomValue(viewHistoryAtom);
+  const [viewHistory, setViewHistoryAtom] = useAtom(viewHistoryAtom);
   /**
    * append new url entry to view history
    * @param entry
    */
-  const add = useSetAtom(addViewHistoryAtom);
+  const add = (entry: ServerItemList) => {
+    if (!mounted) return viewHistory;
+    setViewHistoryAtom(viewHistory => {
+      console.log(viewHistory);
+      if (viewHistory[0]?.id === entry.id) return viewHistory;
+      const prevHistoryWithoutNew = viewHistory.filter(old => old.id !== entry.id);
+      const items = [...entry.items];
+      const newEntry = { ...entry, items } as const satisfies ServerItemList;
+      return [newEntry, ...prevHistoryWithoutNew].slice(0, 100);
+    });
+  };
   return { viewHistory, add } as const;
 };
 
-export { useViewHistory, useAddViewHistory };
+export { useViewHistory };
