@@ -58,7 +58,7 @@ type Props<T extends readonly { name: string; label?: string }[]> = {
   items: readonly [...T];
   onClick?: (name: T[number]["name"]) => void;
   marked?: boolean;
-  buttonSize?: "sm" | "md" | "lg" | "xl" | "2xl";
+  buttonSize?: "sm" | "lg" | "xl" | "2xl";
 };
 const ContextMenu = <T extends readonly { name: string; label?: string }[]>({
   items,
@@ -87,8 +87,14 @@ const ContextMenu = <T extends readonly { name: string; label?: string }[]>({
       <button
         ref={refs.setReference}
         className={`border-0 outline-0 ring-0 ring-info/30 ring-offset-0
-          ${marked ? "bg-info/20" : "btn-ghost btn-info"} btn-sm btn-circle btn ${
-          "text-" + buttonSize
+          ${marked ? "bg-info/20" : "btn-ghost btn-info"} btn-circle btn-sm btn ${
+          buttonSize === "sm"
+            ? "text-sm"
+            : buttonSize === "lg"
+            ? "text-lg"
+            : buttonSize === "xl"
+            ? "text-xl"
+            : "text-2xl"
         } text-info`}
         {...getReferenceProps()}
       >

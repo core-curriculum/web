@@ -12,21 +12,41 @@ const LinkToItemList = ({ count, href }: Prop) => {
   const { t } = useLocaleText("@components/LinktoItemList");
   return (
     <>
+      <style>
+        {`
+          @keyframes risingin{
+            0%{
+              top:300%;
+              opacity:0.5;
+            }
+            
+            100%{
+              top: 0%;
+              opacity:0;
+            }
+          }
+        `}
+      </style>
       <Link
         {...{ href }}
-        className="flex items-center justify-center gap-x-1 rounded-md p-2 hover:bg-info/30"
+        className="relative flex items-center justify-center gap-x-1 
+        rounded-md p-2 hover:bg-info/30"
       >
         <span className={`${count > 0 ? "text-info" : "text-base-content/50"} max-md:text-sm`}>
           {t("title")}
         </span>
         <span
           className={
-            "flex h-6 w-6 items-center justify-center rounded-full text-sm text-white " +
+            "relative flex h-6 w-6 items-center justify-center rounded-full text-sm text-white" +
             "max-md:h-5 max-md:w-5 max-md:text-xs " +
             `${count > 0 ? "bg-sky-300" : "bg-gray-400"}`
           }
         >
           {count}
+          <span
+            style={{ animation: "risingin 1s infinite" }}
+            className="absolute h-full w-full rounded-full bg-info"
+          ></span>
         </span>
       </Link>
     </>

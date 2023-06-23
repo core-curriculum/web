@@ -32,15 +32,18 @@ const text = {
     confirm: { ja: "追加する", en: "Add Items" },
   },
   "@components/ItemContextMenu": {
-    addItem: { ja: "リストに追加", en: "Add to List" },
+    addItem: { ja: "授業に関連づける", en: "Associate with class" },
     copyId: { ja: "idをコピー", en: "Copy id" },
-    removeItem: { ja: "リストから削除", en: "Remove from List" },
-    addItemDone: { ja: "リストに追加しました", en: "Added to List" },
+    removeItem: { ja: "授業の関連付けから削除", en: "Remove from association with class" },
+    addItemDone: { ja: "授業に関連づけました", en: "Associated with class" },
     copyIdDone: {
       ja: "id({id})をクリップボードにコピーしました",
       en: "Copied id({id}) to clipboard",
     },
-    removeItemDone: { ja: "リストから削除しました", en: "Removed from List" },
+    removeItemDone: {
+      ja: "授業の関連付けから削除しました",
+      en: "Removed from association with class",
+    },
   },
   "@components/ItemUrlInputDialog": {
     description: {
