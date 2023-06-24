@@ -1,7 +1,6 @@
 import type { NextPage, GetStaticProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { QRCodeCanvas } from "qrcode.react";
 import { MdDownload } from "react-icons/md";
 import { Table } from "@components/Table";
@@ -12,7 +11,7 @@ import { Tree } from "@libs/treeUtils";
 import { fmt } from "@libs/utils";
 import { makeOutcomeTableData, makeTableItemTableData } from "@services/curriculumMapTable";
 import { Locale, translationInServer, useLocaleText } from "@services/i18n/i18n";
-import { useAddViewHistory } from "@services/itemList/hooks/viewHistory";
+import { useViewHistory } from "@services/itemList/hooks/viewHistory";
 import {
   ServerItemList,
   getSchema,
@@ -24,6 +23,7 @@ import { loadFullOutcomesTable, makeOutcomesTree } from "@services/outcomes";
 import type { OutcomeInfo } from "@services/outcomes";
 import { searchOutcomes, searchTables } from "@services/search";
 import { getAllTables, loadTableInfoDict, TableInfoSet } from "@services/tables";
+import { itemIdToUrl } from "@services/urls";
 
 type PageProps = {
   outcomesTree: Tree<OutcomeInfo>;
@@ -132,14 +132,38 @@ const ListData = ({ values }: { values: SchemaItemsWithValue }) => {
   );
 };
 
-const QrCode = () => {
-  const router = useRouter();
-  const origin =
-    typeof window !== "undefined" && window?.location
-      ? window?.location?.origin
-      : "https://core-curriculum.jp";
-  const url = origin + router.asPath;
-  return <QRCodeCanvas size={80} value={url} />;
+const downloadQRCode = ({
+  canvasId,
+  fileName = "QR_Code",
+}: {
+  canvasId: string;
+  fileName: string;
+}) => {
+  const canvas = document.querySelector(`#${canvasId}`) as HTMLCanvasElement;
+  if (!canvas) throw new Error("<canvas> not found in the DOM");
+
+  const pngUrl = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+  const downloadLink = document.createElement("a");
+  downloadLink.href = pngUrl;
+  downloadLink.download = `${fileName}.png`;
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
+};
+
+const QrCode = ({ url, imageFileName }: { url: string; imageFileName: string }) => {
+  const canvasId = "qr-code-canvas";
+  const { t } = useLocaleText("@pages/x/[id]");
+  return (
+    <Link
+      href="#"
+      className="cursor-pointer"
+      onClick={() => downloadQRCode({ canvasId, fileName: imageFileName })}
+    >
+      <QRCodeCanvas id={canvasId} size={80} value={url} includeMargin={true} />
+      <div className="link-hover link-info link">{t("downLoadQrCode")}</div>
+    </Link>
+  );
 };
 
 type CSVDownloadLinkProps = {
@@ -187,7 +211,7 @@ const CSVDownloadLinks = ({
   );
 };
 
-const OutcomeAccessInfo = ({ id, isMap }: { id: string; isMap: boolean }) => {
+const OutcomeAccessInfo = ({ id, isMap, name }: { id: string; isMap: boolean; name: string }) => {
   const { t } = useLocaleText("@pages/x/[id]");
   const link = isMap ? `/map?from=${id}` : `/list?from=${id}`;
   return (
@@ -195,7 +219,7 @@ const OutcomeAccessInfo = ({ id, isMap }: { id: string; isMap: boolean }) => {
       <div>
         <div>{t("accessQRToThisPage")}</div>
         <div className="my-2">
-          <QrCode />
+          <QrCode url={itemIdToUrl(id)} imageFileName={name} />
         </div>
         <div className="mb-2 mt-8">{t("descriptionToEdit")}</div>
         <div>
@@ -261,7 +285,7 @@ const ListPage: NextPage<PageProps> = ({
 }: PageProps) => {
   const isLoading = !allTables || !outcomesTree || !itemList || !id || !schemaWithValue;
   const { t } = useLocaleText("@pages/x/[id]");
-  const addHistory = useAddViewHistory();
+  const { add: addHistory } = useViewHistory();
   if (isLoading) return <div>Loading...</div>;
   if (typeof itemList === "string" || typeof schemaWithValue === "string")
     return (
@@ -278,13 +302,22 @@ const ListPage: NextPage<PageProps> = ({
       </Head>
       <div className="ml-4">
         <HeaderBar />
+        {!children && (
+          <div className="mx-4 my-8 text-xs text-base-content/80">{t("descriptionOfItemList")}</div>
+        )}
         <ListData values={schemaWithValue} />
         {children ? (
           <CSVDownloadLinks {...{ items: children, allTables, outcomesTree }} />
         ) : (
-          <OutcomesList {...{ allTables, outcomesTree, text, id }} />
+          <>
+            <OutcomesList {...{ allTables, outcomesTree, text, id }} />
+          </>
         )}
-        <OutcomeAccessInfo id={id} isMap={(children && children?.length > 0) ?? false} />
+        <OutcomeAccessInfo
+          id={id}
+          name={itemList.name}
+          isMap={(children && children?.length > 0) ?? false}
+        />
       </div>
     </>
   );

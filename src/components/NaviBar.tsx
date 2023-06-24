@@ -1,8 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { MdSearch } from "react-icons/md";
 import { useLocaleText } from "@services/i18n/i18n";
-import { LinkToItemListWithContent } from "./LinkToItemList";
+import { subsrtibeItems, useItemList } from "@services/itemList/local";
+import { ContextMenu } from "./ContextMenu";
+import { useTantarararaaan } from "./Tantarararaaan";
 import { LocaleSwitchButton } from "./buttons/LocaleSwitchButton";
 
 const ToggleIcon = () => (
@@ -31,8 +35,51 @@ const SearchLink = () => {
   );
 };
 
-const LocaleSwithLink = () => {
+const LocaleSwitchLink = () => {
   return <LocaleSwitchButton />;
+};
+
+const OtherMenu = () => {
+  const { t } = useLocaleText("@components/NaviBar");
+  const { EffectComponent, fire } = useTantarararaaan(1000);
+  const { items } = useItemList();
+  const badgeCount =
+    items.length > 0 ? { associateItems: items.length } : ({} as Record<string, number>);
+  useEffect(() => {
+    return subsrtibeItems((prev, curr) => {
+      if (prev.length < curr.length) {
+        fire();
+      }
+    });
+  }, [fire]);
+
+  const router = useRouter();
+  const handleClick = (name: string) => {
+    switch (name) {
+      case "associateItems":
+        router.push("/list");
+        break;
+      case "curriculumMap":
+        router.push("/map");
+        break;
+    }
+  };
+  return (
+    <div className="relative">
+      <ContextMenu
+        buttonSize="2xl"
+        onClick={handleClick}
+        items={[
+          { name: "associateItems", label: t("associateItems") },
+          { name: "curriculumMap", label: t("curriculumMap") },
+        ]}
+        counts={badgeCount}
+      />
+      <div className="overflow-hidden">
+        <EffectComponent />
+      </div>
+    </div>
+  );
 };
 
 const NaviBar = () => {
@@ -54,10 +101,10 @@ const NaviBar = () => {
           {t("title")}
         </Link>
       </div>
-      <div className="mr-2 flex flex-none items-center">
-        <LocaleSwithLink />
-        <LinkToItemListWithContent />
+      <div className="mr-4 flex flex-none items-center">
+        <LocaleSwitchLink />
         <SearchLink />
+        <OtherMenu />
       </div>
     </div>
   );

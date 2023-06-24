@@ -20,7 +20,6 @@ const ItemContextMenu = ({ id, index }: { id: string; index: string }) => {
     switch (name) {
       case "addToList":
         addItem(id);
-        toast(fmt(t("addItemDone"), { id }));
         return;
       case "removeFromList":
         removeItem(id);

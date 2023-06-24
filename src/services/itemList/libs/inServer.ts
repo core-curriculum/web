@@ -97,8 +97,6 @@ const getItemListFromIds = async (ids: readonly string[]): Promise<ServerItemLis
   const { data: response, error } = await db.from("list_view").select().in("id", uuids);
   if (error || !response) throw error ?? new Error("Error in getting itemList");
   return uuids.map(uuid => {
-    console.log(JSON.stringify(response, null, 2));
-    console.log(uuid);
     const res = response.find(u => u?.id === uuid) as ItemListDBView | undefined;
     if (!res) return { ok: false } as const;
     const data = serverResponseToItemList(res, res.data);

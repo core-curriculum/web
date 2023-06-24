@@ -69,12 +69,13 @@ const StyledText = ({ text, map }: { text: string; map: MappedInfo<AttrInfo>[] }
 const Outcomel1 = ({ item: { index, id, text, desc }, childnodes, idList }: PropType<L1>) => (
   <section className="mb-64">
     <h1
-      className="mb-4 bg-base-100/20 px-4 py-6 text-3xl text-base-content/60 shadow-md"
+      className="mb-4 flex items-center bg-base-100/20 px-4 
+      py-6 text-3xl text-base-content/60 shadow-md"
       id={id}
       data-id-list={idList}
     >
       <span className="pr-2 font-thin">{index}</span>
-      <span className="mr-4 font-bold">{text}</span>
+      <span className=" font-bold">{text}</span>
       <ItemContextMenu {...{ index, id }} />
     </h1>
     <p className="mt-4 px-8 text-base-content/90">{desc}</p>
@@ -85,12 +86,12 @@ const Outcomel1 = ({ item: { index, id, text, desc }, childnodes, idList }: Prop
 const Outcomel2 = ({ item: { index, id, text, desc }, childnodes, idList }: PropType<L2>) => (
   <section className="mt-24">
     <h2
-      className="bg-base-100/20 p-4 text-xl text-base-content/60 shadow"
+      className="flex items-center bg-base-100/20 p-4 text-xl text-base-content/60 shadow "
       id={id}
       data-id-list={idList}
     >
       <span className="pr-2 font-thin">{index}</span>
-      <span className="mr-2 font-bold">{text}</span>
+      <span className="font-bold">{text}</span>
       <ItemContextMenu {...{ id, index }} />
     </h2>
     <p className="mt-4 px-4 text-base-content/90">{desc}</p>
@@ -101,9 +102,13 @@ const Outcomel2 = ({ item: { index, id, text, desc }, childnodes, idList }: Prop
 const Outcomel3 = ({ item: { index, id, text, attrInfo }, childnodes, idList }: PropType<L3>) => {
   return (
     <section className="mt-12">
-      <h2 className="bg-base-100/20 p-4 text-lg shadow-sm" data-id-list={idList} id={id}>
+      <h2
+        className="flex items-center bg-base-100/20 p-4 text-lg shadow-sm "
+        data-id-list={idList}
+        id={id}
+      >
         <span className="pr-2 font-thin">{index}</span>
-        <span className="mr-2">{attrInfo ? <StyledText text={text} map={attrInfo} /> : text}</span>
+        <span className="">{attrInfo ? <StyledText text={text} map={attrInfo} /> : text}</span>
         <ItemContextMenu {...{ id, index }} />
       </h2>
       <ul className="mt-2">{childnodes}</ul>
@@ -113,8 +118,9 @@ const Outcomel3 = ({ item: { index, id, text, attrInfo }, childnodes, idList }: 
 
 const Outcomel4 = ({ item: { id, text, attrInfo, index } }: PropType<L4>) => {
   return (
-    <li className="ml-10 mr-4 list-disc py-1 marker:text-sky-200 " id={id}>
-      <span className="mr-2 text-base-content/90">
+    <li className="ml-10 mr-4 flex list-disc items-center py-1" id={id}>
+      <span className="whitespace-nowrap pr-2 text-xs font-thin">{index}</span>
+      <span className="text-base-content/90">
         {attrInfo ? <StyledText text={text} map={attrInfo} /> : text}
       </span>
       <ItemContextMenu {...{ id, index }} />

@@ -31,6 +31,15 @@ SimpleItems.args = {
   marked: true,
 };
 
+export const Counts = Template.bind({});
+Counts.args = {
+  items: [
+    { name: "item1", label: "label1" },
+    { name: "item2", label: "label2" },
+  ],
+  counts: { item1: 3 },
+};
+
 export const ClickItems = Template.bind({});
 ClickItems.args = {
   onClick: (name: string) => alert(name),
