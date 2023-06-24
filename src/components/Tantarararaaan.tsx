@@ -8,7 +8,6 @@ const useAutoDeleteList = (milliSec: number) => {
     const id = listItemId++;
     setIds(prev => {
       const ids = [...prev, id];
-      console.log(ids);
       setTimeout(() => setIds(prev => prev.filter(i => i !== id)), milliSec);
       return ids;
     });
@@ -26,41 +25,36 @@ const useAutoDeleteList = (milliSec: number) => {
 };
 
 const useTantarararaaan = (milliSec: number) => {
-  const { add: fire, List } = useAutoDeleteList(1000);
+  const { add, List } = useAutoDeleteList(1000);
   const sec = milliSec / 1000;
+  const fire = (reverse = false) => add();
   const EffectComponent = () => (
     <>
       <style>
         {`
         @keyframes risingin{
           0%{
-            top:300%;
             opacity:0;
-            transform:scale(1);
+            transform:scale(1) translate(0,300%);
           }
           3%{
-            top:300%;
-            opacity:0.5;
-            transform:scale(1);
+            opacity:0.2;
+            transform:scale(1) translate(0,300%);
           }
           
           50%{
-            top: 0%;
-            opacity:0;
-            transform:scale(1);
+            opacity:0.5;
+            transform:scale(1) translate(0,0);
           }
           60%{
-            top: 0%;
             opacity:0;
             transform:scale(1);
           }
           90%{
-            top: 0%;
             opacity:0.3;
             transform:scale(1.2);
           }
           100%{
-            top: 0%;
             opacity:0;
             transform:scale(1.5);
           }
@@ -70,8 +64,8 @@ const useTantarararaaan = (milliSec: number) => {
       <List
         template={
           <span
-            style={{ animation: `risingin ${sec}s ease forwards` }}
-            className="absolute h-full w-full rounded-full bg-info"
+            style={{ animation: `risingin ${sec}s  forwards` }}
+            className="absolute top-0 h-full w-full rounded-full bg-info will-change-auto"
           ></span>
         }
       />

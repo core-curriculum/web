@@ -8,6 +8,7 @@ import {
   useDismiss,
   FloatingFocusManager,
   useListNavigation,
+  autoUpdate,
 } from "@floating-ui/react";
 import { useRef, useState } from "react";
 import { MdMoreVert } from "react-icons/md";
@@ -20,7 +21,8 @@ const usePopover = () => {
     middleware: [flip(), shift(), offset(3)],
     open: isOpen,
     onOpenChange: setIsOpen,
-    placement: "bottom-start",
+    placement: "bottom-end",
+    whileElementsMounted: autoUpdate,
   });
   const listNavigation = useListNavigation(context, {
     listRef,
