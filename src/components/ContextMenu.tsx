@@ -6,7 +6,6 @@ import {
   offset,
   useInteractions,
   useDismiss,
-  autoUpdate,
   FloatingFocusManager,
   useListNavigation,
 } from "@floating-ui/react";
@@ -22,7 +21,6 @@ const usePopover = () => {
     open: isOpen,
     onOpenChange: setIsOpen,
     placement: "bottom-start",
-    whileElementsMounted: autoUpdate,
   });
   const listNavigation = useListNavigation(context, {
     listRef,
