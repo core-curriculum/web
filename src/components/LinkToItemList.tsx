@@ -4,6 +4,26 @@ import { useEffect, useState } from "react";
 import { useLocaleText } from "@services/i18n/i18n";
 import { useItemsValue } from "@services/itemList/local";
 
+let listItemId = 0;
+const useAutoDeleteList = (milliSec: number) => {
+  const [ids, setIds] = useState<number[]>([]);
+  const add = () => {
+    const id = listItemId++;
+    setIds([...ids, id]);
+    setTimeout(() => setIds(ids.filter(i => i !== id)), milliSec);
+  };
+  const List = ({ template }: { template: React.ReactNode }) => {
+    return (
+      <>
+        {ids.map(id => (
+          <li key={id}>{template}</li>
+        ))}
+      </>
+    );
+  };
+  return { add, List };
+};
+
 type Prop = {
   count: number;
   href: string;
@@ -18,11 +38,28 @@ const LinkToItemList = ({ count, href }: Prop) => {
             0%{
               top:300%;
               opacity:0.5;
+              transform:scale(1);
             }
             
+            50%{
+              top: 0%;
+              opacity:0;
+              transform:scale(1);
+            }
+            60%{
+              top: 0%;
+              opacity:0;
+              transform:scale(1);
+            }
+            90%{
+              top: 0%;
+              opacity:0.3;
+              transform:scale(2);
+            }
             100%{
               top: 0%;
               opacity:0;
+              transform:scale(3);
             }
           }
         `}
@@ -44,7 +81,7 @@ const LinkToItemList = ({ count, href }: Prop) => {
         >
           {count}
           <span
-            style={{ animation: "risingin 1s infinite" }}
+            style={{ animation: "risingin 1s ease infinite" }}
             className="absolute h-full w-full rounded-full bg-info"
           ></span>
         </span>

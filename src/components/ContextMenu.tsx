@@ -59,12 +59,14 @@ type Props<T extends readonly { name: string; label?: string }[]> = {
   onClick?: (name: T[number]["name"]) => void;
   marked?: boolean;
   buttonSize?: "sm" | "lg" | "xl" | "2xl";
+  counts?: Record<T[number]["name"], number>;
 };
 const ContextMenu = <T extends readonly { name: string; label?: string }[]>({
   items,
   onClick,
   marked,
   buttonSize = "xl",
+  counts = {},
 }: Props<T>) => {
   const {
     listRef,
@@ -87,7 +89,7 @@ const ContextMenu = <T extends readonly { name: string; label?: string }[]>({
       <button
         ref={refs.setReference}
         className={`border-0 outline-0 ring-0 ring-info/30 ring-offset-0
-          ${marked ? "bg-info/20" : "btn-ghost btn-info"} btn-circle btn-sm btn ${
+          ${marked ? "bg-info/20" : "btn-ghost btn-info"} btn-sm btn-circle btn ${
           buttonSize === "sm"
             ? "text-sm"
             : buttonSize === "lg"
@@ -131,11 +133,16 @@ const ContextMenu = <T extends readonly { name: string; label?: string }[]>({
                     ref={node => {
                       listRef.current[index] = node;
                     }}
-                    className="rounded-box w-full border-0 p-2 text-left outline-transparent ring-0
-                    ring-info/30 ring-offset-0 hover:bg-info/70 hover:text-base-100
-                    focus:ring-4"
+                    className="rounded-box flex w-full flex-row flex-nowrap whitespace-nowrap 
+                    border-0 
+                    p-2 text-left
+                    outline-transparent ring-0 ring-info/30 ring-offset-0
+                    hover:bg-info/70 hover:text-base-100 focus:ring-4"
                   >
-                    {label ?? name}
+                    <div>{label ?? name}</div>
+                    {name in counts && counts[name] && (
+                      <div className="badge badge-info h-3 w-3 text-xs">{counts[name]}</div>
+                    )}
                   </li>
                 );
               })}

@@ -1,9 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { MdSearch } from "react-icons/md";
 import { useLocaleText } from "@services/i18n/i18n";
+import { subsrtibeItems, useItemList } from "@services/itemList/local";
 import { ContextMenu } from "./ContextMenu";
+import { useTantarararaaan } from "./Tantarararaaan";
 import { LocaleSwitchButton } from "./buttons/LocaleSwitchButton";
 
 const ToggleIcon = () => (
@@ -38,6 +41,18 @@ const LocaleSwitchLink = () => {
 
 const OtherMenu = () => {
   const { t } = useLocaleText("@components/NaviBar");
+  const { EffectComponent, fire } = useTantarararaaan(1000);
+  const { items } = useItemList();
+  const badgeCount =
+    items.length > 0 ? { associateItems: items.length } : ({} as Record<string, number>);
+  useEffect(() => {
+    return subsrtibeItems((prev, curr) => {
+      if (prev.length < curr.length) {
+        fire();
+      }
+    });
+  }, [fire]);
+
   const router = useRouter();
   const handleClick = (name: string) => {
     switch (name) {
@@ -50,14 +65,20 @@ const OtherMenu = () => {
     }
   };
   return (
-    <ContextMenu
-      buttonSize="2xl"
-      onClick={handleClick}
-      items={[
-        { name: "associateItems", label: t("associateItems") },
-        { name: "curriculumMap", label: t("curriculumMap") },
-      ]}
-    />
+    <div className="relative">
+      <ContextMenu
+        buttonSize="2xl"
+        onClick={handleClick}
+        items={[
+          { name: "associateItems", label: t("associateItems") },
+          { name: "curriculumMap", label: t("curriculumMap") },
+        ]}
+        counts={badgeCount}
+      />
+      <div className="overflow-hidden">
+        <EffectComponent />
+      </div>
+    </div>
   );
 };
 

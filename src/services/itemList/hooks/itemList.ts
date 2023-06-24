@@ -4,6 +4,7 @@ import { atomWithStorage } from "jotai/utils";
 import { arrayEquals, objectEquals } from "@libs/utils";
 import { getDefaultSchema, getSchema, validate } from "@services/itemList/libs/schema";
 import { LocalItemList, SharedItemList } from "@services/itemList/libs/types";
+import { defaultStore } from "@services/store";
 import { getItemListFromServer, shareItemListToServer } from "../local";
 
 const initialItemList: LocalItemList = {
@@ -110,6 +111,16 @@ const useItemListSchema = () => {
   return { schema, isValid, validationResult };
 };
 
+const subsrtibeItems = (onChange: (prev: readonly string[], curr: readonly string[]) => void) => {
+  const store = defaultStore;
+  let prev = store.get(itemsAtom);
+  return store.sub(itemsAtom, () => {
+    const curr = store.get(itemsAtom);
+    onChange(prev, curr);
+    prev = curr;
+  });
+};
+
 export {
   useItems,
   useItemsValue,
@@ -119,5 +130,6 @@ export {
   useShare,
   useItemListSchema,
   itemListAtom,
+  subsrtibeItems,
   useServerTemplate,
 };
