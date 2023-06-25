@@ -49,6 +49,8 @@ const OtherMenu = () => {
     return subsrtibeItems((prev, curr) => {
       if (prev.length < curr.length) {
         fire();
+      } else if (prev.length > curr.length) {
+        fire(true);
       }
     });
   }, [fire]);

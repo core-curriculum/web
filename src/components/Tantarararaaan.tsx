@@ -2,32 +2,43 @@ import * as React from "react";
 import { useState } from "react";
 
 let listItemId = 0;
-const useAutoDeleteList = (milliSec: number) => {
-  const [ids, setIds] = useState<number[]>([]);
-  const add = () => {
+function useAutoDeleteList<T>(milliSec: number) {
+  const [ids, setIds] = useState<Record<string, T | null>>({});
+  function add(value: T | null = null) {
     const id = listItemId++;
     setIds(prev => {
-      const ids = [...prev, id];
-      setTimeout(() => setIds(prev => prev.filter(i => i !== id)), milliSec);
+      const ids = { ...prev, [`${id}`]: value };
+      setTimeout(
+        () =>
+          setIds(prev => {
+            delete prev[`${id}`];
+            return prev;
+          }),
+        milliSec,
+      );
       return ids;
     });
-  };
-  const List = ({ template }: { template: React.ReactNode }) => {
+  }
+  const List = ({
+    template,
+  }: {
+    template: React.ReactNode | ((prop: T | null) => React.ReactNode);
+  }) => {
     return (
       <>
-        {ids.map(id => (
-          <div key={id}>{template}</div>
+        {Object.entries(ids).map(([id, value]) => (
+          <div key={id}>{typeof template === "function" ? template(value) : template}</div>
         ))}
       </>
     );
   };
   return { add, List };
-};
+}
 
 const useTantarararaaan = (milliSec: number) => {
-  const { add, List } = useAutoDeleteList(1000);
+  const { add, List } = useAutoDeleteList<boolean>(1000);
   const sec = milliSec / 1000;
-  const fire = (reverse = false) => add();
+  const fire = (reverse = false) => add(reverse);
   const EffectComponent = () => (
     <>
       <style>
@@ -49,13 +60,16 @@ const useTantarararaaan = (milliSec: number) => {
       `}
       </style>
       <List
-        template={
+        template={reverse => (
           <span
-            style={{ animation: `risingin ${sec}s  forwards` }}
+            style={{
+              animation: `risingin ${sec}s  forwards`,
+              animationDirection: reverse ? "reverse" : "normal",
+            }}
             className="absolute top-0 h-full w-full rounded-full 
             bg-info will-change-[opacity,transform]"
           ></span>
-        }
+        )}
       />
     </>
   );

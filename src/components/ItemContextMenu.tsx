@@ -23,7 +23,6 @@ const ItemContextMenu = ({ id, index }: { id: string; index: string }) => {
         return;
       case "removeFromList":
         removeItem(id);
-        toast(fmt(t("removeItemDone"), { id }));
         return;
       case "id":
         await copyToClip(id);

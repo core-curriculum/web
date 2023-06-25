@@ -4,12 +4,13 @@ import { useTantarararaaan } from "../components/Tantarararaaan";
 
 const TargetComponent = ({ duration = 1000 }: { duration: number }) => {
   const { EffectComponent, fire } = useTantarararaaan(duration);
-  const handleClick = () => {
-    fire();
+  const handleClick = (reverse: boolean = false) => {
+    fire(reverse);
   };
   return (
     <div>
-      <button onClick={handleClick}>click</button>
+      <button onClick={() => handleClick()}>normal</button>
+      <button onClick={() => handleClick(true)}>reverse</button>
       <div className="relative h-4 w-4 rounded-full bg-black">
         <EffectComponent />
       </div>
