@@ -157,6 +157,7 @@ const ListData = () => {
       <Head>
         <title>{t("title")}</title>
       </Head>
+      <div className="m-4">{t("discription")}</div>
       <Suspense fallback="loading...">
         <div className="m-4">
           {schemaWithValue.map(({ type, key, label, value }) => {

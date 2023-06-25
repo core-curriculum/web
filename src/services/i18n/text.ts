@@ -62,6 +62,12 @@ const text = {
     table: { ja: "表", en: "Table" },
     share: { ja: "共有する", en: "Share" },
     sharing: { ja: "共有中...", en: "Sharing..." },
+    discription: {
+      // eslint-disable-next-line max-len
+      ja: "授業・科目に関連するモデル・コア・カリキュラムの学修目標リストを作成します。点数や成績をつけたり、フィードバックを行う学習目標を選択してください。",
+      // eslint-disable-next-line max-len
+      en: "Create a list of learning objectives of the Model Core Curriculum related to classes and subjects. Please select the learning items that you want to score, grade, and give feedback.",
+    },
     back: { ja: "戻る", en: "Back" },
     proceedToShare: { ja: "問題ないので共有する", en: "Proceed to share" },
     alertToShare: {
