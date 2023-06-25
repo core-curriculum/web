@@ -154,10 +154,6 @@ const ListData = () => {
   };
   return (
     <>
-      <Head>
-        <title>{t("title")}</title>
-      </Head>
-      <div className="m-4">{t("discription")}</div>
       <Suspense fallback="loading...">
         <div className="m-4">
           {schemaWithValue.map(({ type, key, label, value }) => {
@@ -220,8 +216,13 @@ const ListPage: NextPage<PageProps> = ({ outcomesTree, allTables }: PageProps) =
   const text = items.join(",");
   return (
     <>
+      <Head>
+        <title>{t("title")}</title>
+      </Head>
       <div className="ml-4">
         <HeaderBar />
+        <div className="m-4">{t("discription")}</div>
+        {items.length === 0 && <div className="m-4">{t("noItems")}</div>}
         <ListData />
         <div>
           {searchOutcomes(outcomesTree, text).map(item => (

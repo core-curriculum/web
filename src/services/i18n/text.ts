@@ -62,6 +62,11 @@ const text = {
     table: { ja: "表", en: "Table" },
     share: { ja: "共有する", en: "Share" },
     sharing: { ja: "共有中...", en: "Sharing..." },
+    noItems: {
+      ja: "関連付けを追加するためには、各学習項目右の「･･･」ボタンから「授業に関連づける」を選んでください",
+      // eslint-disable-next-line max-len
+      en: 'To add an association, select "Associate with class" from the "..." button on the right of each learning item.',
+    },
     discription: {
       // eslint-disable-next-line max-len
       ja: "授業・科目に関連するモデル・コア・カリキュラムの学修目標リストを作成します。点数や成績をつけたり、フィードバックを行う学習目標を選択してください。",
