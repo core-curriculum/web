@@ -27,7 +27,9 @@ function useAutoDeleteList<T>(milliSec: number) {
     return (
       <>
         {Object.entries(ids).map(([id, value]) => (
-          <div key={id}>{typeof template === "function" ? template(value) : template}</div>
+          <div key={id} className="pointer-events-none">
+            {typeof template === "function" ? template(value) : template}
+          </div>
         ))}
       </>
     );
