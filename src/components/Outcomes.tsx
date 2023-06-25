@@ -118,7 +118,7 @@ const Outcomel3 = ({ item: { index, id, text, attrInfo }, childnodes, idList }: 
 
 const Outcomel4 = ({ item: { id, text, attrInfo, index } }: PropType<L4>) => {
   return (
-    <li className="ml-10 mr-4 flex list-disc items-center py-1" id={id}>
+    <li className="ml-6 mr-4 flex list-disc items-center py-1" id={id}>
       <span className="whitespace-nowrap pr-2 text-xs font-thin">{index}</span>
       <span className="text-base-content/90">
         {attrInfo ? <StyledText text={text} map={attrInfo} /> : text}
