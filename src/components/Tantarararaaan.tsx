@@ -66,7 +66,7 @@ const useTantarararaaan = (milliSec: number) => {
               animation: `risingin ${sec}s  forwards`,
               animationDirection: reverse ? "reverse" : "normal",
             }}
-            className="absolute top-0 h-full w-full rounded-full 
+            className="pointer-events-none absolute top-0 h-full w-full rounded-full 
             bg-info will-change-[opacity,transform]"
           ></span>
         )}
