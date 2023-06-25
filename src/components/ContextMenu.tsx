@@ -11,7 +11,7 @@ import {
   autoUpdate,
 } from "@floating-ui/react";
 import { useRef, useState } from "react";
-import { MdMoreVert } from "react-icons/md";
+import { MdMoreHoriz } from "react-icons/md";
 
 const usePopover = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -100,7 +100,7 @@ const ContextMenu = <T extends readonly { name: string; label?: string }[]>({
         } text-info`}
         {...getReferenceProps()}
       >
-        <MdMoreVert />
+        <MdMoreHoriz />
       </button>
       {isOpen && (
         <FloatingFocusManager context={context}>
