@@ -37,22 +37,9 @@ const useTantarararaaan = (milliSec: number) => {
             opacity:0;
             transform:scale(1) translate(0,300%);
           }
-          3%{
-            opacity:0.2;
-            transform:scale(1) translate(0,300%);
-          }
-          
           50%{
             opacity:0.5;
             transform:scale(1) translate(0,0);
-          }
-          60%{
-            opacity:0;
-            transform:scale(1);
-          }
-          90%{
-            opacity:0.3;
-            transform:scale(1.2);
           }
           100%{
             opacity:0;
@@ -65,7 +52,8 @@ const useTantarararaaan = (milliSec: number) => {
         template={
           <span
             style={{ animation: `risingin ${sec}s  forwards` }}
-            className="absolute top-0 h-full w-full rounded-full bg-info will-change-auto"
+            className="absolute top-0 h-full w-full rounded-full 
+            bg-info will-change-[opacity,transform]"
           ></span>
         }
       />
