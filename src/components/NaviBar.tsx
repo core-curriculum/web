@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { MdSearch } from "react-icons/md";
 import { useLocaleText } from "@services/i18n/i18n";
@@ -55,26 +54,15 @@ const OtherMenu = () => {
     });
   }, [fire]);
 
-  const router = useRouter();
-  const handleClick = (name: string) => {
-    switch (name) {
-      case "associateItems":
-        router.push("/list");
-        break;
-      case "curriculumMap":
-        router.push("/map");
-        break;
-    }
-  };
   return (
     <div className="relative">
       <ContextMenu
         buttonSize="2xl"
-        onClick={handleClick}
         items={[
           { name: "associateItems", label: t("associateItems") },
           { name: "curriculumMap", label: t("curriculumMap") },
         ]}
+        links={{ associateItems: "/list", curriculumMap: "/map" }}
         counts={badgeCount}
       />
       <div className="overflow-hidden">
