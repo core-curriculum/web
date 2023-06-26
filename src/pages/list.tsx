@@ -21,6 +21,7 @@ import {
   useShare as useShareItemList,
   useItemListSchema,
   schemaItemsWithValue,
+  useClearItemList,
 } from "@services/itemList/local";
 import { loadFullOutcomesTable, makeOutcomesTree } from "@services/outcomes";
 import type { OutcomeInfo } from "@services/outcomes";
@@ -90,7 +91,7 @@ const useShare = () => {
         choises: [t("back"), t("proceedToShare")],
         primary: t("proceedToShare"),
       });
-      if (res === goBack) return;
+      if (res !== t("proceedToShare")) return;
       const inserted = await shareItemList();
       addHistory(inserted);
       const url = itemIdToUrl(inserted.id);
@@ -176,6 +177,26 @@ const ListData = () => {
   );
 };
 
+const ClearButton = () => {
+  const { clear } = useClearItemList();
+  const { t } = useTranslation("@pages/list");
+  const handleClick = async () => {
+    const res = await showConfirmDialog({
+      content: t("confirmToClear"),
+      choises: [t("doClear"), t("doCancel")],
+      primary: t("doCancel"),
+    });
+    if (res === t("doClear")) {
+      clear();
+    }
+  };
+  return (
+    <button className="btn-ghost btn" onClick={handleClick}>
+      {t("clear")}
+    </button>
+  );
+};
+
 const useTemplate = () => {
   const { apply: doApply } = useServerTemplate();
   const router = useRouter();
@@ -257,7 +278,8 @@ const ListPage: NextPage<PageProps> = ({ outcomesTree, allTables }: PageProps) =
           })}
         </div>
       </div>
-      <div className="m-8 pb-16">
+      <div className="m-8 flex flex-row gap-2 pb-16">
+        <ClearButton />
         <ShareButton />
       </div>
     </>

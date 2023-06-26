@@ -35,13 +35,26 @@ const useItems = () => {
   return { items, add, remove, clear };
 };
 
+const useClearItemList = () => {
+  const { clear: clearItems } = useItems();
+  const setItemList = useSetAtom(itemListAtom);
+  const { clear: clearListData } = useListData();
+  const clear = () => {
+    clearItems();
+    clearListData();
+    setItemList(prev => ({ ...prev, from_id: "" }));
+  };
+  return { clear };
+};
+
 const useListDataValue = () => useAtomValue(listDataAtom);
 const useListData = () => {
   const [listData, setListData] = useAtom(listDataAtom);
   const set = (key: string, value: string) => {
     setListData(listData => ({ ...listData, [key]: value }));
   };
-  return { listData, set };
+  const clear = () => setListData({});
+  return { listData, set, clear };
 };
 
 const useItemList = () => useAtomValue(itemListAtom);
@@ -132,4 +145,5 @@ export {
   itemListAtom,
   subsrtibeItems,
   useServerTemplate,
+  useClearItemList,
 };

@@ -59,6 +59,22 @@ const text = {
       ja: "授業との関連付けリスト | モデルコアカリキュラム",
       en: "List of associations with classes | Model Core Curriculum",
     },
+    confirmToClear: {
+      ja: "入力した内容を破棄してよろしいですか?",
+      en: "Are you sure you want to clear the input?",
+    },
+    clear: {
+      ja: "クリア",
+      en: "Clear",
+    },
+    doClear: {
+      ja: "入力した内容を破棄する",
+      en: "Clear",
+    },
+    doCancel: {
+      ja: "キャンセル",
+      en: "Cancel",
+    },
     table: { ja: "表", en: "Table" },
     share: { ja: "共有する", en: "Share" },
     sharing: { ja: "共有中...", en: "Sharing..." },

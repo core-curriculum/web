@@ -71,7 +71,7 @@ const useShare = () => {
         choises: [t("back"), t("proceedToShare")],
         primary: t("proceedToShare"),
       });
-      if (res === goBack) return;
+      if (res !== t("proceedToShare")) return;
       const { insertedAsItemList: inserted } = await shareCurriculumMap();
       addHistory(inserted);
       const url = itemIdToUrl(inserted.id);

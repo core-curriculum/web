@@ -7,6 +7,7 @@ export {
   useShare,
   useItemListSchema,
   subsrtibeItems,
+  useClearItemList,
 } from "@services/itemList/hooks/itemList";
 export {
   useCurricullumMapServerTemplate,
