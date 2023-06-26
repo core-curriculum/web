@@ -13,6 +13,7 @@ export {
   useCurricullumMapServerTemplate,
   useShareCurriculumMap,
   useCurriculumMapSchema,
+  useClearCurriculumMap,
 } from "@services/itemList/hooks/curriculumMap";
 export { getSchema, schemaItemsWithValue } from "@services/itemList/libs/schema";
 export {

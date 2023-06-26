@@ -44,6 +44,18 @@ const isCurriculumMapDirtyAtom = atom(
   get => !isCurriculumMapEquals(get(curriculumMapAtom), get(sharedCurriculumMapAtom)),
 );
 
+const useClearCurriculumMap = () => {
+  const { clear: clearItems } = useCurriculumMapItems();
+  const setItemList = useSetAtom(curriculumMapAtom);
+  const { clear: clearListData } = useCurriculumMapData();
+  const clear = () => {
+    clearItems();
+    clearListData();
+    setItemList(prev => ({ ...prev, from_id: "" }));
+  };
+  return { clear };
+};
+
 const useCurriculumMapItemsValue = () => useAtomValue(itemsAtom);
 const useCurriculumMapItems = () => {
   const [itemsInner, setItemsInner] = useAtom(itemsAtom);
@@ -75,7 +87,8 @@ const useCurriculumMapData = () => {
   const set = (key: string, value: string) => {
     setListData(listData => ({ ...listData, [key]: value }));
   };
-  return { listData, set };
+  const clear = () => setListData({});
+  return { listData, set, clear };
 };
 
 const useCurriculumMap = () => useAtomValue(curriculumMapAtom);
@@ -158,6 +171,7 @@ export {
   useCurricullumMapServerTemplate,
   useShareCurriculumMap,
   useCurriculumMapSchema,
+  useClearCurriculumMap,
   sharedCurriculumMapAtom,
   curriculumMapAtom,
   curriculumMapToShareAtom,

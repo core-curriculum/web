@@ -13,6 +13,7 @@ import { BackButton } from "@components/buttons/BackButton";
 import { toast } from "@components/toast";
 import { useLocaleText, useTranslation } from "@services/i18n/i18n";
 import {
+  useClearCurriculumMap,
   useCurriculumMapData,
   useCurriculumMapItems,
   useCurriculumMapSchema,
@@ -61,7 +62,6 @@ const useShare = () => {
   const { add: addHistory } = useViewHistory();
   const share = async () => {
     try {
-      const goBack = t("back");
       const res = await showConfirmDialog({
         content: (
           <>
@@ -108,6 +108,24 @@ const ShareButton = () => {
   return (
     <button className="btn-primary btn" disabled={!isValid || sharing} onClick={_share}>
       {sharing ? <Sharing /> : t("share")}
+    </button>
+  );
+};
+
+const ClearButton = () => {
+  const { t } = useTranslation("@pages/map");
+  const { clear } = useClearCurriculumMap();
+  const handleClick = async () => {
+    const res = await showConfirmDialog({
+      content: t("confirmToClear"),
+      choises: [t("doClear"), t("doCancel")],
+      primary: t("doCancel"),
+    });
+    if (res === t("doClear")) clear();
+  };
+  return (
+    <button className="btn-ghost btn" onClick={handleClick}>
+      {t("clear")}
     </button>
   );
 };
@@ -256,7 +274,8 @@ const CurriculumMapPage: NextPage<{}> = () => {
         </div>
         <ItemListList itemListList={items} onChange={items => setItems(items)} />
       </div>
-      <div className="m-8 pb-16">
+      <div className="m-8 flex flex-row gap-2 pb-16">
+        <ClearButton />
         <ShareButton />
       </div>
     </>
