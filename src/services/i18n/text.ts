@@ -69,7 +69,7 @@ const text = {
     },
     discription: {
       // eslint-disable-next-line max-len
-      ja: "授業・科目に関連するモデル・コア・カリキュラムの学修目標リストを作成します。関連する学修目標とは、該当科目において、点数や成績をつける、もしくはフィードバックを行う(レポートにコメントする・口頭でコメントするなど)学習目標を指します。",
+      ja: "授業・科目に関連するモデル・コア・カリキュラムの学修目標リストを作成します。関連する学修目標とは、該当科目において、点数や成績をつける、もしくはフィードバックを行う(レポートにコメントする・口頭でコメント・学生同士でコメントし合うなど)学習目標を指します。",
       // eslint-disable-next-line max-len
       en: "Create a list of learning objectives of the Model Core Curriculum related to classes and subjects. The related learning objectives are those that are scored or graded, or that provide feedback (e.g., commenting on a report or orally) in the subject in question.",
     },
