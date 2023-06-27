@@ -47,22 +47,22 @@ const ContextMenu = <T extends readonly { name: string; label?: string }[]>({
         {items.map(
           ({ name, label }: { name: T[number]["name"]; label?: T[number]["label"] }, index) => {
             const content = (
-              <>
-                <span>{label ?? name}</span>
-                {name in counts && counts[name] && (
-                  <span className="badge badge-info h-3 w-3 text-xs">{counts[name]}</span>
-                )}
-              </>
-            );
-            return (
               <li
                 key={name}
                 className="flex w-full cursor-pointer flex-row flex-nowrap
                 whitespace-nowrap rounded p-2 hover:bg-info/30"
                 onClick={() => handleSelect(name)}
               >
-                {name in links && links[name] ? <Link href={links[name]}>{content}</Link> : content}
+                <span>{label ?? name}</span>
+                {name in counts && counts[name] && (
+                  <span className="badge badge-info h-3 w-3 text-xs">{counts[name]}</span>
+                )}
               </li>
+            );
+            return name in links && links[name] ? (
+              <Link href={links[name]}>{content}</Link>
+            ) : (
+              content
             );
           },
         )}
