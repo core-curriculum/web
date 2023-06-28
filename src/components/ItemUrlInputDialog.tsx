@@ -59,7 +59,7 @@ const ItemUrlInputComponent = ({
       <div>{t("description")}</div>
       <span className="text-xs text-error">{errorText}</span>
       <textarea
-        className="textarea-bordered textarea w-full"
+        className="textarea-bordered textarea w-full  border-base-content/30"
         value={inputText}
         onChange={onChange}
       />

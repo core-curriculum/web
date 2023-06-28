@@ -163,7 +163,7 @@ const ListData = () => {
                 <label>{label ?? key}</label>
                 <input
                   type={type}
-                  className="input-bordered input m-4 w-full max-w-xs"
+                  className="input-bordered input m-4 w-full max-w-xs border-base-content/30"
                   placeholder={label ?? key}
                   value={value}
                   onChange={e => onChange(key, e)}

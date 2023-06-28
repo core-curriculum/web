@@ -109,7 +109,7 @@ const Breadcrumb = ({ parents }: { parents: OutcomeInfo[] }) => {
 
 const HeaderBar = () => {
   return (
-    <div className="sticky top-0 flex w-full items-center bg-white/80 backdrop-blur-sm">
+    <div className="sticky top-0 m-0 flex w-full items-center bg-base-content/10 backdrop-blur-sm">
       <div className="ml-2">
         <BackButton />
       </div>
@@ -300,8 +300,8 @@ const ListPage: NextPage<PageProps> = ({
       <Head>
         <title>{fmt(t("title"), { name: itemList.name })}</title>
       </Head>
+      <HeaderBar />
       <div className="ml-4">
-        <HeaderBar />
         {!children && (
           <div className="mx-4 my-8 text-xs text-base-content/80">{t("descriptionOfItemList")}</div>
         )}
