@@ -54,7 +54,7 @@ const QandAPage: NextPage<PageProps> = ({ data }: PageProps) => {
                 <span className="font-bold text-accent">Q{i + 1}.</span> {question}
               </h3>
               <p className="ml-2 text-base-content">
-                <span className="text-accent">A.</span> {answer}
+                <span className="text-accent">A{i + 1}.</span> {answer}
               </p>
             </section>
           );
