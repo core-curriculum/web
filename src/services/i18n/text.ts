@@ -13,6 +13,7 @@ const text = {
     search: { ja: "検索", en: "Search" },
     associateItems: { ja: "授業との関連付け", en: "Associate with classes" },
     curriculumMap: { ja: "カリキュラムマップの作成", en: "Create a curriculum map" },
+    qAndA: { ja: "Q&A", en: "Q&A" },
   },
   "@components/LinktoItemList": {
     title: { ja: "リスト", en: "List" },
@@ -237,6 +238,10 @@ const text = {
     pdfLinkText: {
       ja: "pdfダウンロード (8.2MB)",
       en: "Download pdf (9.7MB)",
+    },
+    qAndA: {
+      ja: "モデル・コア・カリキュラムに関するQ&A",
+      en: "Q&A about the Model Core Curriculum",
     },
   },
   "@pages/index": {

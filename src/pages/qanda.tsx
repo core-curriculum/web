@@ -49,12 +49,12 @@ const QandAPage: NextPage<PageProps> = ({ data }: PageProps) => {
       <div className="m-4 pb-24">
         {data.map(({ question, answer }, i) => {
           return (
-            <section key={i} className="mb-16 max-w-xl">
+            <section key={i} className="mx-auto mb-16 max-w-3xl">
               <h3 className="my-4 text-lg text-base-content">
-                <span className="font-bold text-primary">Q{i + 1}.</span> {question}
+                <span className="font-bold text-accent">Q{i + 1}.</span> {question}
               </h3>
               <p className="ml-2 text-base-content">
-                <span className="text-primary">A.</span> {answer}
+                <span className="text-accent">A.</span> {answer}
               </p>
             </section>
           );
