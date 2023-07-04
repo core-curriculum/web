@@ -240,10 +240,12 @@ const ListPage: NextPage<PageProps> = ({ outcomesTree, allTables }: PageProps) =
       <Head>
         <title>{t("title")}</title>
       </Head>
-      <div className="ml-4">
+      <div className="mx-4 pr-4">
         <HeaderBar />
-        <div className="m-4">{t("discription")}</div>
-        {items.length === 0 && <div className="m-4">{t("noItems")}</div>}
+        <div className="alert m-4 max-w-3xl">{t("discription")}</div>
+        {items.length === 0 && (
+          <div className="alert  alert-warning m-4 w-full max-w-3xl">{t("noItems")}</div>
+        )}
         <ListData />
         <div>
           {searchOutcomes(outcomesTree, text).map(item => (
