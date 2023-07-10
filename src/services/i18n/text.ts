@@ -258,12 +258,12 @@ const text = {
     },
   },
   "@services/itemList/libs/schema_list": {
-    $name: { ja: "科目・授業名", en: "name" },
-    $place: { ja: "施設・大学名", en: "place" },
+    $name: { ja: "授業・科目名", en: "name" },
+    $place: { ja: "分類(学年・区分など)", en: "place" },
   },
   "@services/itemList/libs/schema_map": {
     $name: { ja: "カリキュラム名", en: "name" },
-    $place: { ja: "施設・大学名", en: "place" },
+    $place: { ja: "分類(施設・大学名など)", en: "place" },
   },
 } as const satisfies Text;
 
