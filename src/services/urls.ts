@@ -17,9 +17,9 @@ const qAndAUrl = (locale: Locale) => {
   return "https://docs.google.com/spreadsheets/d/1xGi_y12VTi2KxLwqqq7ad7mDljNRAfKXI-JkGl0K04Y/export?format=csv&gid=0";
 };
 const itemUrlToId = (url: string) => {
-  const params = url.replace(`${origin}/x/`, "");
+  const params = url.replace(`${origin}/x`, "");
   const id = locales.reduce((acc, locale) => {
-    return acc.replace(`${locale}`, "");
+    return acc.replace(`/${locale}/`, "");
   }, params);
   return id.replaceAll("/", "").trim();
 };
