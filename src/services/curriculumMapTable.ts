@@ -37,7 +37,7 @@ const makeTableItemLabels = (tables: TableInfoSet[]) => {
 
     const rows = toObjectList(table.table).map(item => {
       const _item = item as { index: string; id: string } & { [key: string]: string };
-      return { index, id, item: _item[columns["item"]] as string };
+      return { index, id: _item["id"] as string, item: _item[columns["item"]] as string };
     });
     return [head, ...rows.map(row => ({ index: row.index, label: row.item, ids: [row.id] }))];
   });
@@ -53,7 +53,10 @@ const makeTableData = (items: ServerItemList[], labels: LabelInfo[]) => {
     const row = [
       label.index,
       label.label,
-      ...items.map(item => (label.ids.some(id => item.items.includes(id)) ? "○" : "")),
+      ...items.map(item => {
+        const ids = item.items;
+        return label.ids.some(id => ids.includes(id)) ? "○" : "";
+      }),
     ];
     return row;
   });
