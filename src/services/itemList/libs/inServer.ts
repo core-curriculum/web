@@ -92,12 +92,46 @@ const getItemListFromId = async (id: string): Promise<ServerItemList> => {
   return list.data;
 };
 
+/**
+ * For cases where too long arrays are not allowed in api requests,
+ * the array is divided into chunks of chunkSize and f is executed asynchronously,
+ * and the results are combined and returned.
+ * @param arr
+ * @param f
+ * @param chunkSize
+ * @returns
+ */
+async function asyncChunkedMap<T, U>(
+  arr: T[],
+  f: (chunkedArray: T[]) => Promise<U[]>,
+  chunkSize: number,
+): Promise<U[]> {
+  const res: U[] = [];
+  for (let i = 0; i < arr.length; i += chunkSize) {
+    const chunk = arr.slice(i, i + chunkSize);
+    res.push(...(await f(chunk)));
+  }
+  return res;
+}
+
 const getItemListFromIds = async (ids: readonly string[]): Promise<ServerItemListResponse[]> => {
   const uuids = ids.map(id => toUUID(id, { ignoreError: true }));
-  const { data: response, error } = await db.from("list_view").select().in("id", uuids);
-  if (error || !response) throw error ?? new Error("Error in getting itemList");
+  // If the id is duplicated, remove the duplication and then get it.
+  const uniqueUuids = removeDuplicate(uuids);
+  // The DB api will throw an error if the array of ids is too long,
+  // so divide it into 100 pieces and get it.
+  const responses = await asyncChunkedMap(
+    uniqueUuids,
+    async uuids => {
+      const { data: response, error } = await db.from("list_view").select().in("id", uuids);
+      if (error || !response) throw error ?? new Error("Error in getting itemList");
+      return response as (ItemListDBView | undefined)[];
+    },
+    100,
+  );
+
   return uuids.map(uuid => {
-    const res = response.find(u => u?.id === uuid) as ItemListDBView | undefined;
+    const res = responses.find(u => u?.id === uuid) as ItemListDBView | undefined;
     if (!res) return { ok: false } as const;
     const data = serverResponseToItemList(res, res.data);
     return {
