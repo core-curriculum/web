@@ -20,11 +20,14 @@ import {
   AnimateLayoutChanges,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import Link from "next/link";
 import { forwardRef, useMemo, useState } from "react";
+import { FiExternalLink } from "react-icons/fi";
 import { MdDragIndicator, MdClose } from "react-icons/md";
 import { formatDateTimeIntl } from "@libs/utils";
 import { useTranslation } from "@services/i18n/i18n";
 import { ServerItemList } from "@services/itemList/server";
+import { itemIdToUrl } from "@services/urls";
 
 // eslint-disable-next-line react/display-name
 const DragHandle = forwardRef<HTMLDivElement>((_props, ref) => (
@@ -73,7 +76,7 @@ const animateLayoutChanges: AnimateLayoutChanges = args => {
 type DraggableRowProps = {
   row: {
     id: UniqueIdentifier;
-    items: ReadonlyArray<string>;
+    items: ReadonlyArray<string | { link: string; text: string }>;
     index: number;
   };
   onRemove?: (index: number) => void;
@@ -96,7 +99,14 @@ const DraggableRow = ({ row: { items, index, id }, onRemove }: DraggableRowProps
           <td key={i}>
             <div className={`flex flex-row  items-center`}>
               {needHandle && <DragHandle {...attributes} {...listeners} />}
-              {item}
+              {typeof item === "string" ? (
+                item
+              ) : (
+                <Link href={item.link} target="_blank" className="link">
+                  {item.text}
+                  <FiExternalLink className="ml-1 inline-block" />
+                </Link>
+              )}
               {needDeleteIcon && <DeleteIcon onClick={() => onRemove?.(index)} />}
             </div>
           </td>
@@ -182,7 +192,11 @@ const ItemListList = ({ itemListList, onChange }: Props) => {
             {itemListList
               .map(({ id, name, place, created_at }, i) => ({
                 id,
-                items: [name, place, formatDateTimeIntl(created_at)],
+                items: [
+                  { text: name, link: itemIdToUrl(id) },
+                  place,
+                  formatDateTimeIntl(created_at),
+                ],
                 index: i,
               }))
               .map(row => (
