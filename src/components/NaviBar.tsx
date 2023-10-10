@@ -62,8 +62,14 @@ const OtherMenu = () => {
           { name: "associateItems", label: t("associateItems") },
           { name: "curriculumMap", label: t("curriculumMap") },
           { name: "qAndA", label: t("qAndA") },
+          { name: "citeas", label: t("citeas") },
         ]}
-        links={{ associateItems: "/list", curriculumMap: "/map", qAndA: "/qanda" }}
+        links={{
+          associateItems: "/list",
+          curriculumMap: "/map",
+          qAndA: "/qanda",
+          citeas: "/citeas",
+        }}
         counts={badgeCount}
       />
       <div className="overflow-hidden">

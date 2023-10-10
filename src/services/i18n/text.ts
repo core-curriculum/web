@@ -14,6 +14,7 @@ const text = {
     associateItems: { ja: "授業との関連付け", en: "Associate with classes" },
     curriculumMap: { ja: "カリキュラムマップの作成", en: "Create a curriculum map" },
     qAndA: { ja: "Q&A", en: "Q&A" },
+    citeas: { ja: "引用方法", en: "How to cite" },
   },
   "@components/LinktoItemList": {
     title: { ja: "リスト", en: "List" },
@@ -107,6 +108,18 @@ const text = {
       ja: "編集中のリストがあります。破棄して新しいリストで上書きしますか?",
       // eslint-disable-next-line max-len
       en: "There is a list being edited. Do you want to discard it and overwrite it with a new list?",
+    },
+  },
+  "@pages/citeas": {
+    title: {
+      ja: "引用方法 | モデルコアカリキュラム",
+      en: "How to cite | Model Core Curriculum",
+    },
+    h1: { ja: "引用方法", en: "How to cite" },
+    example_title: { ja: "引用例", en: "Example" },
+    download: {
+      ja: "文献管理ソフトウェア用ファイルダウンロード",
+      en: "Download for reference management software",
     },
   },
   "@pages/map": {
