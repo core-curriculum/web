@@ -70,6 +70,7 @@ const OtherMenu = () => {
           curriculumMap: "/map",
           qAndA: "/qanda",
           citeas: "/citeas",
+          movies: "/movies",
         }}
         counts={badgeCount}
       />
