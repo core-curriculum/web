@@ -14,7 +14,7 @@ const GeneralGuidance: React.FC<Props> = props => {
     <div {...props}>
       <p className="mb-4">{t("discription1")}</p>
       <p>{t("discription2")}</p>
-      <div className="mt-4 flex flex-col gap-2">
+      <div className="mt-8 flex flex-col gap-2">
         <Link
           className="link-hover link-info link"
           target="_blank"
@@ -28,10 +28,10 @@ const GeneralGuidance: React.FC<Props> = props => {
           {t("pdfLinkText")}
           <MdOutlinePictureAsPdf className="ml-1 inline-block" />
         </Link>
-        <Link className="link-hover link-info link my-2" href="/movies">
+        <Link className="link-hover link-info link" href="/movies">
           {t("movies")}
         </Link>
-        <Link className="link-hover link-info link my-2" href="/qanda">
+        <Link className="link-hover link-info link" href="/qanda">
           {t("qAndA")}
         </Link>
       </div>
