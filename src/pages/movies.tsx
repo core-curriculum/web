@@ -26,11 +26,14 @@ const CiteAsPage: NextPage = () => {
         <HeaderBar />
         <div className="m-auto p-2">
           <h1 className="my-8 text-4xl">{t("h1")}</h1>
+          <div className="pb-8 pt-4">{t("discription")}</div>
           <span className="flex items-center justify-center py-4">
-            <Link href="https://vimeo.com/showcase/10574193" target="_blank" className="link">
-              {t("linkToListPage")}
-              <FiExternalLink className="ml-1 inline-block" />
-            </Link>
+            <div>
+              <Link href="https://vimeo.com/showcase/10574193" target="_blank" className="link">
+                {t("linkToListPage")}
+                <FiExternalLink className="ml-1 inline-block" />
+              </Link>
+            </div>
           </span>
           <div className="relative p-0 pt-[56.25%]">
             <iframe
