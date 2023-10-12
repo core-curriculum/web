@@ -120,7 +120,7 @@ const text = {
     linkToListPage: { ja: "動画一覧ページへ", en: "Go to movies list" },
     discription: {
       // eslint-disable-next-line max-len
-      ja: "このような感じでしょうか? 「モデル・コア・カリキュラムの各資質・能力について、またモデル・コア・カリキュラムをどのようにカリキュラムに活かしていくかに関して解説した動画集です。」",
+      ja: "モデル・コア・カリキュラムの各資質・能力について、またモデル・コア・カリキュラムをどのようにカリキュラムに活かしていくかに関して解説した動画集です。",
       // eslint-disable-next-line max-len
       en: "A collection of videos explaining each of the Model Core Curriculum's qualities and abilities (competencies), as well as how to use the Model Core Curriculum in the curriculum.",
     },
