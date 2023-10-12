@@ -28,6 +28,9 @@ const GeneralGuidance: React.FC<Props> = props => {
           {t("pdfLinkText")}
           <MdOutlinePictureAsPdf className="ml-1 inline-block" />
         </Link>
+        <Link className="link-hover link-info link my-2" href="/movies">
+          {t("movies")}
+        </Link>
         <Link className="link-hover link-info link my-2" href="/qanda">
           {t("qAndA")}
         </Link>

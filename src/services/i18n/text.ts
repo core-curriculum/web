@@ -15,6 +15,7 @@ const text = {
     curriculumMap: { ja: "カリキュラムマップの作成", en: "Create a curriculum map" },
     qAndA: { ja: "Q&A", en: "Q&A" },
     citeas: { ja: "引用方法", en: "How to cite" },
+    movies: { ja: "解説動画", en: "Movies" },
   },
   "@components/LinktoItemList": {
     title: { ja: "リスト", en: "List" },
@@ -109,6 +110,14 @@ const text = {
       // eslint-disable-next-line max-len
       en: "There is a list being edited. Do you want to discard it and overwrite it with a new list?",
     },
+  },
+  "@pages/movies": {
+    title: {
+      ja: "解説動画 | モデルコアカリキュラム",
+      en: "Movies | Model Core Curriculum",
+    },
+    h1: { ja: "解説動画", en: "Movies" },
+    linkToListPage: { ja: "動画一覧ページへ", en: "Go to movies list" },
   },
   "@pages/citeas": {
     title: {
@@ -255,6 +264,10 @@ const text = {
     qAndA: {
       ja: "モデル・コア・カリキュラムに関するQ&A",
       en: "Q&A about the Model Core Curriculum",
+    },
+    movies: {
+      ja: "解説動画",
+      en: "Movies",
     },
   },
   "@pages/index": {

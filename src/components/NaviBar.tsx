@@ -61,8 +61,9 @@ const OtherMenu = () => {
         items={[
           { name: "associateItems", label: t("associateItems") },
           { name: "curriculumMap", label: t("curriculumMap") },
-          { name: "qAndA", label: t("qAndA") },
+          { name: "movies", label: t("movies") },
           { name: "citeas", label: t("citeas") },
+          { name: "qAndA", label: t("qAndA") },
         ]}
         links={{
           associateItems: "/list",
