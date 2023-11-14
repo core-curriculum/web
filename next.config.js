@@ -5,6 +5,14 @@ const nextConfig = {
     locales: ["en", "ja"],
     defaultLocale: "ja",
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "i.vimeocdn.com",
+      }
+    ],
+  },
 };
 
 module.exports = nextConfig;

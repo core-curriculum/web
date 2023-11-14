@@ -16,6 +16,12 @@ const qAndAUrl = (locale: Locale) => {
   // eslint-disable-next-line max-len
   return "https://docs.google.com/spreadsheets/d/1xGi_y12VTi2KxLwqqq7ad7mDljNRAfKXI-JkGl0K04Y/export?format=csv&gid=0";
 };
+
+const moviesDataUrl = (locale: Locale) => {
+  // eslint-disable-next-line max-len
+  return `https://docs.google.com/spreadsheets/d/1MNa7Zh2h5vGnSYUHU3vFjWPN4GveYsF_xXZnC0wXUOI/export?format=csv&gid=0`;
+};
+
 const itemUrlToId = (url: string) => {
   const params = url.replace(`${origin}/x`, "");
   const id = locales.reduce((acc, locale) => {
@@ -45,4 +51,5 @@ export {
   itemIdToUrl,
   objectiveIdToUrl,
   qAndAUrl,
+  moviesDataUrl,
 };

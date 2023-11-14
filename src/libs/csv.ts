@@ -155,7 +155,7 @@ const parseCSV = (text: string) => {
   const line = seqBy(item, split);
   const lines = seqBy(line, regParser(lineBreak));
   const end = seq(regParser(`([\n \r]*)`), eof);
-  return skipSecond(lines, end)(text.trim(), 0);
+  return skipSecond(lines, end)(text.trim().replaceAll("\r", ""), 0);
 };
 
 export { ensureWithBom, ensureWithoutBom, parseCSV, toCsv, toDataUrl };

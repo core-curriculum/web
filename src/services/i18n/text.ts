@@ -194,7 +194,19 @@ const text = {
       ja: "第1層と授業の関連付けデータをダウンロード(csv)",
       en: "Download the association data between the first layer and the class (csv)",
     },
+    downloadL2: {
+      ja: "第2層と授業の関連付けデータをダウンロード(csv)",
+      en: "Download the association data between the second layer and the class (csv)",
+    },
+    downloadL3: {
+      ja: "第3層と授業の関連付けデータをダウンロード(csv)",
+      en: "Download the association data between the third layer and the class (csv)",
+    },
     downloadL4: {
+      ja: "第4層と授業の関連付けデータをダウンロード(csv)",
+      en: "Download the association data between the forth layer and the class (csv)",
+    },
+    downloadL1to4: {
       ja: "第1層から第4層と授業の関連付けデータをダウンロード(csv)",
       en: "Download the association data between the first to fourth layers and the class (csv)",
     },

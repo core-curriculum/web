@@ -9,7 +9,11 @@ import { toDataUrl } from "@libs/csv";
 import { HeaderedTable } from "@libs/tableUtils";
 import { Tree } from "@libs/treeUtils";
 import { fmt } from "@libs/utils";
-import { makeOutcomeTableData, makeTableItemTableData } from "@services/curriculumMapTable";
+import {
+  makeCumulativeOutcomeTableData,
+  makeOutcomeTableData,
+  makeTableItemTableData,
+} from "@services/curriculumMapTable";
 import { Locale, translationInServer, useLocaleText } from "@services/i18n/i18n";
 import { useViewHistory } from "@services/itemList/hooks/viewHistory";
 import {
@@ -195,11 +199,17 @@ const CSVDownloadLinks = ({
 }) => {
   const { t } = useLocaleText("@pages/x/[id]");
   const l1Data = makeOutcomeTableData(items, outcomesTree, 1);
-  const l4Data = makeOutcomeTableData(items, outcomesTree, 4);
+  const l2Data = makeCumulativeOutcomeTableData(items, outcomesTree, 2);
+  const l3Data = makeCumulativeOutcomeTableData(items, outcomesTree, 3);
+  const l4Data = makeCumulativeOutcomeTableData(items, outcomesTree, 4);
+  const l1to4Data = makeOutcomeTableData(items, outcomesTree, 4);
   const tableData = makeTableItemTableData(items, allTables);
   const linkDataList = [
     { data: l1Data, label: t("downloadL1"), filename: "outcomes_l1.csv" },
-    { data: l4Data, label: t("downloadL4"), filename: "outcomes_l1_to_l4.csv" },
+    { data: l2Data, label: t("downloadL2"), filename: "outcomes_l2.csv" },
+    { data: l3Data, label: t("downloadL3"), filename: "outcomes_l3.csv" },
+    { data: l4Data, label: t("downloadL4"), filename: "outcomes_l4.csv" },
+    { data: l1to4Data, label: t("downloadL1to4"), filename: "outcomes_l1_to_l4.csv" },
     { data: tableData, label: t("downloadTable"), filename: "tables.csv" },
   ];
   return (
