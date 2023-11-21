@@ -1,4 +1,5 @@
 import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
+import Link from "next/link";
 import { BackButton } from "@components/buttons/BackButton";
 
 import { Locale, Locales } from "@services/i18n/i18n";
@@ -50,6 +51,35 @@ const HeaderBar = () => {
   );
 };
 
+const textToTextWithLink = (text: string) => {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const texts = text.split(urlRegex);
+  return texts.map((text, i) => {
+    return (
+      <span key={i}>
+        {text.match(urlRegex) ? (
+          <Link className="link" href={text} target="_blank" rel="noopener noreferrer">
+            {text}
+          </Link>
+        ) : (
+          text
+        )}
+      </span>
+    );
+  });
+};
+
+const Desctiption = ({ text }: { text: string }) => {
+  const texts = text.split("\n");
+  return (
+    <div className="bg-base-200 p-3 text-sm">
+      {texts.map((text, i) => {
+        return <p key={i}>{textToTextWithLink(text)}</p>;
+      })}
+    </div>
+  );
+};
+
 const Card = ({ data }: { data: MovieData["data"] }) => {
   return (
     <div>
@@ -61,7 +91,10 @@ const Card = ({ data }: { data: MovieData["data"] }) => {
         ></iframe>
       </div>
 
-      <div className="bg-base-200 p-3">{data.title}</div>
+      <div className="bg-base-200 p-3 text-lg font-bold">{data.title}</div>
+      <div className="bg-base-200 p-3 text-sm">
+        <Desctiption text={data.description} />
+      </div>
     </div>
   );
 };

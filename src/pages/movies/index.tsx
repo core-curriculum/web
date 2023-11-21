@@ -32,6 +32,7 @@ type MovieData = {
     upload_date: string;
     uri: string;
     id: string;
+    description: string;
   };
 };
 
@@ -77,21 +78,35 @@ const Card = ({ data }: { data: MovieData["data"] }) => {
   );
 };
 
-const QandAPage: NextPage<PageProps> = ({ data }: PageProps) => {
+const MoviesPage: NextPage<PageProps> = ({ data }: PageProps) => {
+  const categories = [...new Set(data.map(({ category }) => category))];
+  const categoryData = categories.map(category => {
+    return {
+      category,
+      data: data.filter(({ category: _category }) => _category === category),
+    };
+  });
   return (
     <>
       <Head>
         <title>Movies</title>
       </Head>
       <HeaderBar />
-      <div className="mx-auto flex  max-w-6xl flex-row flex-wrap gap-5 pb-16 ">
-        {data.map((movieData, i) => {
-          return <Card key={i} data={movieData.data} />;
-        })}
+      <div className="mx-auto max-w-6xl pb-16 ">
+        {categoryData.map((data, i) => (
+          <div key={i}>
+            <h3 className="my-10 text-2xl text-base-content">{data.category}</h3>
+            <div className="flex flex-row flex-wrap gap-5 pb-8 ">
+              {data.data.map((movieData, i) => {
+                return <Card key={i} data={movieData.data} />;
+              })}
+            </div>
+          </div>
+        ))}
       </div>
     </>
   );
 };
 
-export default QandAPage;
+export default MoviesPage;
 export { type MovieData };
