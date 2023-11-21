@@ -33,13 +33,4 @@ const isValidItemUrlOrId = (urlOrId: string) => {
   return isValidShortId(id);
 };
 
-export {
-  origin,
-  useFullUrl,
-  itemUrlToId,
-  isValidItemUrlOrId,
-  itemIdToUrl,
-  objectiveIdToUrl,
-  qAndAUrl,
-  moviesDataUrl,
-};
+export { origin, useFullUrl, itemUrlToId, isValidItemUrlOrId, itemIdToUrl, objectiveIdToUrl };

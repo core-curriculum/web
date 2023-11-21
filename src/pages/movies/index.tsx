@@ -1,6 +1,7 @@
 import type { NextPage, GetStaticProps } from "next";
 import Head from "next/head";
 import Image from "next/image";
+import Link from "next/link";
 import { BackButton } from "@components/buttons/BackButton";
 
 import { Locale } from "@services/i18n/i18n";
@@ -63,13 +64,15 @@ const Card = ({ data }: { data: MovieData["data"] }) => {
       className="w-[fit-content] rounded-md drop-shadow-md 
       transition hover:opacity-60  hover:drop-shadow-xl"
     >
-      <Image
-        width={data.thumbnail_width}
-        height={data.thumbnail_height}
-        src={data.thumbnail_url_with_play_button}
-        alt={data.title}
-      />
-      <div className="bg-base-200 p-3">{data.title}</div>
+      <Link href={`./movies/${data.id}`}>
+        <Image
+          width={data.thumbnail_width}
+          height={data.thumbnail_height}
+          src={data.thumbnail_url_with_play_button}
+          alt={data.title}
+        />
+        <div className="bg-base-200 p-3">{data.title}</div>
+      </Link>
     </div>
   );
 };
