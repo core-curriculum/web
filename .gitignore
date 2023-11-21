@@ -36,6 +36,7 @@ yarn-error.log*
 
 # ignore data
 data_in_repo
+json_in_repo
 
 # ignore env
 .env

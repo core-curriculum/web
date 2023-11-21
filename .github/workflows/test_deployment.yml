@@ -1,11 +1,7 @@
 name: Test Deployment
 
 on:
-  workflow_dispatch:
-  repository_dispatch:
   push:
-    branches:
-      - main
 
 jobs:
   build:
@@ -60,3 +56,4 @@ jobs:
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID}} #Required
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID}} #Required
           working-directory: ./
+          alias-domains: ${{ github.ref_name }}
