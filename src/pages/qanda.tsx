@@ -11,7 +11,10 @@ type QandA = { question: string; answer: string }[];
 
 export const getStaticProps: GetStaticProps<PageProps> = async ({ locale }) => {
   locale = locale as Locale;
-  const data = (await import("json_in_repo/q-and-a.json")).default as QandA;
+  const data =
+    locale === "ja"
+      ? (await import(`json_in_repo/q-and-a/ja.json`)).default
+      : (await import(`json_in_repo/q-and-a/en.json`)).default;
   return {
     props: { data },
   };

@@ -11,18 +11,35 @@ type PageProps = {
 
 type MovieData = {
   title: string;
-  thumbnail_url: string;
-  thumbnail_width: number;
-  thumbnail_height: number;
-  thumbnail_url_with_play_button: string;
-  upload_date: string;
-  uri: string;
-  player_url: string;
+  category: string;
+  url: string;
+  id: string;
+  data: {
+    type: string;
+    version: string;
+    provider_name: string;
+    provider_url: string;
+    title: string;
+    author_name: string;
+    author_url: string;
+    html: string;
+    player_url: string;
+    thumbnail_url: string;
+    thumbnail_width: number;
+    thumbnail_height: number;
+    thumbnail_url_with_play_button: string;
+    upload_date: string;
+    uri: string;
+    id: string;
+  };
 };
 
 export const getStaticProps: GetStaticProps<PageProps> = async ({ locale }) => {
   locale = locale as Locale;
-  const data = (await import("json_in_repo/movies.json")).default as MovieData[];
+  const data =
+    locale === "ja"
+      ? (await import(`json_in_repo/movies/ja.json`)).default
+      : (await import(`json_in_repo/movies/en.json`)).default;
 
   return {
     props: { data },
@@ -39,7 +56,7 @@ const HeaderBar = () => {
   );
 };
 
-const Card = ({ data }: { data: MovieData }) => {
+const Card = ({ data }: { data: MovieData["data"] }) => {
   return (
     <div
       style={{ width: data.thumbnail_width }}
@@ -61,12 +78,12 @@ const QandAPage: NextPage<PageProps> = ({ data }: PageProps) => {
   return (
     <>
       <Head>
-        <title>QandA</title>
+        <title>Movies</title>
       </Head>
       <HeaderBar />
       <div className="mx-auto flex  max-w-6xl flex-row flex-wrap gap-5 pb-16 ">
         {data.map((movieData, i) => {
-          return <Card key={i} data={movieData} />;
+          return <Card key={i} data={movieData.data} />;
         })}
       </div>
     </>
@@ -74,3 +91,4 @@ const QandAPage: NextPage<PageProps> = ({ data }: PageProps) => {
 };
 
 export default QandAPage;
+export { type MovieData };
