@@ -3,7 +3,7 @@ import Head from "next/head";
 import { GeneralGuidance } from "@components/GeneralGuidance";
 import { MainLayout } from "@components/MainLayout";
 import { OutcomesTree } from "@components/Outcomes";
-import { OutcomesTOC } from "@components/OutcomesTOC";
+import { MenuItem, OutcomesTOC } from "@components/OutcomesTOC";
 import type { Tree } from "@libs/treeUtils";
 import { Locale, useLocaleText } from "@services/i18n/i18n";
 import { loadFullOutcomesTable, makeOutcomesTree } from "@services/outcomes";
@@ -48,7 +48,12 @@ const Home: NextPage<PageProps> = ({ outcomesTree }: PageProps) => {
             <OutcomesTree outcomesTree={outcomesTree} />
           </>
         }
-        menu={<OutcomesTOC outcomesTree={outcomesTree} />}
+        menu={
+          <menu>
+            <OutcomesTOC outcomesTree={outcomesTree} />
+            <MenuItem href="./tables">{t("tables")}</MenuItem>
+          </menu>
+        }
       />
     </>
   );

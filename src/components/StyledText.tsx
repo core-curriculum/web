@@ -20,11 +20,19 @@ const StyledText = ({ text, map }: { text: string; map: MappedInfo<AttrInfo>[] }
               </Link>
             );
           case "sub":
-            return <span className="align-super text-[20%]">{text}</span>;
+            return (
+              <span key={key} className="align-super text-[20%]">
+                {text}
+              </span>
+            );
           case "italic":
-            return <span className="italic">{text}</span>;
+            return (
+              <span key={key} className="italic">
+                {text}
+              </span>
+            );
         }
-        return <>{"unknown:" + text + ":" + attr.type}</>;
+        return <span key={key}>{"unknown:" + text + ":" + attr.type}</span>;
       })}
     </>
   );

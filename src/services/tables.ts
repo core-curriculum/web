@@ -42,6 +42,10 @@ const getTableFiles = (locale: Locale) => {
   return Object.keys(loadTableInfoDict(locale));
 };
 
+const getTalbleInfoList = (locale: Locale) => {
+  return Object.values(loadTableInfoDict(locale));
+};
+
 const getTable = (file: string, locale: Locale): TableInfoSet => {
   const tableInfo = loadTableInfoDict(locale)[file];
   const rawTable = renameColumns(loadTable(file, locale), tableInfo.columns);
@@ -76,5 +80,5 @@ type TableInfo = Expand<TableInfoDict[keyof TableInfoDict]>;
 type TableAttrInfo = { [id: string]: { [key: string]: MappedInfo<AttrInfo>[] } };
 type TableInfoSet = { table: HeaderedTable<string>; tableInfo: TableInfo; attrInfo: TableAttrInfo };
 
-export { loadTableInfoDict, getTableFiles, getTable, getAllTables };
+export { loadTableInfoDict, getTableFiles, getTable, getAllTables, getTalbleInfoList };
 export type { TableInfo, TableInfoDict, TableAttrInfo, TableInfoSet };

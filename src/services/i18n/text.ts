@@ -187,6 +187,11 @@ const text = {
     title: { ja: "{name} | モデルコアカリキュラム", en: "{name} | Model Core Curriculum" },
     table: { ja: "表", en: "Table" },
   },
+  "@pages/list/tables": {
+    title: { ja: "別表一覧 | モデルコアカリキュラム", en: "Tables | Model Core Curriculum" },
+    h1: { ja: "別表一覧", en: "Tables" },
+    table: { ja: "表", en: "Table" },
+  },
   "@pages/x/[id]": {
     title: { ja: "{name} | モデルコアカリキュラム", en: "{name} | Model Core Curriculum" },
     table: { ja: "表", en: "Table" },
@@ -290,6 +295,7 @@ const text = {
   },
   "@pages/index": {
     outcomesTitle: { ja: "資質・能力", en: "Outcomes" },
+    tables: { ja: "別表一覧", en: "Tables" },
     discription: {
       // eslint-disable-next-line max-len
       ja: "モデル・コア・カリキュラムでは、医学生が卒業するまでに身に付けるべき能力を10の資質・能力(第1層)として提示し、詳細を第2層から4層までの項目と、関連づけられた別表で示しています。",
