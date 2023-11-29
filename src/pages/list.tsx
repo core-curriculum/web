@@ -23,10 +23,10 @@ import {
   schemaItemsWithValue,
   useClearItemList,
 } from "@services/itemList/local";
-import { loadFullOutcomesTable, makeOutcomesTree } from "@services/outcomes";
+import { loadOutcomesTree } from "@services/outcomes";
 import type { OutcomeInfo } from "@services/outcomes";
 import { searchOutcomes, searchTables } from "@services/search";
-import { getAllTables, loadTableInfoDict, TableInfoSet } from "@services/tables";
+import { getAllTables, TableInfoSet } from "@services/tables";
 import { itemIdToUrl, objectiveIdToUrl } from "@services/urls";
 
 type PageProps = {
@@ -35,10 +35,8 @@ type PageProps = {
 };
 
 export const getStaticProps: GetStaticProps<PageProps> = async ({ locale }) => {
-  const table = loadFullOutcomesTable(locale as Locale);
-  const tableInfoDict = loadTableInfoDict(locale as Locale);
-  const outcomesTree = makeOutcomesTree(table, tableInfoDict, locale as Locale);
-  const allTables = getAllTables(locale as Locale);
+  const outcomesTree = await loadOutcomesTree(locale as Locale);
+  const allTables = await getAllTables(locale as Locale);
 
   return {
     props: { outcomesTree, allTables },

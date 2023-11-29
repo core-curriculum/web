@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { applyMappedInfo, MappedInfo } from "@libs/textMapper";
-import { AttrInfo } from "@services/replaceMap";
+import { AttrInfo } from "@services/attrInfo";
 
 const StyledText = ({ text, map }: { text: string; map: MappedInfo<AttrInfo>[] }) => {
   if (map.length === 0) return <>{text}</>;

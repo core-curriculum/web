@@ -1,84 +1,79 @@
-import {
-  HeaderedTable,
-  mapTable,
-  reduceTable,
-  renameColumns,
-  toObjectList,
-} from "@libs/tableUtils";
-import { MappedText, mapText, MappedInfo } from "@libs/textMapper";
-import { loadTable, loadTableIndex } from "@services/loadCsv";
+import { HeaderedTable } from "@libs/tableUtils";
+import { MappedInfo } from "@libs/textMapper";
+import { AttrInfo } from "./attrInfo";
 import { Locale } from "./i18n/i18n";
-import { AttrInfo, getReplaceMap } from "./replaceMap";
-
-const fileToTableLink = (file: string) => {
-  return `/tables/${file}`;
-};
 
 type Expand<T extends object> = { [K in keyof T]: T[K] };
 
-const loadTableInfoDict = (locale: Locale) => {
-  const trimExt = (filename: string) => filename.replace(/\.[^\.]+$/, "");
-  const makeIndexed = <T extends object, K extends keyof T>(
-    source: T[],
-    key: K,
-  ): { [key in T[K] extends string ? T[K] : never]: T } => {
-    return source.reduce((indexed, item) => {
-      return { ...indexed, [item[key] as string]: item };
-    }, {} as { [key in T[K] extends string ? T[K] : never]: T });
+const loadAttrInfo = async (locale: Locale) => {
+  return (
+    locale === "ja"
+      ? (await import(`json_in_repo/outcomes/ja/attr_info.json`)).default
+      : (await import(`json_in_repo/outcomes/en/attr_info.json`)).default
+  ) as {
+    [key: string]: { [item: string]: { info: AttrInfo; gap: number; length: number }[] };
   };
-  const tableIndex = loadTableIndex(locale);
-  const infoList = toObjectList(tableIndex).map(info => {
-    const file = trimExt(info.file);
-    const link = fileToTableLink(file);
-    const columns: Record<string, string> = Object.fromEntries(
-      info.columns.split(",").map(entry => entry.split(":")),
-    );
-    return { ...info, file, link, columns };
-  });
-  return makeIndexed(infoList, "file");
 };
 
-const getTableFiles = (locale: Locale) => {
-  return Object.keys(loadTableInfoDict(locale));
+const loadIdInfoList = async (locale: Locale) => {
+  return locale === "ja"
+    ? (await import(`json_in_repo/outcomes/ja/id_list.json`)).default
+    : (await import(`json_in_repo/outcomes/en/id_list.json`)).default;
 };
 
-const getTalbleInfoList = (locale: Locale) => {
-  return Object.values(loadTableInfoDict(locale));
+const loadTableInfoDict = async (locale: Locale) => {
+  return locale === "ja"
+    ? (await import(`json_in_repo/outcomes/ja/table_info.json`)).default
+    : (await import(`json_in_repo/outcomes/en/table_info.json`)).default;
 };
 
-const getTable = (file: string, locale: Locale): TableInfoSet => {
-  const tableInfo = loadTableInfoDict(locale)[file];
-  const rawTable = renameColumns(loadTable(file, locale), tableInfo.columns);
-  const map = getReplaceMap(locale as Locale);
-  const attrTable: HeaderedTable<MappedText<AttrInfo>> = mapTable(rawTable, cell =>
-    mapText(cell, map),
-  );
-  const table = mapTable(attrTable, cell => cell.text);
-  const attrInfo = reduceTable(
-    attrTable,
-    (dict, row) => {
-      const id = row.id.text;
-      const infoLists = Object.entries(row).flatMap(([key, value]) =>
-        value.infoList.length > 0 ? [[key, value.infoList] as const] : [],
-      );
-      const infoDict = Object.fromEntries(infoLists);
-      return { ...dict, [id]: infoDict };
-    },
-    {} as TableAttrInfo,
-  );
+const getTableFiles = async (locale: Locale) => {
+  return Object.keys(await loadTableInfoDict(locale)) as TableFile[];
+};
 
+const getTalbleInfoList = async (locale: Locale) => {
+  return Object.values(await loadTableInfoDict(locale));
+};
+
+const getTable = async (file: TableFile, locale: Locale): Promise<TableInfoSet> => {
+  const tableInfo = (await loadTableInfoDict(locale))[file];
+  const idInfoList = await loadIdInfoList(locale);
+  type ColumnKey = keyof typeof tableInfo.columns;
+  const tableHeader = [
+    "id",
+    "index",
+    ...tableInfo.header.map(key => tableInfo.columns[key as ColumnKey]),
+  ];
+  const tableBody = idInfoList
+    .filter(([_, item]) => item.type === file)
+    .map(([id, { index, ...item }]) => {
+      const row = tableInfo.header.map(key => item[key] ?? "");
+      return [id, index, ...row];
+    });
+  const table = [tableHeader, ...tableBody] as readonly [
+    readonly string[],
+    ...(readonly string[])[],
+  ];
+  const rowIdList = tableBody.map(([id]) => id);
+  const attrInfoDict = await loadAttrInfo(locale);
+  const attrInfoEntries = rowIdList
+    .filter(id => attrInfoDict[id])
+    .map(id => [id, attrInfoDict[id]]);
+  const attrInfo: TableAttrInfo = Object.fromEntries(attrInfoEntries);
   return { table, tableInfo, attrInfo };
 };
 
-const getAllTables = (locale: Locale): TableInfoSet[] => {
-  const files = getTableFiles(locale);
-  return files.map((file: string) => getTable(file, locale));
+const getAllTables = async (locale: Locale): Promise<TableInfoSet[]> => {
+  const files = await getTableFiles(locale);
+  return Promise.all(files.map(file => getTable(file, locale)));
 };
 
-type TableInfoDict = ReturnType<typeof loadTableInfoDict>;
-type TableInfo = Expand<TableInfoDict[keyof TableInfoDict]>;
+type PromiseType<T extends Promise<any>> = T extends Promise<infer P> ? P : never;
+type TableInfoDict = PromiseType<ReturnType<typeof loadTableInfoDict>>;
+type TableFile = keyof TableInfoDict;
+type TableInfo = Expand<TableInfoDict[TableFile]>;
 type TableAttrInfo = { [id: string]: { [key: string]: MappedInfo<AttrInfo>[] } };
 type TableInfoSet = { table: HeaderedTable<string>; tableInfo: TableInfo; attrInfo: TableAttrInfo };
 
 export { loadTableInfoDict, getTableFiles, getTable, getAllTables, getTalbleInfoList };
-export type { TableInfo, TableInfoDict, TableAttrInfo, TableInfoSet };
+export type { TableInfo, TableInfoDict, TableAttrInfo, TableInfoSet, TableFile };

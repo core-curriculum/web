@@ -7,13 +7,9 @@ import { getTalbleInfoList, TableInfo } from "@services/tables";
 
 type PageProps = { tables: TableInfo[] };
 
-type PathParams = {
-  id: string;
-};
-
 export const getStaticProps: GetStaticProps<PageProps> = async ({ locale }) => {
   return {
-    props: { tables: getTalbleInfoList(locale as Locale) },
+    props: { tables: await getTalbleInfoList(locale as Locale) },
   };
 };
 

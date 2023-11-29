@@ -16,6 +16,7 @@ type MappedText<T> = {
 };
 type TextMapper<T> = (res: RegExpExecArray) => MapperResult<T>;
 type ReplaceMap<T> = { reg: RegExp; mapper: TextMapper<T> }[];
+
 const mapText = <T>(text: string, replaceMap: ReplaceMap<T>): MappedText<T> => {
   const seek: (str: string) => (string | MapperResultWithPos<T> | null)[] = (str: string) => {
     const res = replaceMap.reduce(

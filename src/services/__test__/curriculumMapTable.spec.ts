@@ -4,13 +4,11 @@ import { parseCSV } from "@libs/csv";
 import { makeOutcomeTableData } from "@services/curriculumMapTable";
 import { Locale } from "@services/i18n/i18n";
 import { ServerItemList } from "@services/itemList/server";
-import { loadFullOutcomesTable, makeOutcomesTree } from "@services/outcomes";
-import { getAllTables, loadTableInfoDict } from "@services/tables";
+import { loadOutcomesTree } from "@services/outcomes";
+import { getAllTables } from "@services/tables";
 
 const locale: Locale = "ja";
-const table = loadFullOutcomesTable(locale as Locale);
-const tableInfoDict = loadTableInfoDict(locale as Locale);
-const outcomesTree = makeOutcomesTree(table, tableInfoDict, locale as Locale);
+const outcomesTree = await loadOutcomesTree(locale as Locale);
 const allTables = getAllTables(locale as Locale);
 
 const dummyItems: ServerItemList[] = [
