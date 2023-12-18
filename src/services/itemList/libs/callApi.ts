@@ -38,7 +38,8 @@ const shareCurriculumMapToServer = async (
 
 const getCurriculuMapFromServer = async (id: string): Promise<Response<ServerCurriculumMap>> => {
   try {
-    return await apiGet(`/api/v1/map/${id}`);
+    const data = await apiGet(`/api/v1/map/${id}`);
+    return { ok: true, data } as Response<ServerCurriculumMap>;
   } catch (e) {
     throw new Error(`Fail to get curriculumMap. ${e}`);
   }

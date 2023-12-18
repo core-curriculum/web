@@ -24,6 +24,11 @@ const itemIdToUrl = (id: string) => {
   return `${origin}/x/${id}`;
 };
 
+const itemIdToUrlToEditFromUrl = (id: string, isMap: boolean | null | undefined) => {
+  const params = new URLSearchParams([["from", id]]);
+  return `${origin}/${isMap ? "map" : "list"}?${params.toString()}`;
+};
+
 const objectiveIdToUrl = (id: string) => {
   return `${origin}/#${id}`;
 };
@@ -33,4 +38,12 @@ const isValidItemUrlOrId = (urlOrId: string) => {
   return isValidShortId(id);
 };
 
-export { origin, useFullUrl, itemUrlToId, isValidItemUrlOrId, itemIdToUrl, objectiveIdToUrl };
+export {
+  origin,
+  useFullUrl,
+  itemUrlToId,
+  isValidItemUrlOrId,
+  itemIdToUrl,
+  objectiveIdToUrl,
+  itemIdToUrlToEditFromUrl,
+};

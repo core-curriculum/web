@@ -219,6 +219,17 @@ const text = {
       ja: "表データと授業の関連付けデータをダウンロード(csv)",
       en: "Download table data and association data with classes (csv)",
     },
+    downloadClassess: {
+      ja: "授業一覧とurlをダウンロード(csv)",
+      en: "Download list of classes and urls (csv)",
+    },
+    "item-name": { ja: "名前", en: "name" },
+    "item-place": { ja: "場所", en: "place" },
+    "item-url": { ja: "url", en: "url" },
+    "item-url-to-edit": {
+      ja: "この内容を元に新しい項目を作成",
+      en: "Start a new edit based on this content",
+    },
     notFound: {
       ja: "該当する項目が見つかりません。",
       en: "No matching items were found.",

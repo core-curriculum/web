@@ -19,12 +19,16 @@ const apiPost = async <PostData extends object, Response extends object>(
 };
 
 const apiGet = async <Response extends object>(api: string): Promise<Response> => {
-  const res = await fetch(api, {
-    method: "GET",
-  });
-  if (res.ok) {
-    const data = (await res.json()) as Response;
-    return data;
+  try {
+    const res = await fetch(api, {
+      method: "GET",
+    });
+    if (res.ok) {
+      const data = (await res.json()) as Response;
+      return data;
+    }
+  } catch (e) {
+    console.log(e);
   }
   throw new Error(`Cannot get fromapi:${api},${JSON.stringify(res, null, 2)}`);
 };

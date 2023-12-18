@@ -11,6 +11,7 @@ import { Tree } from "@libs/treeUtils";
 import { fmt } from "@libs/utils";
 import {
   makeCumulativeOutcomeTableData,
+  makeItemTableData,
   makeOutcomeTableData,
   makeTableItemTableData,
 } from "@services/curriculumMapTable";
@@ -27,7 +28,7 @@ import { loadOutcomesTree } from "@services/outcomes";
 import type { OutcomeInfo } from "@services/outcomes";
 import { searchOutcomes, searchTables } from "@services/search";
 import { getAllTables, TableInfoSet } from "@services/tables";
-import { itemIdToUrl } from "@services/urls";
+import { itemIdToUrl, itemIdToUrlToEditFromUrl } from "@services/urls";
 
 type PageProps = {
   outcomesTree: Tree<OutcomeInfo>;
@@ -202,7 +203,9 @@ const CSVDownloadLinks = ({
   const l4Data = makeCumulativeOutcomeTableData(items, outcomesTree, 4);
   const l1to4Data = makeOutcomeTableData(items, outcomesTree, 4);
   const tableData = makeTableItemTableData(items, allTables);
+  const itemsIdData = makeItemTableData(items);
   const linkDataList = [
+    { data: itemsIdData, label: t("downloadClassess"), filename: "classes.csv" },
     { data: l1Data, label: t("downloadL1"), filename: "outcomes_l1.csv" },
     { data: l2Data, label: t("downloadL2"), filename: "outcomes_l2.csv" },
     { data: l3Data, label: t("downloadL3"), filename: "outcomes_l3.csv" },
@@ -216,6 +219,47 @@ const CSVDownloadLinks = ({
         <CSVDownloadLink key={props.filename} {...props} />
       ))}
     </div>
+  );
+};
+
+const ItemsTable = ({ items }: { items: ServerItemList[] }) => {
+  const { t } = useLocaleText("@pages/x/[id]");
+  return (
+    <table className="m-4 table">
+      <thead>
+        <tr>
+          <th>{t("item-name")}</th>
+          <th>{t("item-place")}</th>
+          <th>{t("item-url")}</th>
+          <th>{t("item-url-to-edit")}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {items.map(item => {
+          const url = itemIdToUrl(item.id);
+          const urlToEdit = itemIdToUrlToEditFromUrl(
+            item.id,
+            item.children && item.children?.length > 0,
+          );
+          return (
+            <tr key={item.id}>
+              <th>{item.name}</th>
+              <th>{item.place}</th>
+              <td>
+                <Link href={url} target="_blank" className="link">
+                  {url}
+                </Link>
+              </td>
+              <td>
+                <Link href={urlToEdit} target="_blank" className="link">
+                  {urlToEdit}
+                </Link>
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
   );
 };
 
@@ -315,7 +359,10 @@ const ListPage: NextPage<PageProps> = ({
         )}
         <ListData values={schemaWithValue} />
         {children ? (
-          <CSVDownloadLinks {...{ items: children, allTables, outcomesTree }} />
+          <>
+            <ItemsTable items={children} />
+            <CSVDownloadLinks {...{ items: children, allTables, outcomesTree }} />
+          </>
         ) : (
           <>
             <OutcomesList {...{ allTables, outcomesTree, text, id }} />
