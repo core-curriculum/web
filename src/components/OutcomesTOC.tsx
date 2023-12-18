@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ReactNode, useCallback, useState } from "react";
 import { useScrollObserver } from "@hooks/IntersecterObserver";
 import type { Tree } from "@libs/treeUtils";
@@ -43,7 +44,7 @@ const OutcomesTOC = ({ outcomesTree }: OutcomesTreeProps) => {
           case "l3":
             return <ItemList key={item.id} item={item} {...props} />;
         }
-        return <></>;
+        return <span key={item.id}></span>;
       })}
     </ul>
   );
@@ -63,8 +64,30 @@ const ChildList = ({ active, childnodes }: { active: boolean; childnodes: ReactN
   );
 };
 
-const ItemText = ({ children }: { targeted: boolean; children: ReactNode }) => {
-  return <span>{children}</span>;
+type MenuItemProps = {
+  children: ReactNode;
+  padding?: string;
+  size?: string;
+  href: string;
+  targeted?: boolean;
+};
+const MenuItem = ({ children, padding, size, href, targeted }: MenuItemProps) => {
+  padding ??= "pl-2";
+  size ??= "";
+  const linkProps = {
+    className: `block w-full truncate border-l-4 py-3 ${padding} ${size}
+    hover:bg-info/20 hover:underline ${targeted ? " border-info " : "border-transparent"}`,
+    href,
+  };
+  return (
+    <div className="z-10 bg-base-100 hover:text-info">
+      {href.startsWith("#") ? (
+        <a {...linkProps}>{children}</a>
+      ) : (
+        <Link {...linkProps}>{children}</Link>
+      )}
+    </div>
+  );
 };
 
 const ItemList = <L extends OutcomeInfo>({ item, childnodes, active, targeted }: PropType<L>) => {
@@ -80,6 +103,12 @@ const ItemList = <L extends OutcomeInfo>({ item, childnodes, active, targeted }:
     l2: "text-sm",
     l3: "text-sm",
   }[item.layer];
+  const menuItemProps = {
+    padding,
+    size,
+    href: id,
+    targeted,
+  };
   return (
     <li
       title={item.text}
@@ -87,21 +116,13 @@ const ItemList = <L extends OutcomeInfo>({ item, childnodes, active, targeted }:
         targeted ? "text-info" : "text-base-content"
       } transition-all duration-500 ease-in-out`}
     >
-      <div className="z-10 bg-base-100 hover:text-info">
-        <a
-          className={`block w-full truncate border-l-4 py-3 ${padding} ${size}
-          hover:bg-info/20 hover:underline ${targeted ? " border-info " : "border-transparent"}`}
-          href={id}
-        >
-          <ItemText targeted={targeted}>
-            <span className={`pr-1 font-thin`}>{item.index.slice(-2)}</span>
-            {item.text}
-          </ItemText>
-        </a>
-      </div>
+      <MenuItem {...menuItemProps}>
+        <span className={`pr-1 font-thin`}>{item.index.slice(-2)}</span>
+        {item.text}
+      </MenuItem>
       {item.layer !== "l3" ? <ChildList active={active} childnodes={childnodes} /> : ""}
     </li>
   );
 };
 
-export { OutcomesTOC };
+export { OutcomesTOC, MenuItem };

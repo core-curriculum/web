@@ -60,7 +60,9 @@ const ContextMenu = <T extends readonly { name: string; label?: string }[]>({
               </li>
             );
             return name in links && links[name] ? (
-              <Link href={links[name]}>{content}</Link>
+              <Link key={name} href={links[name]}>
+                {content}
+              </Link>
             ) : (
               content
             );

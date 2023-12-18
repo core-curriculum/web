@@ -1,29 +1,20 @@
-import type { NextPage, GetServerSideProps } from "next";
+import type { NextPage, GetStaticProps } from "next";
 import Head from "next/head";
 import { BackButton } from "@components/buttons/BackButton";
-
-import { ensureWithoutBom, parseCSV } from "@libs/csv";
 import { Locale } from "@services/i18n/i18n";
-import { qAndAUrl } from "@services/urls";
 
 type PageProps = {
   data: { question: string; answer: string }[];
 };
 
-export const getServerSideProps: GetServerSideProps<PageProps> = async ({ locale }) => {
-  const url = qAndAUrl(locale as Locale);
-  const text = await fetch(url).then(res => res.text());
-  if (!text) {
-    return {
-      props: { data: [] },
-    };
-  }
-  const res = parseCSV(ensureWithoutBom(text));
-  const [header, ...body] = res.ok ? (res.value as string[][]) : ([] as string[][]);
-  const data = body.map(row => {
-    const zipped = header.map((key, i) => [key, row[i]]);
-    return Object.fromEntries(zipped) as { question: string; answer: string };
-  });
+type QandA = { question: string; answer: string }[];
+
+export const getStaticProps: GetStaticProps<PageProps> = async ({ locale }) => {
+  locale = locale as Locale;
+  const data =
+    locale === "ja"
+      ? (await import(`json_in_repo/q-and-a/ja.json`)).default
+      : (await import(`json_in_repo/q-and-a/en.json`)).default;
   return {
     props: { data },
   };

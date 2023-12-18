@@ -187,6 +187,11 @@ const text = {
     title: { ja: "{name} | モデルコアカリキュラム", en: "{name} | Model Core Curriculum" },
     table: { ja: "表", en: "Table" },
   },
+  "@pages/list/tables": {
+    title: { ja: "別表一覧 | モデルコアカリキュラム", en: "Tables | Model Core Curriculum" },
+    h1: { ja: "別表一覧", en: "Tables" },
+    table: { ja: "表", en: "Table" },
+  },
   "@pages/x/[id]": {
     title: { ja: "{name} | モデルコアカリキュラム", en: "{name} | Model Core Curriculum" },
     table: { ja: "表", en: "Table" },
@@ -213,6 +218,17 @@ const text = {
     downloadTable: {
       ja: "表データと授業の関連付けデータをダウンロード(csv)",
       en: "Download table data and association data with classes (csv)",
+    },
+    downloadClassess: {
+      ja: "授業一覧とurlをダウンロード(csv)",
+      en: "Download list of classes and urls (csv)",
+    },
+    "item-name": { ja: "名前", en: "name" },
+    "item-place": { ja: "場所", en: "place" },
+    "item-url": { ja: "url", en: "url" },
+    "item-url-to-edit": {
+      ja: "この内容を元に新しい項目を作成",
+      en: "Start a new edit based on this content",
     },
     notFound: {
       ja: "該当する項目が見つかりません。",
@@ -290,6 +306,7 @@ const text = {
   },
   "@pages/index": {
     outcomesTitle: { ja: "資質・能力", en: "Outcomes" },
+    tables: { ja: "別表一覧", en: "Tables" },
     discription: {
       // eslint-disable-next-line max-len
       ja: "モデル・コア・カリキュラムでは、医学生が卒業するまでに身に付けるべき能力を10の資質・能力(第1層)として提示し、詳細を第2層から4層までの項目と、関連づけられた別表で示しています。",

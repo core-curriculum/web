@@ -125,6 +125,7 @@ const searchMap = <T, R>(tree: Tree<T>, searchMapper: TreeSearchMapper<T, R>) =>
 };
 
 type TreeMapper<T, R> = (item: T, parents: T[], hasChildren: boolean) => R;
+
 const mapTree = <T, R>(tree: Tree<T>, mapper: TreeMapper<T, R>) => {
   const walkTree: (currTree: Tree<T>, currParents?: T[]) => Tree<R> = (
     currTree: Tree<T>,

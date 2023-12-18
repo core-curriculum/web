@@ -3,19 +3,16 @@ import Head from "next/head";
 import { GeneralGuidance } from "@components/GeneralGuidance";
 import { MainLayout } from "@components/MainLayout";
 import { OutcomesTree } from "@components/Outcomes";
-import { OutcomesTOC } from "@components/OutcomesTOC";
+import { MenuItem, OutcomesTOC } from "@components/OutcomesTOC";
 import type { Tree } from "@libs/treeUtils";
 import { Locale, useLocaleText } from "@services/i18n/i18n";
-import { loadFullOutcomesTable, makeOutcomesTree } from "@services/outcomes";
+import { loadOutcomesTree } from "@services/outcomes";
 import type { OutcomeInfo } from "@services/outcomes";
-import { loadTableInfoDict } from "@services/tables";
 
 type PageProps = { outcomesTree: Tree<OutcomeInfo> };
 
 export const getStaticProps: GetStaticProps<PageProps> = async ({ locale }) => {
-  const table = loadFullOutcomesTable(locale as Locale);
-  const tableInfoDict = loadTableInfoDict(locale as Locale);
-  const outcomesTree = makeOutcomesTree(table, tableInfoDict, locale as Locale);
+  const outcomesTree = await loadOutcomesTree(locale as Locale);
 
   return {
     props: { outcomesTree },
@@ -48,7 +45,12 @@ const Home: NextPage<PageProps> = ({ outcomesTree }: PageProps) => {
             <OutcomesTree outcomesTree={outcomesTree} />
           </>
         }
-        menu={<OutcomesTOC outcomesTree={outcomesTree} />}
+        menu={
+          <menu>
+            <OutcomesTOC outcomesTree={outcomesTree} />
+            <MenuItem href="./tables">{t("tables")}</MenuItem>
+          </menu>
+        }
       />
     </>
   );

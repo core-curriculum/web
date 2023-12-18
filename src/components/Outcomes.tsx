@@ -6,6 +6,7 @@ import { applyMappedInfo } from "@libs/textMapper";
 import type { MappedInfo } from "@libs/textMapper";
 import type { Tree } from "@libs/treeUtils";
 import { reduceTree } from "@libs/treeUtils";
+import { AttrInfo } from "@services/attrInfo";
 import type {
   OutcomeInfo,
   Outcomel1 as L1,
@@ -13,7 +14,6 @@ import type {
   Outcomel3 as L3,
   Outcomel4 as L4,
 } from "@services/outcomes";
-import { AttrInfo } from "@services/replaceMap";
 
 type PropType<T extends OutcomeInfo> = {
   item: T;

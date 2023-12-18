@@ -2,10 +2,9 @@ import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
 import Head from "next/head";
 import { Table } from "@components/Table";
 import { BackButton } from "@components/buttons/BackButton";
-import { dropColumnsByNames } from "@libs/tableUtils";
 import { fmt } from "@libs/utils";
 import { Locale, Locales, useLocaleText } from "@services/i18n/i18n";
-import { getTable, getTableFiles, TableInfoSet } from "@services/tables";
+import { getTable, getTableFiles, TableFile, TableInfoSet } from "@services/tables";
 
 type PageProps = TableInfoSet;
 
@@ -13,10 +12,14 @@ type PathParams = {
   id: string;
 };
 
-export const getStaticPaths: GetStaticPaths<PathParams> = () => {
-  const paths = (["en", "ja"] as Locales)
-    .map(locale => getTableFiles(locale as Locale).map(file => ({ params: { id: file }, locale })))
-    .flat();
+export const getStaticPaths: GetStaticPaths<PathParams> = async () => {
+  const paths = (
+    await Promise.all(
+      (["en", "ja"] as Locales).map(async locale =>
+        (await getTableFiles(locale as Locale)).map(file => ({ params: { id: file }, locale })),
+      ),
+    )
+  ).flat();
   return {
     paths,
     fallback: false,
@@ -27,14 +30,13 @@ export const getStaticProps: GetStaticProps<PageProps> = async ({ locale, params
   const { id } = params as PathParams;
 
   return {
-    props: getTable(id, locale as Locale),
+    props: await getTable(id as TableFile, locale as Locale),
   };
 };
 
 const TableOfId: NextPage<PageProps> = ({ table, tableInfo, attrInfo }: PageProps) => {
   const { t } = useLocaleText("@pages/list/table/[id]");
   const name = `${t("table") + tableInfo.number}. ${tableInfo.item}`;
-  const [header, ...body] = dropColumnsByNames(table, ["id", "index", "H28ID"]);
   return (
     <>
       <Head>

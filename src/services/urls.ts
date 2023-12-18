@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { isValidShortId } from "@libs/uuid_translator";
-import { Locale, locales } from "./i18n/i18n";
+import { locales } from "./i18n/i18n";
 
 const origin =
   typeof window !== "undefined" && window?.location
@@ -10,16 +10,6 @@ const origin =
 const useFullUrl = () => {
   const router = useRouter();
   return origin + router.asPath;
-};
-
-const qAndAUrl = (locale: Locale) => {
-  // eslint-disable-next-line max-len
-  return "https://docs.google.com/spreadsheets/d/1xGi_y12VTi2KxLwqqq7ad7mDljNRAfKXI-JkGl0K04Y/export?format=csv&gid=0";
-};
-
-const moviesDataUrl = (locale: Locale) => {
-  // eslint-disable-next-line max-len
-  return `https://docs.google.com/spreadsheets/d/1MNa7Zh2h5vGnSYUHU3vFjWPN4GveYsF_xXZnC0wXUOI/export?format=csv&gid=0`;
 };
 
 const itemUrlToId = (url: string) => {
@@ -32,6 +22,11 @@ const itemUrlToId = (url: string) => {
 
 const itemIdToUrl = (id: string) => {
   return `${origin}/x/${id}`;
+};
+
+const itemIdToUrlToEditFromUrl = (id: string, isMap: boolean | null | undefined) => {
+  const params = new URLSearchParams([["from", id]]);
+  return `${origin}/${isMap ? "map" : "list"}?${params.toString()}`;
 };
 
 const objectiveIdToUrl = (id: string) => {
@@ -50,6 +45,5 @@ export {
   isValidItemUrlOrId,
   itemIdToUrl,
   objectiveIdToUrl,
-  qAndAUrl,
-  moviesDataUrl,
+  itemIdToUrlToEditFromUrl,
 };

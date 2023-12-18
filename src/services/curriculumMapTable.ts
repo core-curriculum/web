@@ -3,6 +3,7 @@ import { reduceTree, Tree } from "@libs/treeUtils";
 import { ServerItemList } from "@services/itemList/server";
 import { OutcomeInfo } from "@services/outcomes";
 import { TableInfoSet } from "@services/tables";
+import { itemIdToUrl, itemIdToUrlToEditFromUrl } from "./urls";
 
 type LabelInfo = {
   index: string;
@@ -90,6 +91,20 @@ const makeOutcomeTableData = (
   return makeTableData(items, labels);
 };
 
+const makeItemTableData = (items: ServerItemList[]) => {
+  const header = ["name", "place", "url", "url_to_edit"];
+  const body = items.map(item => {
+    const row = [
+      item.name,
+      item.place,
+      itemIdToUrl(item.id),
+      itemIdToUrlToEditFromUrl(item.id, item.children && item.children?.length > 0),
+    ];
+    return row;
+  });
+  return [header, ...body];
+};
+
 const makeCumulativeOutcomeTableData = (
   items: ServerItemList[],
   tree: Tree<OutcomeInfo>,
@@ -114,4 +129,5 @@ export {
   makeTableTableData,
   makeTableItemTableData,
   makeCumulativeOutcomeTableData,
+  makeItemTableData,
 };
