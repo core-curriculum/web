@@ -123,17 +123,24 @@ const MovieCardList = ({ data }: { data: MovieData[] }) => {
 const WholeMovieCardList = ({ data }: { data: MovieData[] }) => {
   const categorisedData = categoriseData(data, ["category", "sub-category"]);
   console.log(categorisedData);
-  return categorisedData.map((dataList, i) => (
-    <div key={dataList.key} className="rounded-box border-[1px] border-base-300 bg-base-100 p-6">
-      <h3 className="my-10 text-2xl text-base-content">{dataList.key}</h3>
-      {dataList.data.map((data, i) => (
-        <div key={i}>
-          <h4 className="my-5 text-xl text-base-content">{data.key}</h4>
-          <MovieCardList data={data.data} />
+  return (
+    <>
+      {categorisedData.map((dataList, i) => (
+        <div
+          key={dataList.key}
+          className="rounded-box border-[1px] border-base-300 bg-base-100 p-6"
+        >
+          <h3 className="my-10 text-2xl text-base-content">{dataList.key}</h3>
+          {dataList.data.map((data, i) => (
+            <div key={i}>
+              <h4 className="my-5 text-xl text-base-content">{data.key}</h4>
+              <MovieCardList data={data.data} />
+            </div>
+          ))}
         </div>
       ))}
-    </div>
-  ));
+    </>
+  );
 };
 const MoviesPage: NextPage<PageProps> = ({ data }: PageProps) => {
   return (
