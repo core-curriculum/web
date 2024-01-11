@@ -2,7 +2,6 @@ import type { NextPage, GetStaticProps } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { Fragment } from "react";
 import { BackButton } from "@components/buttons/BackButton";
 
 import { Locale } from "@services/i18n/i18n";
@@ -37,6 +36,36 @@ type MovieData = {
     description: string;
   };
 };
+
+type CategoriesedData<T, K extends (keyof T)[]> = {
+  key: K[0] extends keyof T ? T[K[0]] : never;
+  data: K extends [infer _, ...infer Rest]
+    ? Rest["length"] extends 0
+      ? T[]
+      : Rest extends (keyof T)[]
+      ? CategoriesedData<T, Rest>[]
+      : never
+    : never;
+};
+
+function categoriseData<T, K extends (keyof T)[]>(
+  dataList: T[],
+  keyList: [...K],
+): CategoriesedData<T, K>[] {
+  const removeDuplicate = function <T>(array: T[]) {
+    return [...new Set(array)];
+  };
+  const [key, ...rest] = keyList;
+  const categories = removeDuplicate(dataList.map(data => data[key]));
+  return categories.map(category => {
+    const filteredData = dataList.filter(data => data[key] === category);
+    const data = rest.length ? categoriseData(filteredData, rest) : filteredData;
+    return {
+      key: category,
+      data,
+    } as CategoriesedData<T, K>;
+  });
+}
 
 export const getStaticProps: GetStaticProps<PageProps> = async ({ locale }) => {
   locale = locale as Locale;
@@ -80,36 +109,6 @@ const Card = ({ data }: { data: MovieData["data"] }) => {
   );
 };
 
-type CategoriesedData<T, K extends (keyof T)[]> = {
-  key: K[0] extends keyof T ? T[K[0]] : never;
-  data: K extends [infer _, ...infer Rest]
-    ? Rest["length"] extends 0
-      ? T[]
-      : Rest extends (keyof T)[]
-      ? CategoriesedData<T, Rest>[]
-      : never
-    : never;
-};
-
-function categoriseData<T, K extends (keyof T)[]>(
-  dataList: T[],
-  keyList: [...K],
-): CategoriesedData<T, K>[] {
-  const removeDuplicate = function <T>(array: T[]) {
-    return [...new Set(array)];
-  };
-  const [key, ...rest] = keyList;
-  const categories = removeDuplicate(dataList.map(data => data[key]));
-  return categories.map(category => {
-    const filteredData = dataList.filter(data => data[key] === category);
-    const data = rest.length ? categoriseData(filteredData, rest) : filteredData;
-    return {
-      key: category,
-      data,
-    } as CategoriesedData<T, K>;
-  });
-}
-
 const MovieCardList = ({ data }: { data: MovieData[] }) => {
   return (
     <div className="flex flex-row flex-wrap gap-5 pb-8 ">
@@ -122,7 +121,6 @@ const MovieCardList = ({ data }: { data: MovieData[] }) => {
 
 const WholeMovieCardList = ({ data }: { data: MovieData[] }) => {
   const categorisedData = categoriseData(data, ["category", "sub-category"]);
-  console.log(categorisedData);
   return (
     <>
       {categorisedData.map((dataList, i) => (
