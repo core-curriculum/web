@@ -2,6 +2,7 @@ import type { NextPage, GetStaticProps } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
+import { Fragment } from "react";
 import { BackButton } from "@components/buttons/BackButton";
 
 import { Locale } from "@services/i18n/i18n";
@@ -13,6 +14,7 @@ type PageProps = {
 type MovieData = {
   title: string;
   category: string;
+  "sub-category": string;
   url: string;
   id: string;
   data: {
@@ -78,31 +80,70 @@ const Card = ({ data }: { data: MovieData["data"] }) => {
   );
 };
 
-const MoviesPage: NextPage<PageProps> = ({ data }: PageProps) => {
-  const categories = [...new Set(data.map(({ category }) => category))];
-  const categoryData = categories.map(category => {
+type CategoriesedData<T, K extends (keyof T)[]> = {
+  key: K[0] extends keyof T ? T[K[0]] : never;
+  data: K extends [infer _, ...infer Rest]
+    ? Rest["length"] extends 0
+      ? T[]
+      : Rest extends (keyof T)[]
+      ? CategoriesedData<T, Rest>[]
+      : never
+    : never;
+};
+
+function categoriseData<T, K extends (keyof T)[]>(
+  dataList: T[],
+  keyList: [...K],
+): CategoriesedData<T, K>[] {
+  const removeDuplicate = function <T>(array: T[]) {
+    return [...new Set(array)];
+  };
+  const [key, ...rest] = keyList;
+  const categories = removeDuplicate(dataList.map(data => data[key]));
+  return categories.map(category => {
+    const filteredData = dataList.filter(data => data[key] === category);
+    const data = rest.length ? categoriseData(filteredData, rest) : filteredData;
     return {
-      category,
-      data: data.filter(({ category: _category }) => _category === category),
-    };
+      key: category,
+      data,
+    } as CategoriesedData<T, K>;
   });
+}
+
+const MovieCardList = ({ data }: { data: MovieData[] }) => {
+  return (
+    <div className="flex flex-row flex-wrap gap-5 pb-8 ">
+      {data.map((movieData, i) => {
+        return <Card key={i} data={movieData.data} />;
+      })}
+    </div>
+  );
+};
+
+const WholeMovieCardList = ({ data }: { data: MovieData[] }) => {
+  const categorisedData = categoriseData(data, ["category", "sub-category"]);
+  console.log(categorisedData);
+  return categorisedData.map((dataList, i) => (
+    <div key={dataList.key} className="rounded-box border-[1px] border-base-300 bg-base-100 p-6">
+      <h3 className="my-10 text-2xl text-base-content">{dataList.key}</h3>
+      {dataList.data.map((data, i) => (
+        <div key={i}>
+          <h4 className="my-5 text-xl text-base-content">{data.key}</h4>
+          <MovieCardList data={data.data} />
+        </div>
+      ))}
+    </div>
+  ));
+};
+const MoviesPage: NextPage<PageProps> = ({ data }: PageProps) => {
   return (
     <>
       <Head>
         <title>Movies</title>
       </Head>
       <HeaderBar />
-      <div className="mx-auto max-w-6xl pb-16 ">
-        {categoryData.map((data, i) => (
-          <div key={i}>
-            <h3 className="my-10 text-2xl text-base-content">{data.category}</h3>
-            <div className="flex flex-row flex-wrap gap-5 pb-8 ">
-              {data.data.map((movieData, i) => {
-                return <Card key={i} data={movieData.data} />;
-              })}
-            </div>
-          </div>
-        ))}
+      <div className=" mx-auto grid max-w-6xl gap-14 pb-16">
+        <WholeMovieCardList data={data} />
       </div>
     </>
   );
