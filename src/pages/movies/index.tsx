@@ -91,18 +91,18 @@ const HeaderBar = () => {
   );
 };
 
-const Card = ({ data: movieData }: { data: MovieData }) => {
+const MovieCard = ({ data: movieData }: { data: MovieData }) => {
   const { title, data } = movieData;
   return (
     <div
-      style={{ maxWidth: data.thumbnail_width }}
+      style={{ maxWidth: data.thumbnail_width * 1.5 }}
       className="row-span-2 grid grid-rows-subgrid overflow-hidden rounded-lg drop-shadow-md
       transition [row-gap:0]  hover:opacity-60 hover:drop-shadow-xl"
     >
       <Link href={`./movies/${data.id}`}>
         <Image
-          width={data.thumbnail_width}
-          height={data.thumbnail_height}
+          width={data.thumbnail_width * 1.5}
+          height={data.thumbnail_height * 1.5}
           src={data.thumbnail_url_with_play_button}
           alt={title || data.title}
         />
@@ -116,9 +116,9 @@ const Card = ({ data: movieData }: { data: MovieData }) => {
 
 const MovieCardList = ({ data }: { data: MovieData[] }) => {
   return (
-    <div className="grid grid-cols-[repeat(auto-fit,minmax(theme(spacing.60),1fr))] gap-5 pb-8 ">
+    <div className="grid grid-cols-[repeat(auto-fill,minmax(theme(spacing.60),1fr))] gap-5 pb-8 ">
       {data.map((movieData, i) => {
-        return <Card key={i} data={movieData} />;
+        return <MovieCard key={i} data={movieData} />;
       })}
     </div>
   );
@@ -128,7 +128,7 @@ const WholeMovieCardList = ({ data }: { data: MovieData[] }) => {
   const categorisedData = categoriseData(data, ["category", "sub-category"]);
   return (
     <div className="grid gap-14">
-      {categorisedData.map((dataList, i) => (
+      {categorisedData.map(dataList => (
         <div
           key={dataList.key}
           className="rounded-box border-[1px] border-base-300 bg-base-100 p-6"
@@ -136,8 +136,8 @@ const WholeMovieCardList = ({ data }: { data: MovieData[] }) => {
           <h3 className="my-10 text-2xl text-base-content" id={dataList.key}>
             {dataList.key}
           </h3>
-          {dataList.data.map((data, i) => (
-            <div key={i}>
+          {dataList.data.map(data => (
+            <div key={data.key}>
               <h4 className="my-5 text-xl text-base-content" id={data.key}>
                 {data.key}
               </h4>
