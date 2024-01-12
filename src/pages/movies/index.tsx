@@ -83,7 +83,7 @@ export const getStaticProps: GetStaticProps<PageProps> = async ({ locale }) => {
 
 const HeaderBar = () => {
   return (
-    <div className="fixed top-0 flex w-full items-center bg-base-100/20 backdrop-blur-lg">
+    <div className="fixed top-0 z-10 flex w-full items-center bg-base-100/20 backdrop-blur-lg">
       <div className="ml-2">
         <BackButton />
       </div>
@@ -95,9 +95,9 @@ const Card = ({ data: movieData }: { data: MovieData }) => {
   const { title, data } = movieData;
   return (
     <div
-      style={{ width: data.thumbnail_width }}
-      className="w-[fit-content] rounded-md drop-shadow-md 
-      transition hover:opacity-60  hover:drop-shadow-xl"
+      style={{ maxWidth: data.thumbnail_width }}
+      className="row-span-2 grid grid-rows-subgrid overflow-hidden rounded-lg drop-shadow-md
+      transition [row-gap:0]  hover:opacity-60 hover:drop-shadow-xl"
     >
       <Link href={`./movies/${data.id}`}>
         <Image
@@ -106,7 +106,9 @@ const Card = ({ data: movieData }: { data: MovieData }) => {
           src={data.thumbnail_url_with_play_button}
           alt={title || data.title}
         />
-        <div className="bg-base-200 p-3">{title || data.title}</div>
+      </Link>
+      <Link href={`./movies/${data.id}`} className="block bg-base-200 ">
+        <div className="p-3">{title || data.title}</div>
       </Link>
     </div>
   );
@@ -114,7 +116,7 @@ const Card = ({ data: movieData }: { data: MovieData }) => {
 
 const MovieCardList = ({ data }: { data: MovieData[] }) => {
   return (
-    <div className="flex flex-row flex-wrap gap-5 pb-8 ">
+    <div className="grid grid-cols-[repeat(auto-fit,minmax(theme(spacing.60),1fr))] gap-5 pb-8 ">
       {data.map((movieData, i) => {
         return <Card key={i} data={movieData} />;
       })}
@@ -181,12 +183,12 @@ type LayoutProps = {
 const Layout = ({ toc, main }: LayoutProps) => {
   return (
     <div className="flex h-full flex-col gap-5 md:flex-row">
-      <div className="h-full overflow-y-auto p-8">
+      <div className="p-8 md:h-full md:overflow-y-auto">
         <div className="md:sticky md:top-14 md:block ">
           <div className="">{toc}</div>
         </div>
       </div>
-      <div className="h-full w-full scroll-pt-14  overflow-y-auto  p-4 pt-14">
+      <div className="w-full scroll-pt-14 p-4  pt-14  md:h-full md:overflow-y-auto">
         <div className="mx-auto max-w-6xl pb-16">{main}</div>
       </div>
     </div>
