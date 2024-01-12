@@ -83,7 +83,7 @@ export const getStaticProps: GetStaticProps<PageProps> = async ({ locale }) => {
 
 const HeaderBar = () => {
   return (
-    <div className="fixed top-0 z-10 flex w-full items-center bg-base-100/20 backdrop-blur-lg">
+    <div className="bg-base-100/20 fixed top-0 z-10 flex w-full items-center backdrop-blur-lg">
       <div className="ml-2">
         <BackButton />
       </div>
@@ -107,7 +107,7 @@ const MovieCard = ({ data: movieData }: { data: MovieData }) => {
           alt={title || data.title}
         />
       </Link>
-      <Link href={`./movies/${data.id}`} className="block bg-base-200 ">
+      <Link href={`./movies/${data.id}`} className="bg-base-200 block ">
         <div className="p-3">{title || data.title}</div>
       </Link>
     </div>
@@ -116,7 +116,7 @@ const MovieCard = ({ data: movieData }: { data: MovieData }) => {
 
 const MovieCardList = ({ data }: { data: MovieData[] }) => {
   return (
-    <div className="grid grid-cols-[repeat(auto-fill,minmax(theme(spacing.60),1fr))] gap-5 pb-8 ">
+    <div className="grid-cols-auto-fill-60 grid gap-5 pb-8 ">
       {data.map((movieData, i) => {
         return <MovieCard key={i} data={movieData} />;
       })}
@@ -131,14 +131,14 @@ const WholeMovieCardList = ({ data }: { data: MovieData[] }) => {
       {categorisedData.map(dataList => (
         <div
           key={dataList.key}
-          className="rounded-box border-[1px] border-base-300 bg-base-100 p-6"
+          className="rounded-box border-base-300 bg-base-100 border-[1px] p-6"
         >
-          <h3 className="my-10 text-2xl text-base-content" id={dataList.key}>
+          <h3 className="text-base-content my-10 text-2xl" id={dataList.key}>
             {dataList.key}
           </h3>
           {dataList.data.map(data => (
             <div key={data.key}>
-              <h4 className="my-5 text-xl text-base-content" id={data.key}>
+              <h4 className="text-base-content my-5 text-xl" id={data.key}>
                 {data.key}
               </h4>
               <MovieCardList data={data.data} />
