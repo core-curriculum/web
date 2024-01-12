@@ -83,7 +83,7 @@ export const getStaticProps: GetStaticProps<PageProps> = async ({ locale }) => {
 
 const HeaderBar = () => {
   return (
-    <div className="sticky top-0 flex w-full items-center bg-base-100/80 backdrop-blur-sm">
+    <div className="fixed top-0 flex w-full items-center bg-base-100/20 backdrop-blur-lg">
       <div className="ml-2">
         <BackButton />
       </div>
@@ -125,35 +125,85 @@ const MovieCardList = ({ data }: { data: MovieData[] }) => {
 const WholeMovieCardList = ({ data }: { data: MovieData[] }) => {
   const categorisedData = categoriseData(data, ["category", "sub-category"]);
   return (
-    <>
+    <div className="grid gap-14">
       {categorisedData.map((dataList, i) => (
         <div
           key={dataList.key}
           className="rounded-box border-[1px] border-base-300 bg-base-100 p-6"
         >
-          <h3 className="my-10 text-2xl text-base-content">{dataList.key}</h3>
+          <h3 className="my-10 text-2xl text-base-content" id={dataList.key}>
+            {dataList.key}
+          </h3>
           {dataList.data.map((data, i) => (
             <div key={i}>
-              <h4 className="my-5 text-xl text-base-content">{data.key}</h4>
+              <h4 className="my-5 text-xl text-base-content" id={data.key}>
+                {data.key}
+              </h4>
               <MovieCardList data={data.data} />
             </div>
           ))}
         </div>
       ))}
-    </>
+    </div>
   );
 };
-const MoviesPage: NextPage<PageProps> = ({ data }: PageProps) => {
+
+const Toc = ({ data }: { data: MovieData[] }) => {
+  const categorisedData = categoriseData(data, ["category", "sub-category"]);
   return (
-    <>
+    <ul className="flex flex-col gap-2">
+      {categorisedData.map((dataList, i) => (
+        <li key={i}>
+          <Link href={`#${dataList.key}`} className="link-info block">
+            {dataList.key}
+          </Link>
+          <ul className="flex flex-col gap-2">
+            {dataList.data.map((data, i) => (
+              <li key={i} className="pl-4">
+                <Link href={`#${data.key}`} className="link-info block">
+                  {data.key}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </li>
+      ))}
+    </ul>
+  );
+};
+
+type LayoutProps = {
+  toc: React.ReactNode;
+  main: React.ReactNode;
+};
+
+/** Cummulative layout in small screen and show toc in left in large screen */
+const Layout = ({ toc, main }: LayoutProps) => {
+  return (
+    <div className="flex h-full flex-col gap-5 md:flex-row">
+      <div className="h-full overflow-y-auto p-8">
+        <div className="md:sticky md:top-14 md:block ">
+          <div className="">{toc}</div>
+        </div>
+      </div>
+      <div className="h-full w-full scroll-pt-14  overflow-y-auto  p-4 pt-14">
+        <div className="mx-auto max-w-6xl pb-16">{main}</div>
+      </div>
+    </div>
+  );
+};
+
+const MoviesPage: NextPage<PageProps> = ({ data }: { data: MovieData[] }) => {
+  return (
+    <div className="h-dvh">
       <Head>
         <title>Movies</title>
       </Head>
       <HeaderBar />
-      <div className=" mx-auto grid max-w-6xl gap-14 pb-16">
-        <WholeMovieCardList data={data} />
+      <div className="h-full">
+        <Layout toc={<Toc data={data} />} main={<WholeMovieCardList data={data} />} />
       </div>
-    </>
+    </div>
   );
 };
 
