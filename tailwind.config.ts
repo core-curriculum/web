@@ -1,6 +1,28 @@
 import { type Config } from "tailwindcss";
 import plugin from "tailwindcss/plugin";
 
+const autoFillPlugin = plugin(({ matchUtilities, theme }) => {
+  matchUtilities(
+    {
+      "grid-cols-auto-fill": value => ({
+        gridTemplateColumns: `repeat(auto-fill, minmax(${value}, 1fr))`,
+      }),
+    },
+    { values: theme("spacing") },
+  );
+});
+
+const autoFitPlugin = plugin(({ matchUtilities, theme }) => {
+  matchUtilities(
+    {
+      "grid-cols-auto-fit": value => ({
+        gridTemplateColumns: `repeat(auto-fit, minmax(${value}, 1fr))`,
+      }),
+    },
+    { values: theme("spacing") },
+  );
+});
+
 const config: Config = {
   mode: "jit",
   content: [
@@ -9,30 +31,7 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx}",
     "./src/stories/**/*.{js,ts,jsx,tsx}",
   ],
-  plugins: [
-    plugin(({ matchUtilities, theme }) => {
-      matchUtilities(
-        {
-          "grid-cols-auto-fill": value => ({
-            gridTemplateColumns: `repeat(auto-fill, minmax(${value}, 1fr))`,
-          }),
-        },
-        { values: theme("spacing") },
-      );
-    }),
-    plugin(({ matchUtilities, theme }) => {
-      matchUtilities(
-        {
-          "grid-cols-auto-fit": value => ({
-            gridTemplateColumns: `repeat(auto-fit, minmax(${value}, 1fr))`,
-          }),
-        },
-        { values: theme("spacing") },
-      );
-    }),
-    require("@tailwindcss/typography"),
-    require("daisyui"),
-  ],
+  plugins: [autoFillPlugin, autoFitPlugin, require("@tailwindcss/typography"), require("daisyui")],
   theme: {
     extend: {
       animation: {
