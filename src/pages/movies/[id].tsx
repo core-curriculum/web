@@ -80,7 +80,8 @@ const Desctiption = ({ text }: { text: string }) => {
   );
 };
 
-const Card = ({ data }: { data: MovieData["data"] }) => {
+const Card = ({ data: movieData }: { data: MovieData }) => {
+  const { title, description, data } = movieData;
   return (
     <div>
       <HeaderBar />
@@ -91,16 +92,16 @@ const Card = ({ data }: { data: MovieData["data"] }) => {
         ></iframe>
       </div>
 
-      <div className="bg-base-200 p-3 text-lg font-bold">{data.title}</div>
+      <div className="bg-base-200 p-3 text-lg font-bold">{title || data.title}</div>
       <div className="bg-base-200 p-3 text-sm">
-        <Desctiption text={data.description} />
+        <Desctiption text={description || data.description} />
       </div>
     </div>
   );
 };
 
 const QandAPage: NextPage<PageProps> = ({ data, id }: PageProps) => {
-  return <>{data ? <Card data={data.data} /> : `not found ${id}`}</>;
+  return <>{data ? <Card data={data} /> : `not found ${id}`}</>;
 };
 
 export default QandAPage;

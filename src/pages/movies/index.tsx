@@ -16,6 +16,8 @@ type MovieData = {
   "sub-category": string;
   url: string;
   id: string;
+  description: string;
+  files: string;
   data: {
     type: string;
     version: string;
@@ -89,7 +91,8 @@ const HeaderBar = () => {
   );
 };
 
-const Card = ({ data }: { data: MovieData["data"] }) => {
+const Card = ({ data: movieData }: { data: MovieData }) => {
+  const { title, data } = movieData;
   return (
     <div
       style={{ width: data.thumbnail_width }}
@@ -101,9 +104,9 @@ const Card = ({ data }: { data: MovieData["data"] }) => {
           width={data.thumbnail_width}
           height={data.thumbnail_height}
           src={data.thumbnail_url_with_play_button}
-          alt={data.title}
+          alt={title || data.title}
         />
-        <div className="bg-base-200 p-3">{data.title}</div>
+        <div className="bg-base-200 p-3">{title || data.title}</div>
       </Link>
     </div>
   );
@@ -113,7 +116,7 @@ const MovieCardList = ({ data }: { data: MovieData[] }) => {
   return (
     <div className="flex flex-row flex-wrap gap-5 pb-8 ">
       {data.map((movieData, i) => {
-        return <Card key={i} data={movieData.data} />;
+        return <Card key={i} data={movieData} />;
       })}
     </div>
   );
