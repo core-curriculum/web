@@ -1,7 +1,7 @@
 import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
 import Link from "next/link";
 import { BackButton } from "@components/buttons/BackButton";
-import { type MovieData } from "..";
+import { MovieCardList, MoviePageLayout, type MovieData, MovieToc, categoriseData } from "..";
 
 import { Locale, Locales } from "@services/i18n/i18n";
 
@@ -87,8 +87,54 @@ export const getStaticProps: GetStaticProps<PageProps> = async ({ locale, params
   };
 };
 
+type SubCategoryPageProps = {
+  category: { category: string; subCategory: string };
+  data: MovieData[];
+};
+
+const SubCategoryPage = ({ data, category: { category, subCategory } }: SubCategoryPageProps) => {
+  return (
+    <div className="h-dvh">
+      <div className="grid gap-4 p-4">
+        <h1 className="text-xl">{category}</h1>
+        <h2 className="text-lg">{subCategory}</h2>
+        <MovieCardList data={data} />
+      </div>
+    </div>
+  );
+};
+
+const CategoryPane = ({ data, category: { category } }: PageProps) => {
+  const subCategories = categoriseData(data, ["sub-category"]);
+  return (
+    <div className="grid gap-4 p-4">
+      <h1 className="text-xl">{category}</h1>
+      {subCategories.map(subCategory => (
+        <Link
+          key={subCategory.key}
+          href={`/movies/list/${encodeURIComponent(category)}/${encodeURIComponent(
+            subCategory.key,
+          )}`}
+          className="text-lg"
+        >
+          {subCategory.key}
+          <MovieCardList data={subCategory.data} />
+        </Link>
+      ))}
+    </div>
+  );
+};
+
+const CategoryPage = (props: PageProps) => {
+  return (
+    <MoviePageLayout toc={<MovieToc data={props.data} />} main={<CategoryPane {...props} />} />
+  );
+};
 const MovieListPage: NextPage<PageProps> = ({ data, category }: PageProps) => {
-  return <div>{JSON.stringify(category)}</div>;
+  if ("subCategory" in category) {
+    return <SubCategoryPage data={data} category={category} />;
+  }
+  return <CategoryPage data={data} category={category} />;
 };
 
 export default MovieListPage;

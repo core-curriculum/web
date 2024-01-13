@@ -212,3 +212,4 @@ const MoviesPage: NextPage<PageProps> = ({ data }: { data: MovieData[] }) => {
 
 export default MoviesPage;
 export { type MovieData };
+export { MovieToc, Layout as MoviePageLayout, categoriseData, MovieCardList };
