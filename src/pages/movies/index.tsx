@@ -93,13 +93,14 @@ const HeaderBar = () => {
 
 const MovieCard = ({ data: movieData }: { data: MovieData }) => {
   const { title, data } = movieData;
+  const url = `/movies/view/${data.id}`;
   return (
     <div
       style={{ maxWidth: data.thumbnail_width * 1.5 }}
       className="row-span-2 grid grid-rows-subgrid overflow-hidden rounded-lg drop-shadow-md
       transition [row-gap:0]  hover:opacity-60 hover:drop-shadow-xl"
     >
-      <Link href={`./movies/${data.id}`}>
+      <Link href={url}>
         <Image
           width={data.thumbnail_width * 1.5}
           height={data.thumbnail_height * 1.5}
@@ -107,7 +108,7 @@ const MovieCard = ({ data: movieData }: { data: MovieData }) => {
           alt={title || data.title}
         />
       </Link>
-      <Link href={`./movies/${data.id}`} className="bg-base-200 block ">
+      <Link href={url} className="bg-base-200 block ">
         <div className="p-3">{title || data.title}</div>
       </Link>
     </div>
@@ -134,12 +135,12 @@ const WholeMovieCardList = ({ data }: { data: MovieData[] }) => {
           className="rounded-box border-base-300 bg-base-100 border-[1px] p-6"
         >
           <h3 className="text-base-content my-10 text-2xl" id={dataList.key}>
-            {dataList.key}
+            <Link href={`/movies/list/${dataList.key}`}> {dataList.key}</Link>
           </h3>
           {dataList.data.map(data => (
             <div key={data.key}>
               <h4 className="text-base-content my-5 text-xl" id={data.key}>
-                {data.key}
+                <Link href={`/movies/list/${dataList.key}/${data.key}`}>{data.key}</Link>
               </h4>
               <MovieCardList data={data.data} />
             </div>
@@ -150,7 +151,7 @@ const WholeMovieCardList = ({ data }: { data: MovieData[] }) => {
   );
 };
 
-const Toc = ({ data }: { data: MovieData[] }) => {
+const MovieToc = ({ data }: { data: MovieData[] }) => {
   const categorisedData = categoriseData(data, ["category", "sub-category"]);
   return (
     <ul className="flex flex-col gap-2">
@@ -203,7 +204,7 @@ const MoviesPage: NextPage<PageProps> = ({ data }: { data: MovieData[] }) => {
       </Head>
       <HeaderBar />
       <div className="h-full">
-        <Layout toc={<Toc data={data} />} main={<WholeMovieCardList data={data} />} />
+        <Layout toc={<MovieToc data={data} />} main={<WholeMovieCardList data={data} />} />
       </div>
     </div>
   );

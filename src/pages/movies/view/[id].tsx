@@ -3,7 +3,7 @@ import Link from "next/link";
 import { BackButton } from "@components/buttons/BackButton";
 
 import { Locale, Locales } from "@services/i18n/i18n";
-import { MovieData } from ".";
+import { MovieData } from "..";
 
 type PageProps = {
   data: MovieData | undefined;
@@ -43,9 +43,9 @@ export const getStaticProps: GetStaticProps<PageProps> = async ({ locale, params
 
 const HeaderBar = () => {
   return (
-    <div className="sticky top-0 flex w-full items-center bg-base-100/80 backdrop-blur-sm">
+    <div className="bg-base-100/80 sticky top-0 flex w-full items-center backdrop-blur-sm">
       <div className="ml-2">
-        <BackButton href="./" />
+        <BackButton href="../" />
       </div>
     </div>
   );
@@ -100,8 +100,8 @@ const Card = ({ data: movieData }: { data: MovieData }) => {
   );
 };
 
-const QandAPage: NextPage<PageProps> = ({ data, id }: PageProps) => {
+const MovieViewPage: NextPage<PageProps> = ({ data, id }: PageProps) => {
   return <>{data ? <Card data={data} /> : `not found ${id}`}</>;
 };
 
-export default QandAPage;
+export default MovieViewPage;
