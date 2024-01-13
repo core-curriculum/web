@@ -135,12 +135,17 @@ const WholeMovieCardList = ({ data }: { data: MovieData[] }) => {
           className="rounded-box border-base-300 bg-base-100 border-[1px] p-6"
         >
           <h3 className="text-base-content my-10 text-2xl" id={dataList.key}>
-            <Link href={`/movies/list/${dataList.key}`}> {dataList.key}</Link>
+            <Link className="link link-hover" href={`/movies/list/${dataList.key}`}>
+              {" "}
+              {dataList.key}
+            </Link>
           </h3>
           {dataList.data.map(data => (
             <div key={data.key}>
               <h4 className="text-base-content my-5 text-xl" id={data.key}>
-                <Link href={`/movies/list/${dataList.key}/${data.key}`}>{data.key}</Link>
+                <Link className="link link-hover" href={`/movies/list/${dataList.key}/${data.key}`}>
+                  {data.key}
+                </Link>
               </h4>
               <MovieCardList data={data.data} />
             </div>
