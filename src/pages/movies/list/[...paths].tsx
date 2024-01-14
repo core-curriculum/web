@@ -1,9 +1,7 @@
 import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
 import Link from "next/link";
-import { BackButton } from "@components/buttons/BackButton";
-import { MovieCardList, MoviePageLayout, type MovieData, MovieToc, categoriseData } from "..";
-
 import { Locale, Locales } from "@services/i18n/i18n";
+import { MovieCardList, MoviePageLayout, type MovieData, MovieToc, categoriseData } from "..";
 
 type PageProps = {
   data: MovieData[];
@@ -58,7 +56,6 @@ const getPaths = async (): Promise<
 
 export const getStaticPaths: GetStaticPaths<PathParams> = async () => {
   const paths = await getPaths();
-  console.log(JSON.stringify(paths));
   return {
     paths,
     fallback: false,
