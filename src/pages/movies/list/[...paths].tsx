@@ -4,6 +4,7 @@ import { BackButton } from "@components/buttons/BackButton";
 import { Locale, Locales, useTranslation } from "@services/i18n/i18n";
 import { MovieCardList, MoviePageLayout, type MovieData, MovieToc, categoriseData } from "..";
 import { usePathname } from "next/navigation";
+import Head from "next/head";
 
 type PageProps = {
   data: MovieData[];
@@ -169,10 +170,22 @@ const CannotFindPage = () => {
 
 const MovieListPage: NextPage<PageProps> = ({ data, category }: PageProps) => {
   if (!data || data.length === 0) return <CannotFindPage />;
-  if ("subCategory" in category) {
-    return <SubCategoryPage data={data} category={category} />;
-  }
-  return <CategoryPage data={data} category={category} />;
+  const { t } = useTranslation("@pages/movies");
+  const pageTitle = "subCategory" in category ? category.subCategory : category.category;
+  return (
+    <>
+      <Head>
+        <title>
+          {pageTitle} | {t("siteTitle")}
+        </title>
+      </Head>
+      {"subCategory" in category ? (
+        <SubCategoryPage data={data} category={category} />
+      ) : (
+        <CategoryPage data={data} category={category} />
+      )}
+    </>
+  );
 };
 
 export default MovieListPage;

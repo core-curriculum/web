@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BackButton } from "@components/buttons/BackButton";
 
-import { Locale } from "@services/i18n/i18n";
+import { Locale, useTranslation } from "@services/i18n/i18n";
 
 type PageProps = {
   data: MovieData[];
@@ -214,10 +214,11 @@ const Layout = ({ toc, main }: LayoutProps) => {
 };
 
 const MoviesPage: NextPage<PageProps> = ({ data }: { data: MovieData[] }) => {
+  const { t } = useTranslation("@pages/movies");
   return (
     <div className="h-dvh">
       <Head>
-        <title>Movies</title>
+        <title>{t("h1")}</title>
       </Head>
       <HeaderBar />
       <div className="h-full">
