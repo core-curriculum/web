@@ -1,8 +1,9 @@
 import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
 import Link from "next/link";
 import { BackButton } from "@components/buttons/BackButton";
-import { Locale, Locales } from "@services/i18n/i18n";
+import { Locale, Locales, useTranslation } from "@services/i18n/i18n";
 import { MovieCardList, MoviePageLayout, type MovieData, MovieToc, categoriseData } from "..";
+import { usePathname } from "next/navigation";
 
 type PageProps = {
   data: MovieData[];
@@ -71,7 +72,7 @@ export const getStaticPaths: GetStaticPaths<PathParams> = async () => {
   const paths = await getPaths();
   return {
     paths,
-    fallback: false,
+    fallback: true,
   };
 };
 
@@ -144,7 +145,30 @@ const CategoryPage = (props: PageProps) => {
     </>
   );
 };
+
+const CannotFindPage = () => {
+  const pathname = usePathname();
+  const { t } = useTranslation("@pages/movies");
+  return (
+    <div className="h-dvh">
+      <HeaderBar />
+      <div className="grid h-full scroll-pt-14 place-items-center gap-4 p-4 pt-14">
+        <div className="grid gap-10">
+          <h1 className="text-2xl">{t("notFoundTitle")}</h1>
+          <p>
+            {decodeURIComponent(pathname)} {t("notFound")}
+          </p>
+          <Link href="/movies" className="link link-info">
+            {t("notFoundToBack")}
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const MovieListPage: NextPage<PageProps> = ({ data, category }: PageProps) => {
+  if (!data || data.length === 0) return <CannotFindPage />;
   if ("subCategory" in category) {
     return <SubCategoryPage data={data} category={category} />;
   }

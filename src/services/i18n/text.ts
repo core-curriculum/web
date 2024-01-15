@@ -124,6 +124,17 @@ const text = {
       // eslint-disable-next-line max-len
       en: "A collection of videos explaining each of the Model Core Curriculum's qualities and abilities (competencies), as well as how to use the Model Core Curriculum in the curriculum.",
     },
+    notFoundTitle: { ja: "動画が見つかりません", en: "Movie not found" },
+    notFound: { ja: "は見つかりませんでした。", en: " was not found." },
+    notFoundToBack: { ja: "動画一覧ページへ戻る", en: "Back to movies list" },
+  },
+  "@pages/404": {
+    title: {
+      ja: "ページが見つかりません | コアカリナビ",
+      en: "Page not found | Core Curriculum Navigator",
+    },
+    notFound: { ja: "ページが見つかりません", en: "Page not found" },
+    notFoundToHome: { ja: "ホームへ戻る", en: "Back to home" },
   },
   "@pages/citeas": {
     title: {
