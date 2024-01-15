@@ -142,11 +142,16 @@ const WholeMovieCardList = ({ data }: { data: MovieData[] }) => {
           </h3>
           {dataList.data.map(data => (
             <div key={data.key}>
-              <h4 className="text-base-content my-5 text-xl" id={data.key}>
-                <Link className="link link-hover" href={`/movies/list/${dataList.key}/${data.key}`}>
-                  {data.key}
-                </Link>
-              </h4>
+              {data.key ? (
+                <h4 className="text-base-content my-5 text-xl" id={data.key}>
+                  <Link
+                    className="link link-hover"
+                    href={`/movies/list/${dataList.key}/${data.key}`}
+                  >
+                    {data.key}
+                  </Link>
+                </h4>
+              ) : null}
               <MovieCardList data={data.data} />
             </div>
           ))}
@@ -166,13 +171,17 @@ const MovieToc = ({ data }: { data: MovieData[] }) => {
             {dataList.key}
           </Link>
           <ul className="flex flex-col gap-2">
-            {dataList.data.map((data, i) => (
-              <li key={i} className="pl-4">
-                <Link href={`#${data.key}`} className="link-info block">
-                  {data.key}
-                </Link>
-              </li>
-            ))}
+            {dataList.data.flatMap(data => {
+              return data.key
+                ? [
+                    <li key={data.key} className="pl-4">
+                      <Link href={`#${data.key}`} className="link-info block">
+                        {data.key}
+                      </Link>
+                    </li>,
+                  ]
+                : [];
+            })}
           </ul>
         </li>
       ))}

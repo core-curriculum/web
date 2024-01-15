@@ -20,7 +20,9 @@ function extractCategories<T, K extends (keyof T)[]>(
     return [...new Set(array)];
   };
   const [key, ...rest] = keyList;
-  const categories = removeDuplicate(dataList.map(data => data[key])).map(category => [category]);
+  const categories = removeDuplicate(dataList.map(data => data[key]))
+    .filter(category => category)
+    .map(category => [category]);
   if (!rest.length) return categories;
   const childCategories = categories
     .map(([category]) => {
