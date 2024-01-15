@@ -12,6 +12,16 @@ type PathParams = {
   paths: string[];
 };
 
+const HeaderBar = () => {
+  return (
+    <div className="bg-base-100/20 fixed top-0 z-10 flex w-full items-center backdrop-blur-lg">
+      <div className="ml-2">
+        <BackButton href="../" />
+      </div>
+    </div>
+  );
+};
+
 function extractCategories<T, K extends (keyof T)[]>(
   dataList: T[],
   keyList: [...K],
@@ -94,7 +104,8 @@ type SubCategoryPageProps = {
 const SubCategoryPage = ({ data, category: { category, subCategory } }: SubCategoryPageProps) => {
   return (
     <div className="h-dvh">
-      <div className="grid gap-4 p-4">
+      <HeaderBar />
+      <div className="grid scroll-pt-14 gap-4 p-4 pt-14">
         <h1 className="text-xl">{category}</h1>
         <h2 className="text-lg">{subCategory}</h2>
         <MovieCardList data={data} />
@@ -126,7 +137,10 @@ const CategoryPane = ({ data, category: { category } }: PageProps) => {
 
 const CategoryPage = (props: PageProps) => {
   return (
-    <MoviePageLayout toc={<MovieToc data={props.data} />} main={<CategoryPane {...props} />} />
+    <>
+      <HeaderBar />
+      <MoviePageLayout toc={<MovieToc data={props.data} />} main={<CategoryPane {...props} />} />
+    </>
   );
 };
 const MovieListPage: NextPage<PageProps> = ({ data, category }: PageProps) => {

@@ -4,6 +4,7 @@ import { BackButton } from "@components/buttons/BackButton";
 
 import { Locale, Locales } from "@services/i18n/i18n";
 import { MovieData } from "..";
+import { useParams, useSearchParams } from "next/navigation";
 
 type PageProps = {
   data: MovieData | undefined;
@@ -42,10 +43,12 @@ export const getStaticProps: GetStaticProps<PageProps> = async ({ locale, params
 };
 
 const HeaderBar = () => {
+  const params = useSearchParams();
+  const returnPath = params.get("return_to") || "../";
   return (
     <div className="bg-base-100/80 sticky top-0 flex w-full items-center backdrop-blur-sm">
       <div className="ml-2">
-        <BackButton href="../" />
+        <BackButton href={returnPath} />
       </div>
     </div>
   );

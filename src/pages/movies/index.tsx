@@ -5,6 +5,7 @@ import Link from "next/link";
 import { BackButton } from "@components/buttons/BackButton";
 
 import { Locale } from "@services/i18n/i18n";
+import { usePathname } from "next/navigation";
 
 type PageProps = {
   data: MovieData[];
@@ -93,7 +94,8 @@ const HeaderBar = () => {
 
 const MovieCard = ({ data: movieData }: { data: MovieData }) => {
   const { title, data } = movieData;
-  const url = `/movies/view/${data.id}`;
+  const pathname = usePathname();
+  const url = `/movies/view/${data.id}?return_to=${pathname}`;
   return (
     <div
       style={{ maxWidth: data.thumbnail_width * 1.5 }}
