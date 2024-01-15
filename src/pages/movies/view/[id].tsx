@@ -1,10 +1,11 @@
 import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
+import Head from "next/head";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { BackButton } from "@components/buttons/BackButton";
 
-import { Locale, Locales } from "@services/i18n/i18n";
+import { Locale, Locales, useTranslation } from "@services/i18n/i18n";
 import { MovieData } from "..";
-import { useParams, useSearchParams } from "next/navigation";
 
 type PageProps = {
   data: MovieData | undefined;
@@ -84,9 +85,13 @@ const Desctiption = ({ text }: { text: string }) => {
 };
 
 const Card = ({ data: movieData }: { data: MovieData }) => {
+  const { t } = useTranslation("@pages/movies");
   const { title, description, data } = movieData;
   return (
     <div>
+      <Head>
+        <title>{`${title} | ${t("siteTitle")}`}</title>
+      </Head>
       <HeaderBar />
       <div className="relative p-0 pt-[56.25%]">
         <iframe

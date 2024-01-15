@@ -2,10 +2,10 @@ import type { NextPage, GetStaticProps } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { BackButton } from "@components/buttons/BackButton";
 
 import { Locale } from "@services/i18n/i18n";
-import { usePathname } from "next/navigation";
 
 type PageProps = {
   data: MovieData[];

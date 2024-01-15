@@ -8,8 +8,11 @@ type Text = {
 };
 
 const text = {
+  $common: {
+    siteTitle: { ja: "コアカリナビ", en: "Core Curriculum Navigator" },
+  },
   "@components/NaviBar": {
-    title: { ja: "モデルコアカリキュラム", en: "Model Core Curriculum" },
+    title: { ja: "コアカリナビ", en: "コアカリナビ" },
     search: { ja: "検索", en: "Search" },
     associateItems: { ja: "授業との関連付け", en: "Associate with classes" },
     curriculumMap: { ja: "カリキュラムマップの作成", en: "Create a curriculum map" },
@@ -112,10 +115,7 @@ const text = {
     },
   },
   "@pages/movies": {
-    title: {
-      ja: "解説動画 | モデルコアカリキュラム",
-      en: "Movies | Model Core Curriculum",
-    },
+    title: { ja: "解説動画 | コアカリナビ", en: "Movies | Core Curriculum Navigator" },
     h1: { ja: "解説動画", en: "Movies" },
     linkToListPage: { ja: "動画一覧ページへ", en: "Go to movies list" },
     discription: {

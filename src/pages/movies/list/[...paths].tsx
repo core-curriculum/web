@@ -1,8 +1,8 @@
 import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
 import Link from "next/link";
+import { BackButton } from "@components/buttons/BackButton";
 import { Locale, Locales } from "@services/i18n/i18n";
 import { MovieCardList, MoviePageLayout, type MovieData, MovieToc, categoriseData } from "..";
-import { BackButton } from "@components/buttons/BackButton";
 
 type PageProps = {
   data: MovieData[];
