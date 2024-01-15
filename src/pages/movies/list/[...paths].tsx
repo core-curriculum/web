@@ -1,10 +1,10 @@
 import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
+import Head from "next/head";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { BackButton } from "@components/buttons/BackButton";
 import { Locale, Locales, useTranslation } from "@services/i18n/i18n";
 import { MovieCardList, MoviePageLayout, type MovieData, MovieToc, categoriseData } from "..";
-import { usePathname } from "next/navigation";
-import Head from "next/head";
 
 type PageProps = {
   data: MovieData[];
@@ -169,8 +169,8 @@ const CannotFindPage = () => {
 };
 
 const MovieListPage: NextPage<PageProps> = ({ data, category }: PageProps) => {
-  if (!data || data.length === 0) return <CannotFindPage />;
   const { t } = useTranslation("@pages/movies");
+  if (!data || data.length === 0) return <CannotFindPage />;
   const pageTitle = "subCategory" in category ? category.subCategory : category.category;
   return (
     <>

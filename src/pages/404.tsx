@@ -1,6 +1,6 @@
-import { useTranslation } from "@services/i18n/i18n";
 import Head from "next/head";
 import Link from "next/link";
+import { useTranslation } from "@services/i18n/i18n";
 
 export default function Custom404() {
   const { t } = useTranslation("@pages/404");
