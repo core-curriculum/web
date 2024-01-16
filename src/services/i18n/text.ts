@@ -9,10 +9,10 @@ type Text = {
 
 const text = {
   $common: {
-    siteTitle: { ja: "コアカリナビ", en: "Core Curriculum Navigator" },
+    siteTitle: { ja: "コアカリナビ", en: "The Japanese Core Curriculum for Medical Education" },
   },
   "@components/NaviBar": {
-    title: { ja: "コアカリナビ", en: "コアカリナビ" },
+    title: { ja: "コアカリナビ", en: "Japanese Core Curriculum" },
     search: { ja: "検索", en: "Search" },
     associateItems: { ja: "授業との関連付け", en: "Associate with classes" },
     curriculumMap: { ja: "カリキュラムマップの作成", en: "Create a curriculum map" },
@@ -326,7 +326,7 @@ const text = {
     },
     title: {
       ja: "医学教育モデル・コア・カリキュラム",
-      en: "Model Core Curriculum for Medical Education",
+      en: "The Japanese Core Curriculum for Medical Education",
     },
   },
   "@services/itemList/libs/schema_list": {
