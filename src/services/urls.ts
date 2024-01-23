@@ -12,6 +12,11 @@ const useFullUrl = () => {
   return origin + router.asPath;
 };
 
+const usePathName = () => {
+  const router = useRouter();
+  return router.pathname;
+};
+
 const itemUrlToId = (url: string) => {
   const params = url.replace(`${origin}/x`, "");
   const id = locales.reduce((acc, locale) => {
@@ -41,6 +46,7 @@ const isValidItemUrlOrId = (urlOrId: string) => {
 export {
   origin,
   useFullUrl,
+  usePathName,
   itemUrlToId,
   isValidItemUrlOrId,
   itemIdToUrl,

@@ -14,10 +14,10 @@ const useLocale = () => {
 };
 const useLocaleText = <T extends keyof LocaleText>(path: T) => {
   const { locale } = useLocale();
-  const pageText = text[path];
+  const pageText = { ...text["$common" as const], ...text[path] };
   const t = <U extends keyof typeof pageText>(key: U) => {
     const value = pageText[key];
-    return value ? value[locale as keyof LocaleText[T][U]] : key;
+    return value ? value[locale as keyof (LocaleText[T] & LocaleText["$common"])[U]] : key;
   };
   return { t };
 };

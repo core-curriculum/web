@@ -8,8 +8,11 @@ type Text = {
 };
 
 const text = {
+  $common: {
+    siteTitle: { ja: "コアカリナビ", en: "The Japanese Core Curriculum for Medical Education" },
+  },
   "@components/NaviBar": {
-    title: { ja: "モデルコアカリキュラム", en: "Model Core Curriculum" },
+    title: { ja: "コアカリナビ", en: "Japanese Core Curriculum" },
     search: { ja: "検索", en: "Search" },
     associateItems: { ja: "授業との関連付け", en: "Associate with classes" },
     curriculumMap: { ja: "カリキュラムマップの作成", en: "Create a curriculum map" },
@@ -112,10 +115,7 @@ const text = {
     },
   },
   "@pages/movies": {
-    title: {
-      ja: "解説動画 | モデルコアカリキュラム",
-      en: "Movies | Model Core Curriculum",
-    },
+    title: { ja: "解説動画 | コアカリナビ", en: "Movies | Core Curriculum Navigator" },
     h1: { ja: "解説動画", en: "Movies" },
     linkToListPage: { ja: "動画一覧ページへ", en: "Go to movies list" },
     discription: {
@@ -124,6 +124,17 @@ const text = {
       // eslint-disable-next-line max-len
       en: "A collection of videos explaining each of the Model Core Curriculum's qualities and abilities (competencies), as well as how to use the Model Core Curriculum in the curriculum.",
     },
+    notFoundTitle: { ja: "動画が見つかりません", en: "Movie not found" },
+    notFound: { ja: "は見つかりませんでした。", en: " was not found." },
+    notFoundToBack: { ja: "動画一覧ページへ戻る", en: "Back to movies list" },
+  },
+  "@pages/404": {
+    title: {
+      ja: "ページが見つかりません | コアカリナビ",
+      en: "Page not found | Core Curriculum Navigator",
+    },
+    notFound: { ja: "ページが見つかりません", en: "Page not found" },
+    notFoundToHome: { ja: "ホームへ戻る", en: "Back to home" },
   },
   "@pages/citeas": {
     title: {
@@ -315,7 +326,7 @@ const text = {
     },
     title: {
       ja: "医学教育モデル・コア・カリキュラム",
-      en: "Model Core Curriculum for Medical Education",
+      en: "The Japanese Core Curriculum for Medical Education",
     },
   },
   "@services/itemList/libs/schema_list": {

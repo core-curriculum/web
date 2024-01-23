@@ -2,7 +2,9 @@ name: Test Deployment
 
 on:
   push:
-
+    branches:
+      - "**" # matches every branch
+      - "!main" # excludes main
 jobs:
   build:
     name: Test Deployment

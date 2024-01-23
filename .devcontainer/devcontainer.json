@@ -1,15 +1,17 @@
 {
-  "name": "${localWorkspaceFolderBasename}",
+  "name": "core-curriculum-web",
   "remoteEnv": {
-    "APP_NAME": "${localWorkspaceFolderBasename}"
+    "APP_NAME": "core-curriculum-web"
   },
   "context": "..",
   "dockerFile": "dockerfile",
   "mounts": [
-    "source=${localWorkspaceFolderBasename}_nodemodules,target=/workspaces/${localWorkspaceFolderBasename}/node_modules",
-    "source=${localWorkspaceFolderBasename}_config,target=/root",
-    "source=${localWorkspaceFolderBasename}_userHome,target=/home/node"
   ],
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "version": "latest"
+    }
+  },
   "customizations": {
     "vscode": {
       "extensions": [
@@ -20,14 +22,6 @@
         "GitHub.copilot",
         "github.vscode-github-actions"
       ]
-    },
-    "settings": {
-      "terminal.integrated.profiles.linux": {
-        "bash": {
-          "path": "/bin/sh"
-        }
-      },
-      "terminal.integrated.defaultProfile.linux": "bash"
     }
   },
   // Specifies a command that should be run after the container has been created.
