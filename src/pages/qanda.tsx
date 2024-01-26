@@ -13,8 +13,8 @@ export const getStaticProps: GetStaticProps<PageProps> = async ({ locale }) => {
   locale = locale as Locale;
   const data =
     locale === "ja"
-      ? (await import(`json_in_repo/q-and-a/ja.json`)).default
-      : (await import(`json_in_repo/q-and-a/en.json`)).default;
+      ? (await import("json_in_repo/q-and-a/ja.json")).default
+      : (await import("json_in_repo/q-and-a/en.json")).default;
   return {
     props: { data },
   };
@@ -39,13 +39,14 @@ const QandAPage: NextPage<PageProps> = ({ data }: PageProps) => {
       <HeaderBar />
       <div className="m-4 pb-24">
         {data.map(({ question, answer }, i) => {
+          const index = i+1
           return (
-            <section key={i} className="mx-auto mb-16 max-w-3xl">
+            <section key={question} className="mx-auto mb-16 max-w-3xl">
               <h3 className="my-4 text-lg text-base-content">
-                <span className="font-bold text-accent">Q{i + 1}.</span> {question}
+                <span className="font-bold text-accent">Q{index}.</span> {question}
               </h3>
               <p className="ml-2 text-base-content">
-                <span className="text-accent">A{i + 1}.</span> {answer}
+                <span className="text-accent">A{index}.</span> {answer}
               </p>
             </section>
           );
