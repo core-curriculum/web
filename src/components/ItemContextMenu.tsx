@@ -4,7 +4,7 @@ import { useLocaleText } from "@services/i18n/i18n";
 import { useItems } from "@services/itemList/local";
 import { toast } from "./toast";
 
-const ItemContextMenu = ({ id, index }: { id: string; index: string }) => {
+const ItemContextMenu = ({ id }: { id: string }) => {
   const { add: addItem, remove: removeItem, items } = useItems();
   const { t } = useLocaleText("@components/ItemContextMenu");
   const marked = items.includes(id);

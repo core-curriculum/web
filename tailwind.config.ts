@@ -28,6 +28,7 @@ const config: Config = {
   content: [
     // class属性を含む全てのファイルを指定する必要がある(jsx,htmlなど)
     "./src/pages/**/*.{js,ts,jsx,tsx}",
+    "./src/app/**/*.{js,ts,jsx,tsx}",
     "./src/components/**/*.{js,ts,jsx,tsx}",
     "./src/stories/**/*.{js,ts,jsx,tsx}",
   ],

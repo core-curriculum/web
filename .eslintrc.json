@@ -12,7 +12,18 @@
   // 追記
   // tailwind.config.js などの config ファイル、ESLint の対象外にする
   "ignorePatterns": ["*.config.js"],
-  "plugins": ["unused-imports"],
+  "plugins": ["unused-imports", "import"],
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true, // always try to resolve types under `<root>@types` directory even it doesn't contain any source code, like `@types/unist`
+        "project": "./tsconfig.json"
+      }
+    }
+  },
   "rules": {
     "@typescript-eslint/no-unused-vars": "off",
     "unused-imports/no-unused-imports": "warn",
