@@ -11,6 +11,16 @@ const text = {
   $common: {
     siteTitle: { ja: "コアカリナビ", en: "The Japanese Core Curriculum for Medical Education" },
   },
+  "@components/Footer": {
+    description: {
+      ja: "このページは医学教育学会「モデル・コア・カリキュラム改訂等に関する調査研究チーム」が、「医学教育モデル・コア・カリキュラム（令和4年度改訂版）」に基づいて作成しています。",
+      en: "This page contains the official English translation of the original Japanese revision, produced by the Model Core Curriculum Expert Research Committee of the Japan Society for Medical Education, as part of a project commissioned by the Ministry of Education, Culture, Sports, Science and Technology (MEXT).",
+    },
+    linkForData: {
+      en: "Data for Research and IR.",
+      ja: "研究・IR用データ",
+    },
+  },
   "@components/NaviBar": {
     title: { ja: "コアカリナビ", en: "Japanese Core Curriculum" },
     search: { ja: "検索", en: "Search" },
