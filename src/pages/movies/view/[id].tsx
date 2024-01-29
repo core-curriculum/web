@@ -6,7 +6,7 @@ import { MdDownload } from "react-icons/md";
 import { BackButton } from "@components/buttons/BackButton";
 
 import { Locale, Locales, useTranslation } from "@services/i18n/i18n";
-import { loadMovieData, type MovieData, type MovieInfo } from "..";
+import { loadMovieData, type MovieData } from "..";
 
 type FileInfo = {
   name: string;
@@ -139,7 +139,8 @@ const Card = ({ data: movieData }: { data: MovieData }) => {
           src={data.player_url}
           className="absolute left-0 top-0 h-full w-full border-0"
         ></iframe>
-        <script src="https://player.vimeo.com/api/player.js"></script>
+
+        <script src="https://player.vimeo.com/api/player.js" async></script>
       </div>
 
       <div className="bg-base-200 p-3 text-lg font-bold">{title || data.title}</div>

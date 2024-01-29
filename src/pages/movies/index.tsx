@@ -3,10 +3,10 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { MdFilePresent } from "react-icons/md";
 import { BackButton } from "@components/buttons/BackButton";
 
 import { Locale, useTranslation } from "@services/i18n/i18n";
-import { MdFilePresent } from "react-icons/md";
 
 type PageProps = {
   data: MovieData[];
