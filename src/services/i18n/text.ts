@@ -134,6 +134,7 @@ const text = {
       // eslint-disable-next-line max-len
       en: "A collection of videos explaining each of the Model Core Curriculum's qualities and abilities (competencies), as well as how to use the Model Core Curriculum in the curriculum.",
     },
+    filesTitle: { ja: "関連ファイル", en: "Related files" },
     notFoundTitle: { ja: "動画が見つかりません", en: "Movie not found" },
     notFound: { ja: "は見つかりませんでした。", en: " was not found." },
     notFoundToBack: { ja: "動画一覧ページへ戻る", en: "Back to movies list" },

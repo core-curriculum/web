@@ -18,8 +18,7 @@ type MovieData = {
   url: string;
   id: string;
   description: string;
-  files: string[];
-  filesInfo: { url: string; fileName?: string; lastModified: string }[];
+  files: string;
   data: {
     type: string;
     version: string;
