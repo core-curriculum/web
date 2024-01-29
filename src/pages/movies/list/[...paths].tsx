@@ -4,7 +4,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BackButton } from "@components/buttons/BackButton";
 import { Locale, Locales, useTranslation } from "@services/i18n/i18n";
-import { MovieCardList, MoviePageLayout, type MovieData, MovieToc, categoriseData } from "..";
+import {
+  MovieCardList,
+  MoviePageLayout,
+  type MovieData,
+  MovieToc,
+  categoriseData,
+  loadMovieData,
+} from "..";
 
 type PageProps = {
   data: MovieData[];
@@ -85,10 +92,7 @@ export const getStaticProps: GetStaticProps<PageProps> = async ({ locale, params
       ? { category: paths[0] as string }
       : { category: paths[0] as string, subCategory: paths[1] as string };
   locale = locale as Locale;
-  const allData =
-    locale === "ja"
-      ? (await import(`json_in_repo/movies/ja.json`)).default
-      : (await import(`json_in_repo/movies/en.json`)).default;
+  const allData = await loadMovieData(locale as Locale);
   const data = allData.filter(
     ({ category, "sub-category": subCategory }) =>
       category === categoryToMatch.category &&

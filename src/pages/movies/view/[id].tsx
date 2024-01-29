@@ -6,7 +6,7 @@ import { MdDownload } from "react-icons/md";
 import { BackButton } from "@components/buttons/BackButton";
 
 import { Locale, Locales, useTranslation } from "@services/i18n/i18n";
-import { MovieData } from "..";
+import { loadMovieData, type MovieData, type MovieInfo } from "..";
 
 type FileInfo = {
   name: string;
@@ -16,7 +16,6 @@ type FileInfo = {
 
 type PageProps = {
   data: MovieData | undefined;
-  filesInfo: FileInfo[];
   id: string;
 };
 
@@ -40,20 +39,10 @@ export const getStaticPaths: GetStaticPaths<PathParams> = async () => {
 
 export const getStaticProps: GetStaticProps<PageProps> = async ({ locale, params }) => {
   const id = (params?.id as string) || "";
-  locale = locale as Locale;
-  const allData =
-    locale === "ja"
-      ? (await import(`json_in_repo/movies/ja.json`)).default
-      : (await import(`json_in_repo/movies/en.json`)).default;
-  const allFilesInfo =
-    locale === "ja"
-      ? (await import(`json_in_repo/movies/ja-files.json`)).default
-      : (await import(`json_in_repo/movies/en-files.json`)).default;
+  const allData = await loadMovieData(locale as Locale);
   const data = allData.find(({ id: _id }) => _id === id);
-  const files = data?.files.split(",").map(v => v.trim()) || [];
-  const filesInfo = allFilesInfo.filter(({ file }) => files.some(f => f === file));
   return {
-    props: { data, id, filesInfo },
+    props: { data, id },
   };
 };
 
@@ -135,9 +124,10 @@ const FileList = ({
   );
 };
 
-const Card = ({ data: movieData, filesInfo }: { data: MovieData; filesInfo: FileInfo[] }) => {
+const Card = ({ data: movieData }: { data: MovieData }) => {
   const { t } = useTranslation("@pages/movies");
-  const { title, description, data } = movieData;
+  const { title, description, data, filesInfo } = movieData;
+  console.log(data.player_url);
   return (
     <div>
       <Head>
@@ -149,6 +139,7 @@ const Card = ({ data: movieData, filesInfo }: { data: MovieData; filesInfo: File
           src={data.player_url}
           className="absolute left-0 top-0 h-full w-full border-0"
         ></iframe>
+        <script src="https://player.vimeo.com/api/player.js"></script>
       </div>
 
       <div className="bg-base-200 p-3 text-lg font-bold">{title || data.title}</div>
@@ -160,8 +151,8 @@ const Card = ({ data: movieData, filesInfo }: { data: MovieData; filesInfo: File
   );
 };
 
-const MovieViewPage: NextPage<PageProps> = ({ data, id, filesInfo }: PageProps) => {
-  return <>{data ? <Card {...{ filesInfo, data }} /> : `not found ${id}`}</>;
+const MovieViewPage: NextPage<PageProps> = ({ data, id }: PageProps) => {
+  return <>{data ? <Card {...{ data }} /> : `not found ${id}`}</>;
 };
 
 export default MovieViewPage;

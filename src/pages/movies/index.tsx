@@ -6,9 +6,38 @@ import { usePathname } from "next/navigation";
 import { BackButton } from "@components/buttons/BackButton";
 
 import { Locale, useTranslation } from "@services/i18n/i18n";
+import { MdFilePresent } from "react-icons/md";
 
 type PageProps = {
   data: MovieData[];
+};
+
+type FileInfo = {
+  name: string;
+  file: string;
+  downloadUrl: string;
+};
+
+type MovieInfo = {
+  type: string;
+  version: string;
+  provider_name: string;
+  provider_url: string;
+  title: string;
+  author_name: string;
+  author_url: string;
+  duration: string;
+  html: string;
+  player_url: string;
+  thumbnail_url: string;
+  thumbnail_width: string;
+  thumbnail_height: string;
+  thumbnail_url_with_play_button: string;
+  upload_date: string;
+  uri: string;
+  id: string;
+  description: string;
+  url: string;
 };
 
 type MovieData = {
@@ -19,25 +48,8 @@ type MovieData = {
   id: string;
   description: string;
   files: string;
-  data: {
-    type: string;
-    version: string;
-    provider_name: string;
-    provider_url: string;
-    title: string;
-    author_name: string;
-    author_url: string;
-    html: string;
-    player_url: string;
-    thumbnail_url: string;
-    thumbnail_width: number;
-    thumbnail_height: number;
-    thumbnail_url_with_play_button: string;
-    upload_date: string;
-    uri: string;
-    id: string;
-    description: string;
-  };
+  data: MovieInfo;
+  filesInfo: FileInfo[];
 };
 
 type CategoriesedData<T, K extends (keyof T)[]> = {
@@ -70,13 +82,33 @@ function categoriseData<T, K extends (keyof T)[]>(
   });
 }
 
-export const getStaticProps: GetStaticProps<PageProps> = async ({ locale }) => {
-  locale = locale as Locale;
-  const data =
+export const loadMovieData = async (locale: Locale): Promise<MovieData[]> => {
+  const rawData =
     locale === "ja"
       ? (await import(`json_in_repo/movies/ja.json`)).default
       : (await import(`json_in_repo/movies/en.json`)).default;
+  const movieInfo =
+    locale === "ja"
+      ? (await import(`json_in_repo/movies/ja-movie-info.json`)).default
+      : (await import(`json_in_repo/movies/en-movie-info.json`)).default;
+  const filesInfo =
+    locale === "ja"
+      ? (await import(`json_in_repo/movies/ja-files.json`)).default
+      : (await import(`json_in_repo/movies/en-files.json`)).default;
+  const data = rawData.map(d => {
+    const info = movieInfo.find(({ url }) => url === d.url);
+    if (!info) throw new Error("No info");
+    d.title = info.title;
+    d.description = info.description;
+    d.id = info.id;
+    const filesInfoList = filesInfo.filter(({ file }) => d.files.split(",").some(f => f === file));
+    return { ...d, data: info, filesInfo: filesInfoList };
+  });
+  return data;
+};
 
+export const getStaticProps: GetStaticProps<PageProps> = async ({ locale }) => {
+  const data = await loadMovieData(locale as Locale);
   return {
     props: { data },
   };
@@ -92,26 +124,47 @@ const HeaderBar = () => {
   );
 };
 
+const formatDuration = (second: number) => {
+  const hours = Math.floor(second / 3600).toString();
+  const minutes = Math.floor((second % 3600) / 60).toString();
+  const seconds = Math.floor(second % 60).toString();
+  return `${hours ? `${hours.padStart(2, "0")}:` : ""}${
+    minutes ? `${minutes.padStart(2, "0")}:` : ""
+  }${seconds.padStart(2, "0")}`;
+};
+
 const MovieCard = ({ data: movieData }: { data: MovieData }) => {
-  const { title, data } = movieData;
+  const { title, data, description } = movieData;
   const pathname = usePathname();
   const url = `/movies/view/${data.id}?return_to=${pathname}`;
+  const truncate = (text: string, length = 30) => {
+    return text.length > length ? text.substring(0, length) + "..." : text;
+  };
   return (
     <div
-      style={{ maxWidth: data.thumbnail_width * 1.5 }}
-      className="row-span-2 grid grid-rows-subgrid overflow-hidden rounded-lg drop-shadow-md
+      style={{ maxWidth: Number(data.thumbnail_width) * 1.5 }}
+      className="row-span-3 grid grid-rows-subgrid overflow-hidden rounded-lg drop-shadow-md
       transition [row-gap:0]  hover:opacity-60 hover:drop-shadow-xl"
     >
       <Link href={url}>
         <Image
-          width={data.thumbnail_width * 1.5}
-          height={data.thumbnail_height * 1.5}
+          width={Number(data.thumbnail_width) * 1.5}
+          height={Number(data.thumbnail_height) * 1.5}
           src={data.thumbnail_url_with_play_button}
           alt={title || data.title}
         />
       </Link>
-      <Link href={url} className="bg-base-200 block ">
+      <Link className="bg-base-200 block " href={url}>
         <div className="p-3">{title || data.title}</div>
+      </Link>
+      <Link className="bg-base-200 block " href={url}>
+        <div className="px-3 text-right text-xs">{formatDuration(Number(data.duration))}</div>
+        <div className="p-3 text-xs">{truncate(description || data.description)}</div>
+        {movieData.filesInfo.length ? (
+          <div className="flex flex-row-reverse px-3 pb-3">
+            <MdFilePresent className="text-base-content text-2xl" />
+          </div>
+        ) : null}
       </Link>
     </div>
   );
@@ -228,5 +281,5 @@ const MoviesPage: NextPage<PageProps> = ({ data }: { data: MovieData[] }) => {
 };
 
 export default MoviesPage;
-export { type MovieData };
+export type { MovieData, MovieInfo };
 export { MovieToc, Layout as MoviePageLayout, categoriseData, MovieCardList };
