@@ -16,9 +16,9 @@ const BackButton = ({ href }: BackButtonProps) => {
       <MdArrowBack
         size="2rem"
         title={t("target")}
-        color="hsl(var(--in))"
-        className="cursor-pointer rounded-md 
-    p-1 hover:bg-info/30"
+        color="oklch(var(--in))"
+        className="hover:bg-info/30 cursor-pointer 
+    rounded-md p-1"
       />
     </Link>
   );

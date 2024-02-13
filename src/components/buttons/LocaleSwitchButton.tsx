@@ -15,7 +15,7 @@ const LocaleSwitchButton = () => {
       <MdLanguage
         size="2rem"
         title={title}
-        color="rgb(125 211 252"
+        color="rgb(125 211 252)"
         className="hover:bg-info/30 cursor-pointer 
     rounded-md p-1"
       />
