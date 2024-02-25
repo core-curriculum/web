@@ -310,8 +310,8 @@ const text = {
       en: "MEXT Model Core Curriculum page (Japanese page)",
     },
     pdfLink: {
-      ja: "https://www.mext.go.jp/content/20230207-mxt_igaku-000026049_00001.pdf",
-      en: "https://www.mext.go.jp/content/20230315-mxt_igaku-000026049_00003.pdf",
+      ja: "https://www.mext.go.jp/content/20240220_mxt_igaku-000028108_01.pdf",
+      en: "https://www.mext.go.jp/content/20230323-mxt_igaku-000028108_00003.pdf",
     },
     pdfLinkText: {
       ja: "pdfダウンロード (8.2MB)",
