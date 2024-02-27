@@ -30,7 +30,10 @@ const Footer: React.FC = () => {
       : "https://github.com/core-curriculum/data/tree/main/2022/en";
   return (
     <footer className="text-base-content/80 px-5 py-4 text-center text-sm">
-      <div className="border-t-base-content/80 grid grid-cols-1 justify-items-center gap-3 border-t-[1px] px-5 py-2">
+      <div
+        className="border-t-base-content/80
+      grid grid-cols-1 justify-items-center gap-3 border-t-[1px] px-5 py-2"
+      >
         <p className="text-xs">{t("description")}</p>
         <p className="flex flex-row gap-2">
           <Link href="https://github.com/core-curriculum/web" className="link" target="_blank">

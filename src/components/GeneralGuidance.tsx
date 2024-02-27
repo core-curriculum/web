@@ -8,6 +8,8 @@ import { useLocale, useLocaleText } from "@services/i18n/i18n";
 type PProps = React.HTMLAttributes<HTMLDivElement>;
 type Props = {} & PProps;
 
+const mextUrl = "https://www.mext.go.jp/a_menu/koutou/iryou/mext_00005.html";
+
 const GeneralGuidance: React.FC<Props> = props => {
   const { t } = useLocaleText("@components/GeneralGuidance");
   const { locale } = useLocale();
@@ -16,11 +18,7 @@ const GeneralGuidance: React.FC<Props> = props => {
       <p className="mb-4">{t("discription1")}</p>
       <p>{t("discription2")}</p>
       <div className="mt-8 flex flex-col gap-2">
-        <Link
-          className="link-hover link-info link"
-          target="_blank"
-          href="https://www.mext.go.jp/b_menu/shingi/chousa/koutou/116/toushin/mext_01280.html"
-        >
+        <Link className="link-hover link-info link" target="_blank" href={mextUrl}>
           {t("linkMextText")}
           <FiExternalLink className="ml-1 inline-block" />
         </Link>
