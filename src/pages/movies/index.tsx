@@ -245,8 +245,6 @@ type CategoryInfoProps = {
   subCategory: string;
 };
 const CategoryInfo = ({ data, category, subCategory }: CategoryInfoProps) => {
-  const list = data.filter(d => d.type === "categoryData");
-  console.log(list, category, subCategory);
   const categoryData = data.find(
     d => d.type === "categoryData" && d.category === category && d["sub-category"] === subCategory,
   ) as MovieCategoryData;

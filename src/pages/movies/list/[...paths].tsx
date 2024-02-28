@@ -66,11 +66,13 @@ const getPaths = async (): Promise<
   const paths = (
     await Promise.all(
       (["en", "ja"] as Locales).map(async locale => {
-        const data = (await loadMovieData(locale as Locale)).filter(isMovieData);
-        return extractCategories(data, ["category", "sub-category"]).map(paths => ({
-          params: { paths },
-          locale,
-        }));
+        const data = await loadMovieData(locale as Locale);
+        return extractCategories(data.filter(isMovieData), ["category", "sub-category"]).map(
+          paths => ({
+            params: { paths },
+            locale,
+          }),
+        );
       }),
     )
   ).flat();
@@ -115,7 +117,9 @@ const SubCategoryPage = ({ data, category: { category, subCategory } }: SubCateg
     <div className="h-dvh">
       <HeaderBar />
       <div className="grid scroll-pt-14 gap-4 p-4 pt-14">
-        <h1 className="text-xl">{category}</h1>
+        <Link href={`/movies/list/${encodeURIComponent(category)}`} className="link link-hover">
+          <h1 className="text-xl">{category}</h1>
+        </Link>
         <h2 className="text-lg">{subCategory}</h2>
         <CategoryInfo data={data} category={category} subCategory={subCategory} />
         <MovieCardList data={movieData} />
@@ -180,9 +184,10 @@ const CannotFindPage = () => {
 
 const MovieListPage: NextPage<PageProps> = ({ data, category }: PageProps) => {
   const { t } = useTranslation("@pages/movies");
+  if (!data || data.length === 0) return <CannotFindPage />;
+  const pageTitle = "subCategory" in category ? category.subCategory : category.category;
   const movieData = data.filter(isMovieData);
   if (!movieData || movieData.length === 0) return <CannotFindPage />;
-  const pageTitle = "subCategory" in category ? category.subCategory : category.category;
   return (
     <>
       <Head>
