@@ -69,7 +69,7 @@ const getPaths = async (): Promise<
         const data = await loadMovieData(locale as Locale);
         return extractCategories(data.filter(isMovieData), ["category", "sub-category"]).map(
           paths => ({
-            params: { paths },
+            params: { paths: paths },
             locale,
           }),
         );

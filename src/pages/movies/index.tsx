@@ -269,13 +269,10 @@ const WholeMovieCardList = ({ data }: { data: DataList }) => {
           className="rounded-box border-base-300 bg-base-100 border-[1px] p-6"
         >
           <h3 className="text-base-content my-10 text-2xl" id={dataList.key}>
-            <Link
-              className="link link-hover"
-              href={`/movies/list/${encodeURIComponent(dataList.key)}`}
-            >
+            <a className="link link-hover" href={`/movies/list/${dataList.key}`}>
               {" "}
               {dataList.key}
-            </Link>
+            </a>
           </h3>
           <CategoryInfo data={data} category={dataList.key} subCategory="" />
           {dataList.data.map(subData => (
