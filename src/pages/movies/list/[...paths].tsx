@@ -76,6 +76,7 @@ const getPaths = async (): Promise<
       }),
     )
   ).flat();
+  console.log(paths);
   return paths;
 };
 
@@ -83,7 +84,7 @@ export const getStaticPaths: GetStaticPaths<PathParams> = async () => {
   const paths = await getPaths();
   return {
     paths,
-    fallback: true,
+    fallback: false,
   };
 };
 

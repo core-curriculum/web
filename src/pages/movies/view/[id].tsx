@@ -85,7 +85,6 @@ const Desctiption = ({ text }: { text: string }) => {
 const Card = ({ data: movieData }: { data: MovieData }) => {
   const { t } = useTranslation("@pages/movies");
   const { title, description, data, filesInfo } = movieData;
-  console.log(data.player_url);
   return (
     <div>
       <Head>
