@@ -7,14 +7,16 @@ import { Locale, Locales, useTranslation } from "@services/i18n/i18n";
 import {
   MovieCardList,
   MoviePageLayout,
-  type MovieData,
   MovieToc,
   categoriseData,
   loadMovieData,
+  DataList,
+  isMovieData,
+  CategoryInfo,
 } from "..";
 
 type PageProps = {
-  data: MovieData[];
+  data: DataList;
   category: { category: string; subCategory: string } | { category: string };
 };
 
@@ -61,18 +63,17 @@ const getPaths = async (): Promise<
     locale: Locale;
   }[]
 > => {
-  const data = {
-    ja: (await import("json_in_repo/movies/ja.json")).default,
-    en: (await import("json_in_repo/movies/en.json")).default,
-  };
-  const paths = (["en", "ja"] as Locales)
-    .map(locale =>
-      extractCategories(data[locale], ["category", "sub-category"]).map(paths => ({
-        params: { paths },
-        locale,
-      })),
+  const paths = (
+    await Promise.all(
+      (["en", "ja"] as Locales).map(async locale => {
+        const data = (await loadMovieData(locale as Locale)).filter(isMovieData);
+        return extractCategories(data, ["category", "sub-category"]).map(paths => ({
+          params: { paths },
+          locale,
+        }));
+      }),
     )
-    .flat();
+  ).flat();
   return paths;
 };
 
@@ -105,27 +106,31 @@ export const getStaticProps: GetStaticProps<PageProps> = async ({ locale, params
 
 type SubCategoryPageProps = {
   category: { category: string; subCategory: string };
-  data: MovieData[];
+  data: DataList;
 };
 
 const SubCategoryPage = ({ data, category: { category, subCategory } }: SubCategoryPageProps) => {
+  const movieData = data.filter(isMovieData);
   return (
     <div className="h-dvh">
       <HeaderBar />
       <div className="grid scroll-pt-14 gap-4 p-4 pt-14">
         <h1 className="text-xl">{category}</h1>
         <h2 className="text-lg">{subCategory}</h2>
-        <MovieCardList data={data} />
+        <CategoryInfo data={data} category={category} subCategory={subCategory} />
+        <MovieCardList data={movieData} />
       </div>
     </div>
   );
 };
 
 const CategoryPane = ({ data, category: { category } }: PageProps) => {
-  const subCategories = categoriseData(data, ["sub-category"]);
+  const movieData = data.filter(isMovieData);
+  const subCategories = categoriseData(movieData, ["sub-category"]);
   return (
     <div className="grid gap-4 p-4">
       <h1 className="text-xl">{category}</h1>
+      <CategoryInfo data={data} category={category} subCategory="" />
       {subCategories.map(subCategory => (
         <Link
           key={subCategory.key}
@@ -135,6 +140,7 @@ const CategoryPane = ({ data, category: { category } }: PageProps) => {
           className="text-lg"
         >
           {subCategory.key}
+          <CategoryInfo data={data} category={category} subCategory={subCategory.key} />
           <MovieCardList data={subCategory.data} />
         </Link>
       ))}
@@ -174,7 +180,8 @@ const CannotFindPage = () => {
 
 const MovieListPage: NextPage<PageProps> = ({ data, category }: PageProps) => {
   const { t } = useTranslation("@pages/movies");
-  if (!data || data.length === 0) return <CannotFindPage />;
+  const movieData = data.filter(isMovieData);
+  if (!movieData || movieData.length === 0) return <CannotFindPage />;
   const pageTitle = "subCategory" in category ? category.subCategory : category.category;
   return (
     <>

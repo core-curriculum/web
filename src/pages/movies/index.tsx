@@ -3,13 +3,13 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MdFilePresent } from "react-icons/md";
+import { MdFilePresent, MdDownload } from "react-icons/md";
 import { BackButton } from "@components/buttons/BackButton";
 
 import { Locale, useTranslation } from "@services/i18n/i18n";
 
 type PageProps = {
-  data: MovieData[];
+  data: DataList;
 };
 
 type FileInfo = {
@@ -41,6 +41,7 @@ type MovieInfo = {
 };
 
 type MovieData = {
+  type: "movieData";
   title: string;
   category: string;
   "sub-category": string;
@@ -51,6 +52,19 @@ type MovieData = {
   data: MovieInfo;
   filesInfo: FileInfo[];
 };
+
+type MovieCategoryData = {
+  type: "categoryData";
+  category: string;
+  "sub-category": string;
+  description: string;
+  files: string;
+  filesInfo: FileInfo[];
+};
+
+type DataList = ReadonlyArray<MovieData | MovieCategoryData>;
+
+const isMovieData = (data: DataList[number]): data is MovieData => data.type === "movieData";
 
 type CategoriesedData<T, K extends (keyof T)[]> = {
   key: K[0] extends keyof T ? T[K[0]] : never;
@@ -82,11 +96,11 @@ function categoriseData<T, K extends (keyof T)[]>(
   });
 }
 
-export const loadMovieData = async (locale: Locale): Promise<MovieData[]> => {
+export const loadMovieData = async (locale: Locale): Promise<DataList> => {
   const rawData =
     locale === "ja"
-      ? (await import(`json_in_repo/movies/ja.json`)).default
-      : (await import(`json_in_repo/movies/en.json`)).default;
+      ? (await import(`json_in_repo/movies/ja-list.json`)).default
+      : (await import(`json_in_repo/movies/en-list.json`)).default;
   const movieInfo =
     locale === "ja"
       ? (await import(`json_in_repo/movies/ja-movie-info.json`)).default
@@ -96,13 +110,25 @@ export const loadMovieData = async (locale: Locale): Promise<MovieData[]> => {
       ? (await import(`json_in_repo/movies/ja-files.json`)).default
       : (await import(`json_in_repo/movies/en-files.json`)).default;
   const data = rawData.map(d => {
+    const filesInfoList = filesInfo.filter(({ file }) => d.files.split(",").some(f => f === file));
+    if (!d.url) {
+      return {
+        type: "categoryData" as const,
+        ...d,
+        filesInfo: filesInfoList,
+      } as const satisfies MovieCategoryData;
+    }
     const info = movieInfo.find(({ url }) => url === d.url);
     if (!info) throw new Error("No info");
     d.title = info.title;
     d.description = info.description;
-    d.id = info.id;
-    const filesInfoList = filesInfo.filter(({ file }) => d.files.split(",").some(f => f === file));
-    return { ...d, data: info, filesInfo: filesInfoList };
+    return {
+      type: "movieData" as const,
+      id: info.id,
+      ...d,
+      data: info,
+      filesInfo: filesInfoList,
+    } as const satisfies MovieData;
   });
   return data;
 };
@@ -180,8 +206,63 @@ const MovieCardList = ({ data }: { data: MovieData[] }) => {
   );
 };
 
-const WholeMovieCardList = ({ data }: { data: MovieData[] }) => {
-  const categorisedData = categoriseData(data, ["category", "sub-category"]);
+const FileInfoPanel = ({ name, downloadUrl }: { name: string; downloadUrl: string }) => {
+  return (
+    <div className="text-sm">
+      <Link
+        href={downloadUrl}
+        className="link link-info link-hover"
+        target="_blank"
+        download={true}
+        rel="noopener noreferrer"
+      >
+        {name}
+        <MdDownload className="ml-1 inline-block" />
+      </Link>
+    </div>
+  );
+};
+
+const FileList = ({ filesInfo, hasTitle }: { filesInfo: FileInfo[]; hasTitle: boolean }) => {
+  const { t } = useTranslation("@pages/movies");
+  if (filesInfo.length === 0) return <></>;
+  const infoList = [...filesInfo].sort(({ name: name1 }, { name: name2 }) =>
+    new Intl.Collator("ja").compare(name1, name2),
+  );
+  return (
+    <div className="flex flex-col gap-4 p-3 text-sm">
+      {hasTitle ? <h3 className="text-base-content mt-10 text-xl">{t("filesTitle")}</h3> : null}
+      {infoList.map(({ name, downloadUrl }, i) => {
+        return <FileInfoPanel key={i} name={name} downloadUrl={downloadUrl} />;
+      })}
+    </div>
+  );
+};
+
+type CategoryInfoProps = {
+  data: DataList;
+  category: string;
+  subCategory: string;
+};
+const CategoryInfo = ({ data, category, subCategory }: CategoryInfoProps) => {
+  const list = data.filter(d => d.type === "categoryData");
+  console.log(list, category, subCategory);
+  const categoryData = data.find(
+    d => d.type === "categoryData" && d.category === category && d["sub-category"] === subCategory,
+  ) as MovieCategoryData;
+  if (!categoryData) return null;
+  const { description, filesInfo } = categoryData;
+  return (
+    <div className="flex flex-row gap-3">
+      <p>{description}</p>
+      <FileList filesInfo={filesInfo} hasTitle={false} />
+    </div>
+  );
+};
+
+const WholeMovieCardList = ({ data }: { data: DataList }) => {
+  const movieData = data.filter(d => d.type === "movieData") as MovieData[];
+  const categorisedData = categoriseData(movieData, ["category", "sub-category"]);
   return (
     <div className="grid gap-14">
       {categorisedData.map(dataList => (
@@ -195,19 +276,23 @@ const WholeMovieCardList = ({ data }: { data: MovieData[] }) => {
               {dataList.key}
             </Link>
           </h3>
-          {dataList.data.map(data => (
-            <div key={data.key}>
-              {data.key ? (
-                <h4 className="text-base-content my-5 text-xl" id={data.key}>
-                  <Link
-                    className="link link-hover"
-                    href={`/movies/list/${dataList.key}/${data.key}`}
-                  >
-                    {data.key}
-                  </Link>
-                </h4>
+          <CategoryInfo data={data} category={dataList.key} subCategory="" />
+          {dataList.data.map(subData => (
+            <div key={subData.key}>
+              {subData.key ? (
+                <div>
+                  <h4 className="text-base-content my-5 text-xl" id={subData.key}>
+                    <Link
+                      className="link link-hover"
+                      href={`/movies/list/${dataList.key}/${subData.key}`}
+                    >
+                      {subData.key}
+                    </Link>
+                  </h4>
+                  <CategoryInfo data={data} category={dataList.key} subCategory={subData.key} />
+                </div>
               ) : null}
-              <MovieCardList data={data.data} />
+              <MovieCardList data={subData.data} />
             </div>
           ))}
         </div>
@@ -216,8 +301,9 @@ const WholeMovieCardList = ({ data }: { data: MovieData[] }) => {
   );
 };
 
-const MovieToc = ({ data }: { data: MovieData[] }) => {
-  const categorisedData = categoriseData(data, ["category", "sub-category"]);
+const MovieToc = ({ data }: { data: DataList }) => {
+  const movieData = data.filter(d => d.type === "movieData") as MovieData[];
+  const categorisedData = categoriseData(movieData, ["category", "sub-category"]);
   return (
     <ul className="flex flex-col gap-2">
       {categorisedData.map((dataList, i) => (
@@ -265,7 +351,7 @@ const Layout = ({ toc, main }: LayoutProps) => {
   );
 };
 
-const MoviesPage: NextPage<PageProps> = ({ data }: { data: MovieData[] }) => {
+const MoviesPage: NextPage<PageProps> = ({ data }: { data: DataList }) => {
   const { t } = useTranslation("@pages/movies");
   return (
     <div className="h-dvh">
@@ -281,5 +367,13 @@ const MoviesPage: NextPage<PageProps> = ({ data }: { data: MovieData[] }) => {
 };
 
 export default MoviesPage;
-export type { MovieData, MovieInfo };
-export { MovieToc, Layout as MoviePageLayout, categoriseData, MovieCardList };
+export type { MovieData, MovieInfo, DataList };
+export {
+  MovieToc,
+  Layout as MoviePageLayout,
+  categoriseData,
+  MovieCardList,
+  isMovieData,
+  CategoryInfo,
+  FileList,
+};

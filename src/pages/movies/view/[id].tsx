@@ -2,17 +2,10 @@ import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { MdDownload } from "react-icons/md";
 import { BackButton } from "@components/buttons/BackButton";
 
 import { Locale, Locales, useTranslation } from "@services/i18n/i18n";
-import { loadMovieData, type MovieData } from "..";
-
-type FileInfo = {
-  name: string;
-  file: string;
-  downloadUrl: string;
-};
+import { isMovieData, loadMovieData, type MovieData, FileList } from "..";
 
 type PageProps = {
   data: MovieData | undefined;
@@ -24,13 +17,15 @@ type PathParams = {
 };
 
 export const getStaticPaths: GetStaticPaths<PathParams> = async () => {
-  const data = {
-    ja: (await import("json_in_repo/movies/ja.json")).default,
-    en: (await import("json_in_repo/movies/en.json")).default,
-  };
-  const paths = (["en", "ja"] as Locales)
-    .map(locale => data[locale].map(({ id }) => ({ params: { id }, locale })))
-    .flat();
+  const paths = (
+    await Promise.all(
+      (["en", "ja"] as Locales).map(async locale => {
+        return (await loadMovieData(locale as Locale))
+          .filter(isMovieData)
+          .map(({ id }) => ({ params: { id }, locale }));
+      }),
+    )
+  ).flat();
   return {
     paths,
     fallback: false,
@@ -40,7 +35,7 @@ export const getStaticPaths: GetStaticPaths<PathParams> = async () => {
 export const getStaticProps: GetStaticProps<PageProps> = async ({ locale, params }) => {
   const id = (params?.id as string) || "";
   const allData = await loadMovieData(locale as Locale);
-  const data = allData.find(({ id: _id }) => _id === id);
+  const data = allData.filter(isMovieData).find(({ id: _id }) => _id === id);
   return {
     props: { data, id },
   };
@@ -87,43 +82,6 @@ const Desctiption = ({ text }: { text: string }) => {
   );
 };
 
-const FileInfo = ({ name, downloadUrl }: { name: string; downloadUrl: string }) => {
-  return (
-    <div className="text-sm">
-      <Link
-        href={downloadUrl}
-        className="link link-info link-hover"
-        target="_blank"
-        download={true}
-        rel="noopener noreferrer"
-      >
-        {name}
-        <MdDownload className="ml-1 inline-block" />
-      </Link>
-    </div>
-  );
-};
-
-const FileList = ({
-  filesInfo,
-}: {
-  filesInfo: { name: string; file: string; downloadUrl: string }[];
-}) => {
-  const { t } = useTranslation("@pages/movies");
-  if (filesInfo.length === 0) return <></>;
-  const infoList = [...filesInfo].sort(({ name: name1 }, { name: name2 }) =>
-    new Intl.Collator("ja").compare(name1, name2),
-  );
-  return (
-    <div className="bg-base-200 flex flex-col gap-4 p-3 text-sm">
-      <h3 className="text-base-content mt-10 text-xl">{t("filesTitle")}</h3>
-      {infoList.map(({ name, downloadUrl }, i) => {
-        return <FileInfo key={i} name={name} downloadUrl={downloadUrl} />;
-      })}
-    </div>
-  );
-};
-
 const Card = ({ data: movieData }: { data: MovieData }) => {
   const { t } = useTranslation("@pages/movies");
   const { title, description, data, filesInfo } = movieData;
@@ -146,7 +104,7 @@ const Card = ({ data: movieData }: { data: MovieData }) => {
       <div className="bg-base-200 p-3 text-lg font-bold">{title || data.title}</div>
       <div className="bg-base-200 p-3 text-sm">
         <Desctiption text={description || data.description} />
-        <FileList filesInfo={filesInfo} />
+        <FileList filesInfo={filesInfo} hasTitle={true} />
       </div>
     </div>
   );
