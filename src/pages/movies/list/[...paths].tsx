@@ -117,7 +117,7 @@ const SubCategoryPage = ({ data, category: { category, subCategory } }: SubCateg
     <div className="h-dvh">
       <HeaderBar />
       <div className="grid scroll-pt-14 gap-4 p-4 pt-14">
-        <Link href={`/movies/list/${encodeURIComponent(category)}`} className="link link-hover">
+        <Link href={`/movies/list/${category}`} className="link link-hover">
           <h1 className="text-xl">{category}</h1>
         </Link>
         <h2 className="text-lg">{subCategory}</h2>
@@ -184,6 +184,8 @@ const CannotFindPage = () => {
 
 const MovieListPage: NextPage<PageProps> = ({ data, category }: PageProps) => {
   const { t } = useTranslation("@pages/movies");
+  console.log(category);
+  console.log(data);
   if (!data || data.length === 0) return <CannotFindPage />;
   const pageTitle = "subCategory" in category ? category.subCategory : category.category;
   const movieData = data.filter(isMovieData);
