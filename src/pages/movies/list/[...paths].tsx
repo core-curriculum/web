@@ -76,7 +76,6 @@ const getPaths = async (): Promise<
       }),
     )
   ).flat();
-  console.log(paths);
   return paths;
 };
 
@@ -102,6 +101,7 @@ export const getStaticProps: GetStaticProps<PageProps> = async ({ locale, params
       category === categoryToMatch.category &&
       ("subCategory" in categoryToMatch ? subCategory === categoryToMatch.subCategory : true),
   );
+  if (!data) console.error("No data found for category", categoryToMatch, "in locale", locale);
   return {
     props: { data, category: categoryToMatch },
   };
@@ -185,8 +185,6 @@ const CannotFindPage = () => {
 
 const MovieListPage: NextPage<PageProps> = ({ data, category }: PageProps) => {
   const { t } = useTranslation("@pages/movies");
-  console.log(category);
-  console.log(data);
   if (!data || data.length === 0) return <CannotFindPage />;
   const pageTitle = "subCategory" in category ? category.subCategory : category.category;
   const movieData = data.filter(isMovieData);
