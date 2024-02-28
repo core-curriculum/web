@@ -185,6 +185,7 @@ const CannotFindPage = () => {
 
 const MovieListPage: NextPage<PageProps> = ({ data, category }: PageProps) => {
   const { t } = useTranslation("@pages/movies");
+  if (!data || data.length === 0) console.error("No data found for category: " + category);
   if (!data || data.length === 0) return <CannotFindPage />;
   const pageTitle = "subCategory" in category ? category.subCategory : category.category;
   const movieData = data.filter(isMovieData);
