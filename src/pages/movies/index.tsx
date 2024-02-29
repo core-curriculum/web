@@ -120,8 +120,8 @@ export const loadMovieData = async (locale: Locale): Promise<DataList> => {
     }
     const info = movieInfo.find(({ url }) => url === d.url);
     if (!info) throw new Error("No info");
-    d.title = info.title;
-    d.description = info.description;
+    if (!d.title) d.title = info.title;
+    if (!d.description) d.description = info.description;
     return {
       type: "movieData" as const,
       id: info.id,
@@ -161,15 +161,17 @@ const formatDuration = (second: number) => {
 
 const MovieCard = ({ data: movieData }: { data: MovieData }) => {
   const { title, data, description } = movieData;
+  const { t } = useTranslation("@pages/movies");
   const pathname = usePathname();
   const url = `/movies/view/${data.id}?return_to=${pathname}`;
+  const urlToFileList = `/movies/view/${data.id}#filelist?return_to=${pathname}`;
   const truncate = (text: string, length = 30) => {
     return text.length > length ? text.substring(0, length) + "..." : text;
   };
   return (
     <div
       style={{ maxWidth: Number(data.thumbnail_width) * 1.5 }}
-      className="row-span-3 grid grid-rows-subgrid overflow-hidden rounded-lg drop-shadow-md
+      className="row-span-4 grid grid-rows-subgrid overflow-hidden rounded-lg drop-shadow-md
       transition [row-gap:0]  hover:opacity-60 hover:drop-shadow-xl"
     >
       <Link href={url}>
@@ -186,9 +188,12 @@ const MovieCard = ({ data: movieData }: { data: MovieData }) => {
       <Link className="bg-base-200 block " href={url}>
         <div className="px-3 text-right text-xs">{formatDuration(Number(data.duration))}</div>
         <div className="p-3 text-xs">{truncate(description || data.description)}</div>
+      </Link>
+      <Link className="bg-base-200 block " href={urlToFileList}>
         {movieData.filesInfo.length ? (
           <div className="flex flex-row-reverse px-3 pb-3">
-            <MdFilePresent className="text-base-content text-2xl" />
+            <MdFilePresent className="text-base-content/40 text-xl" />
+            <span className="text-base-content/40 text-xs">{t("fileExists")}</span>
           </div>
         ) : null}
       </Link>
@@ -198,7 +203,7 @@ const MovieCard = ({ data: movieData }: { data: MovieData }) => {
 
 const MovieCardList = ({ data }: { data: MovieData[] }) => {
   return (
-    <div className="grid-cols-auto-fill-60 grid gap-5 pb-8 ">
+    <div className="grid-cols-auto-fill-60 grid content-center gap-5 pb-8">
       {data.map((movieData, i) => {
         return <MovieCard key={i} data={movieData} />;
       })}
@@ -231,7 +236,11 @@ const FileList = ({ filesInfo, hasTitle }: { filesInfo: FileInfo[]; hasTitle: bo
   );
   return (
     <div className="flex flex-col gap-4 p-3 text-sm">
-      {hasTitle ? <h3 className="text-base-content mt-10 text-xl">{t("filesTitle")}</h3> : null}
+      {hasTitle ? (
+        <h3 className="text-base-content mt-10 text-xl" id="filelist">
+          {t("filesTitle")}
+        </h3>
+      ) : null}
       {infoList.map(({ name, downloadUrl }, i) => {
         return <FileInfoPanel key={i} name={name} downloadUrl={downloadUrl} />;
       })}

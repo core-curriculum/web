@@ -138,6 +138,7 @@ const text = {
     notFoundTitle: { ja: "動画が見つかりません", en: "Movie not found" },
     notFound: { ja: "は見つかりませんでした。", en: " was not found." },
     notFoundToBack: { ja: "動画一覧ページへ戻る", en: "Back to movies list" },
+    fileExists: { ja: "関連ファイルあり", en: "Related files exist" },
   },
   "@pages/404": {
     title: {
