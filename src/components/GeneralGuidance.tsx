@@ -22,11 +22,20 @@ const GeneralGuidance: React.FC<Props> = props => {
           {t("linkMextText")}
           <FiExternalLink className="ml-1 inline-block" />
         </Link>
-        <Link target="_blank" className="link-hover link-info link" href={t("pdfLink")}>
-          <MdDownload className="mr-1 inline-block" />
-          {t("pdfLinkText")}
-          <MdOutlinePictureAsPdf className="ml-1 inline-block" />
-        </Link>
+        <span className="flex flex-row gap-3">
+          <Link target="_blank" className="link-hover link-info link" href={t("pdfLink")}>
+            <MdDownload className="mr-1 inline-block" />
+            {t("pdfLinkText")}
+            <MdOutlinePictureAsPdf className="ml-1 inline-block" />
+          </Link>
+          <span>
+            (
+            <Link className="link-hover link-info link" href="/errata">
+              {t("errata")}
+            </Link>
+            )
+          </span>
+        </span>
         <Link className="link-hover link-info link" href="/movies">
           {t("movies")}
         </Link>

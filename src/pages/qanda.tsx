@@ -22,7 +22,7 @@ export const getStaticProps: GetStaticProps<PageProps> = async ({ locale }) => {
 
 const HeaderBar = () => {
   return (
-    <div className="sticky top-0 flex w-full items-center bg-base-100/80 backdrop-blur-sm">
+    <div className="bg-base-100/80 sticky top-0 flex w-full items-center backdrop-blur-sm">
       <div className="ml-2">
         <BackButton />
       </div>
@@ -39,13 +39,13 @@ const QandAPage: NextPage<PageProps> = ({ data }: PageProps) => {
       <HeaderBar />
       <div className="m-4 pb-24">
         {data.map(({ question, answer }, i) => {
-          const index = i+1
+          const index = i + 1;
           return (
             <section key={question} className="mx-auto mb-16 max-w-3xl">
-              <h3 className="my-4 text-lg text-base-content">
-                <span className="font-bold text-accent">Q{index}.</span> {question}
+              <h3 className="text-base-content my-4 text-lg">
+                <span className="text-accent font-bold">Q{index}.</span> {question}
               </h3>
-              <p className="ml-2 text-base-content">
+              <p className="text-base-content ml-2">
                 <span className="text-accent">A{index}.</span> {answer}
               </p>
             </section>
