@@ -146,7 +146,7 @@ export const getStaticProps: GetStaticProps<PageProps> = async ({ locale }) => {
   const constributors =
     locale === "ja"
       ? (await import("json_in_repo/contributors/ja.json")).default
-      : await import("json_in_repo/contributors/en.json");
+      : (await import("json_in_repo/contributors/en.json")).default;
   return {
     props: { data, constributors },
   };
