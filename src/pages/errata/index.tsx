@@ -45,20 +45,22 @@ const ErrataAPage: NextPage<PageProps> = ({ data }: PageProps) => {
       <div className="m-4 pb-24">
         {data.map(({ position, error, correct, comment, date }, i) => {
           return (
-            <section key={error} className="mx-auto mb-16 max-w-3xl">
+            <section key={error} className="mx-auto mb-16 flex w-fit max-w-3xl flex-col gap-2 pl-2">
               <h3 className="text-base-content my-4 text-lg">{position}</h3>
-              <p className="text-base-content ml-2">
-                <span className="text-accent">{t("errorHeader")}</span> {error}
-              </p>
-              <p className="text-base-content ml-2">
-                <span className="text-accent">{t("correctHeader")}</span> {correct}
-              </p>
+              <div>
+                <p className="text-base-content">
+                  <span className="text-accent">{t("errorHeader")}</span> {error}
+                </p>
+                <p className="text-base-content">
+                  <span className="text-accent">{t("correctHeader")}</span> {correct}
+                </p>
+              </div>
               {comment && (
-                <p className="text-base-content ml-2">
-                  <span className="text-accent">{t("commentHeader")}</span> {comment}
+                <p className="text-base-content text-sm">
+                  <span className="">{t("commentHeader")}</span> {comment}
                 </p>
               )}
-              <p className="text-base-content/40 ml-2 text-xs">{date}</p>
+              <p className="text-base-content/40 justify-end text-right text-xs">{date}</p>
             </section>
           );
         })}

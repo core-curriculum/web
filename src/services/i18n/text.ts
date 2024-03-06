@@ -146,7 +146,7 @@ const text = {
     h1: { ja: "誤植・誤り一覧", en: "Errata" },
     errorHeader: { ja: "誤り", en: "Error" },
     correctHeader: { ja: "訂正", en: "Correction" },
-    commentHeader: { ja: "コメント", en: "Comment" },
+    commentHeader: { ja: "注: ", en: "Note: " },
   },
   "@pages/404": {
     title: {
