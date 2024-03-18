@@ -10,6 +10,14 @@ import { Locale, useTranslation } from "@services/i18n/i18n";
 
 type PageProps = {
   data: DataList;
+  constributors: ContributorInfo[];
+};
+
+type ContributorInfo = {
+  team: string;
+  category: string;
+  name: string;
+  affiliation: string;
 };
 
 type FileInfo = {
@@ -135,8 +143,12 @@ export const loadMovieData = async (locale: Locale): Promise<DataList> => {
 
 export const getStaticProps: GetStaticProps<PageProps> = async ({ locale }) => {
   const data = await loadMovieData(locale as Locale);
+  const constributors =
+    locale === "ja"
+      ? (await import("json_in_repo/contributors/ja.json")).default
+      : (await import("json_in_repo/contributors/en.json")).default;
   return {
-    props: { data },
+    props: { data, constributors },
   };
 };
 
@@ -358,7 +370,29 @@ const Layout = ({ toc, main }: LayoutProps) => {
   );
 };
 
-const MoviesPage: NextPage<PageProps> = ({ data }: { data: DataList }) => {
+const ContributorsList = ({ constributors }: { constributors: ContributorInfo[] }) => {
+  const { t } = useTranslation("@pages/movies");
+  return (
+    <div className="p-8">
+      <h2 className="text-base-content mt-10 text-2xl" id="contributors">
+        {t("contributors")}
+      </h2>
+      <ul className="flex flex-col gap-3">
+        {constributors.map(({ team, category, name, affiliation }, i) => {
+          return (
+            <li key={i}>
+              <h3 className="text-base-content mt-10 text-xl">{name}</h3>
+              <p className="text-base-content">{affiliation}</p>
+              <p className="text-base-content">{category}</p>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+};
+
+const MoviesPage: NextPage<PageProps> = ({ data, constributors }) => {
   const { t } = useTranslation("@pages/movies");
   return (
     <div className="h-dvh">
@@ -367,7 +401,22 @@ const MoviesPage: NextPage<PageProps> = ({ data }: { data: DataList }) => {
       </Head>
       <HeaderBar />
       <div className="h-full">
-        <Layout toc={<MovieToc data={data} />} main={<WholeMovieCardList data={data} />} />
+        <Layout
+          toc={
+            <div className="flex flex-col gap-5">
+              <MovieToc data={data} />
+              <Link href="/movies#contributors" className="link-info block">
+                {t("contributors")}
+              </Link>
+            </div>
+          }
+          main={
+            <div>
+              <WholeMovieCardList data={data} />
+              <ContributorsList constributors={constributors} />
+            </div>
+          }
+        />
       </div>
     </div>
   );

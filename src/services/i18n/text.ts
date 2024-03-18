@@ -139,6 +139,14 @@ const text = {
     notFound: { ja: "は見つかりませんでした。", en: " was not found." },
     notFoundToBack: { ja: "動画一覧ページへ戻る", en: "Back to movies list" },
     fileExists: { ja: "関連ファイルあり", en: "Related files exist" },
+    contributors: { ja: "動画制作協力者一覧 (敬称略)", en: "Movie contributors" },
+  },
+  "@pages/errata": {
+    title: { ja: "誤植・誤り一覧 | コアカリナビ", en: "Errata | Core Curriculum Navigator" },
+    h1: { ja: "誤植・誤り一覧", en: "Errata" },
+    errorHeader: { ja: "誤り", en: "Error" },
+    correctHeader: { ja: "訂正", en: "Correction" },
+    commentHeader: { ja: "注: ", en: "Note: " },
   },
   "@pages/404": {
     title: {
@@ -305,6 +313,10 @@ const text = {
       ja: `一般社団法人日本医学教育学会(医学教育学会)は、文部科学省「大学における医療人養成の在り方に関する調査研究委託事業」による委託に基づき「医学教育モデル・コア・カリキュラム（令和4年度改訂版）」を作成いたしました。このページは医学教育学会「モデル・コア・カリキュラム改訂等に関する調査研究チーム」が、「医学教育モデル・コア・カリキュラム（令和4年度改訂版）」に基づいて作成しています。`,
       // eslint-disable-next-line max-len
       en: `This page contains the official English translation of the original Japanese revision, produced by the Model Core Curriculum Expert Research Committee of the Japan Society for Medical Education, as part of a project commissioned by the Ministry of Education, Culture, Sports, Science and Technology (MEXT).`,
+    },
+    errata: {
+      ja: "誤植・誤り一覧",
+      en: "Errata",
     },
     linkMextText: {
       ja: "文部科学省モデル・コア・カリキュラム公表ページ",
