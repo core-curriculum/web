@@ -324,7 +324,7 @@ const text = {
     },
     pdfLink: {
       ja: "https://www.mext.go.jp/content/20240220_mxt_igaku-000028108_01.pdf",
-      en: "https://www.mext.go.jp/content/20230323-mxt_igaku-000028108_00003.pdf",
+      en: "https://www.mext.go.jp/content/20250411-mxt_igaku-000028108_00003-2.pdf",
     },
     pdfLinkText: {
       ja: "pdfダウンロード (8.2MB)",
